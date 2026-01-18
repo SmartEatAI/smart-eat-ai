@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: # definir ruta al Dockerfile del backend  
+        # ejemplo: ./docker/backend/Dockerfile
+    container_name: smarteatai_backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: .
+      dockerfile: # definir ruta al Dockerfile del frontend
+        # ejemplo: ./docker/frontend/Dockerfile
+    container_name: smarteatai_frontend
+    ports:
+      - "3000:3000"
+    #volumes:
+    #  - ./frontend/src:/app/src 
+    #  - ./frontend/public:/app/public
+
+  db:
+    image: postgres:15 # cambiar si se usa otra base de datos
+    container_name: smarteatai_db
+    environment:
+      POSTGRES_USER: smarteatai
+      POSTGRES_PASSWORD: smarteatai
+      POSTGRES_DB: smarteatai
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
