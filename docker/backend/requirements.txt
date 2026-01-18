@@ -1,0 +1,15 @@
+# Backend requirements
+fastapi
+uvicorn[standard]
+
+# Database dependencies (PostgreSQL. Cambiar si se usa otra base de datos)
+# sqlalchemy
+# psycopg2-binary
+
+# ML/NLP dependencies (descomentar si se usan)
+# scikit-learn
+# joblib
+# pandas
+# numpy
+# matplotlib
+# seaborn

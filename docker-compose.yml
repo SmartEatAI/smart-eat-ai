@@ -4,8 +4,7 @@ services:
   backend:
     build:
       context: .
-      dockerfile: # definir ruta al Dockerfile del backend  
-        # ejemplo: ./docker/backend/Dockerfile
+      dockerfile: ./docker/backend/Dockerfile
     container_name: smarteatai_backend
     ports:
       - "8000:8000"
@@ -17,14 +16,15 @@ services:
   frontend:
     build:
       context: .
-      dockerfile: # definir ruta al Dockerfile del frontend
-        # ejemplo: ./docker/frontend/Dockerfile
+      dockerfile: ./docker/frontend/Dockerfile
     container_name: smarteatai_frontend
     ports:
       - "3000:3000"
-    #volumes:
-    #  - ./frontend/src:/app/src 
-    #  - ./frontend/public:/app/public
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+    environment:
+      - CHOKIDAR_USEPOLLING=true
 
   db:
     image: postgres:15 # cambiar si se usa otra base de datos
