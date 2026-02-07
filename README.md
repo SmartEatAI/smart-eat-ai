@@ -19,8 +19,8 @@ SmartEat AI es una plataforma que combina inteligencia artificial con gestión n
 ## 🛠️ Tecnologías
 
 ### Frontend
-- JavaScript
-- React
+- TypeScript
+- Next.js
 - HTML5 & Tailwind CSS
 
 ### Backend
@@ -41,11 +41,11 @@ SmartEat AI es una plataforma que combina inteligencia artificial con gestión n
 ```
 smart-eat-ai/
 ├── backend/          # Código del servidor, API y lógica de IA/ML
-├── frontend/         # Interfaz de usuario (React)
-│   └── components/   # Componentes React
-│       ├── layout/   # Componentes estructurales globales (Header, Footer, etc.)
-│       ├── ui/       # Componentes reutilizables y genéricos
-│       └── features/ # Componentes agrupados por funcionalidad o vista
+├── frontend/         # Interfaz de usuario (Next.js)
+│   └── app/          # Directorio principal de Next.js
+│       ├── layout.tsx   # Diseño global
+│       ├── page.tsx     # Página principal
+│       └── globals.css  # Estilos globales
 ├── docker/           # Configuraciones de Docker
 ├── docker-compose.yml
 ├── README.md
