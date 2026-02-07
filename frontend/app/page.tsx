@@ -1,11 +1,72 @@
+"use client";
+
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Section from "@/components/layout/section";
-import { Card, CardContent } from "@/components/ui/cards/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Clock, Heart, Leaf } from "lucide-react";
 import Step from "@/components/ui/step";
+import PlanCard from "@/components/ui/cards/plan-card";
+import ReviewCard from "@/components/ui/cards/review-card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
+import { useRef } from "react";
+import Link from "next/link";
+
+{
+  /* Define the Review interface and sample reviews data */
+}
+interface Review {
+  name: string;
+  image: string;
+  rating: number;
+  review: string;
+}
+
+const reviews: Review[] = [
+  {
+    name: "Emily Carter",
+    image:
+      "https://r-charts.com/es/miscelanea/procesamiento-imagenes-magick_files/figure-html/importar-imagen-r.png",
+    rating: 5,
+    review:
+      "SmartEatAI completely changed how I plan my meals. I save so much time and I eat healthier without thinking about it.",
+  },
+  {
+    name: "Daniel Moore",
+    image:
+      "https://r-charts.com/es/miscelanea/procesamiento-imagenes-magick_files/figure-html/importar-imagen-r.png",
+    rating: 5,
+    review:
+      "The AI suggestions are surprisingly accurate. The grocery lists alone are worth it.",
+  },
+  {
+    name: "Sophia Lee",
+    image:
+      "https://r-charts.com/es/miscelanea/procesamiento-imagenes-magick_files/figure-html/importar-imagen-r.png",
+    rating: 4,
+    review:
+      "I love how easy it is to follow. Less food waste, better meals, and zero stress.",
+  },
+  {
+    name: "Michael Brown",
+    image:
+      "https://r-charts.com/es/miscelanea/procesamiento-imagenes-magick_files/figure-html/importar-imagen-r.png",
+    rating: 5,
+    review:
+      "Meal planning has never been this simple. The personalization is spot on.",
+  },
+];
 
 export default function Home() {
+  const autoplay = useRef(Autoplay({ delay: 8000, stopOnInteraction: true }));
+
   return (
     <main className="w-full min-h-screen">
       {/* SECCIÓN DE INICIO */}
@@ -136,6 +197,110 @@ export default function Home() {
           </div>
         </div>
       </Section>
+
+      {/* SECCIÓN DE PRICING */}
+      <Section
+        id="plans"
+        title="Simple & Transparent Plans"
+        subtitle="Choose a plan that fits your lifestyle and start eating smarter today."
+      >
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* BASIC */}
+          <PlanCard
+            title="Basic"
+            price="Free"
+            description="Perfect to get started"
+            features={[
+              "Basic meal recommendations",
+              "Limited recipes access",
+              "Standard grocery list",
+            ]}
+            buttonText="Get started"
+          />
+
+          {/* PRO */}
+          <PlanCard
+            title="Pro"
+            price="$9 / month"
+            description="Most popular choice"
+            features={[
+              "Personalized AI meal plans",
+              "Unlimited recipes",
+              "Smart grocery lists",
+              "Nutrition insights",
+            ]}
+            highlighted
+            buttonText="Start free trial"
+          />
+
+          {/* PREMIUM */}
+          <PlanCard
+            title="Premium"
+            price="$19 / month"
+            description="For maximum control & results"
+            features={[
+              "Everything in Pro",
+              "Advanced nutrition analytics",
+              "Custom dietary goals",
+              "Priority support",
+            ]}
+            buttonText="Go premium"
+          />
+        </div>
+      </Section>
+
+      {/* SECCIÓN DE TESTIMONIOS */}
+      <Section
+        id="reviews"
+        title="What Our Users Say"
+        subtitle="Real experiences from people using SmartEatAI every day."
+      >
+        <div className="relative">
+          <Carousel plugins={[autoplay.current]} opts={{ loop: true }}>
+            <CarouselContent>
+              {reviews.map((review, index) => (
+                <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                  <ReviewCard {...review} />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+
+            <CarouselPrevious className="hidden lg:flex" />
+
+            <CarouselNext className="hidden lg:flex" />
+          </Carousel>
+        </div>
+      </Section>
+
+      {/* SECCIÓN DE LLAMADO A LA ACCIÓN FINAL */}
+      <Section id="cta" className="mt-12">
+      <div className="rounded-2xl bg-primary text-primary-foreground px-6 py-16 text-center flex flex-col items-center gap-6">
+
+        <p className="text-2xl md:text-3xl font-bold max-w-2xl">
+          Start eating smarter today.
+        </p>
+
+        <p className="text-sm md:text-base opacity-90 max-w-xl">
+          Create your personalized meal plan in minutes and take control of
+          your nutrition with SmartEatAI.
+        </p>
+
+        <div className="flex flex-col sm:flex-row gap-4">
+          <Button size="lg" variant="secondary" asChild>
+            <Link href="/signup">
+              Get started for free
+            </Link>
+          </Button>
+
+          <Button size="lg" variant="outline" asChild>
+            <Link href="/login">
+              Log in
+            </Link>
+          </Button>
+        </div>
+
+      </div>
+    </Section>
     </main>
   );
 }
