@@ -40,10 +40,15 @@ SmartEat AI es una plataforma que combina inteligencia artificial con gestión n
 
 ```
 smart-eat-ai/
-├── backend/          # Código del servidor y API
-├── frontend/         # Interfaz de usuario
+├── backend/          # Código del servidor, API y lógica de IA/ML
+├── frontend/         # Interfaz de usuario (React)
+│   └── components/   # Componentes React
+│       ├── layout/   # Componentes estructurales globales (Header, Footer, etc.)
+│       ├── ui/       # Componentes reutilizables y genéricos
+│       └── features/ # Componentes agrupados por funcionalidad o vista
 ├── docker/           # Configuraciones de Docker
 ├── docker-compose.yml
+├── README.md
 └── LICENSE
 ```
 
