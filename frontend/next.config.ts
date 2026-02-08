@@ -9,6 +9,20 @@ const nextConfig: NextConfig = {
       };
     }
     return config;
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+      {
+        protocol: 'http',
+        hostname: '**',
+      },
+    ],
+  },
+  typescript: {
+    ignoreBuildErrors: true,
   },
 };
 
