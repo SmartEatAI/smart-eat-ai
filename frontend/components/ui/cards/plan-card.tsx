@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/cards/button-card";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
