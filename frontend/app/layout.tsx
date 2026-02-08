@@ -22,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" class="dark">
+    <html lang="es" className="dark">
       <body
         className={`${figtree.variable} antialiased`}
       >
