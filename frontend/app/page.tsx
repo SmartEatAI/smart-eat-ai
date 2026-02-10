@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
+import Button from "@/components/ui/Button";
 import Section from "@/components/layout/section";
 import { Card, CardContent } from "@/components/ui/card";
 import { Clock, Heart, Leaf } from "lucide-react";
@@ -18,6 +18,8 @@ import {
 import Autoplay from "embla-carousel-autoplay";
 import { useRef } from "react";
 import Link from "next/link";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
 {
   /* Define the Review interface and sample reviews data */
@@ -69,6 +71,7 @@ export default function Home() {
 
   return (
     <main className="w-full min-h-screen">
+      <Navbar />
       {/* SECCIÓN DE INICIO */}
       <Section id="inicio">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center w-full">
@@ -95,7 +98,7 @@ export default function Home() {
           </div>
 
           {/* LADO DERECHO */}
-          <div className="relative w-full h-[300px] md:h-[400px]">
+          <div className="relative w-full h-75 md:h-100">
             <Image
               src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c"
               alt="Healthy food"
@@ -286,21 +289,16 @@ export default function Home() {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4">
-          <Button size="lg" variant="secondary" asChild>
+          <Button variant="primary">
             <Link href="/signup">
               Get started for free
-            </Link>
-          </Button>
-
-          <Button size="lg" variant="outline" asChild>
-            <Link href="/login">
-              Log in
             </Link>
           </Button>
         </div>
 
       </div>
     </Section>
+    <Footer />
     </main>
   );
 }
