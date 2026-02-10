@@ -1,7 +1,13 @@
 "use client";
 
 import Sidebar from "@/components/layout/Sidebar";
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/Carousel";
+import { 
+    Carousel, 
+    CarouselContent, 
+    CarouselItem, 
+    CarouselNext, 
+    CarouselPrevious 
+} from "@/components/ui/carousel";
 import RecipeCard from "@/components/ui/cards/recipe-card";
 import MacronutrientCard from "@/components/ui/cards/macronutrient-card";
 import ProgressCard from "@/components/ui/cards/progress-card";
@@ -21,19 +27,29 @@ const mockUser = {
 
 const mockRecipes = [
     {
-        title: "Avocado Toast",
+        title: "Omelette with Ham",
         calories: 350,
-        image: "https://via.placeholder.com/150",
+        image: "/images/receta_1.jpg",
     },
     {
-        title: "Grilled Chicken Salad",
+        title: "Gnocci with Tuna",
         calories: 550,
-        image: "https://via.placeholder.com/150",
+        image: "/images/receta_2.jpg",
     },
     {
-        title: "Salmon with Asparagus",
+        title: "Salmon with Salad",
         calories: 480,
-        image: "https://via.placeholder.com/150",
+        image: "/images/receta_3.jpg",
+    },
+    {
+        title: "Seafood Creamy Soup",
+        calories: 420,
+        image: "/images/receta_4.jpg",
+    },
+    {
+        title: "Sweet Potato Fries",
+        calories: 390,
+        image: "/images/receta_5.jpg",
     },
 ];
 
@@ -132,15 +148,19 @@ export default function Dashboard() {
 
                 {/* Recommended Recipes Carousel */}
                 <h2 className="text-xl font-semibold mb-4 text-primary">Recommended Recipes</h2>
-                <Carousel opts={{ loop: true }}>
-                <CarouselContent>
-                    {recipes.map((recipe, index) => (
-                    <CarouselItem key={index} className="md:basis-1/3">
-                        <RecipeCard {...recipe} />
-                    </CarouselItem>
-                    ))}
-                </CarouselContent>
-                </Carousel>
+                <div className="relative">
+                    <Carousel opts={{ loop: true, align: "start" }} className="w-full">
+                        <CarouselContent className="-ml-2 md:-ml-4">
+                            {recipes.map((recipe, index) => (
+                            <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+                                <RecipeCard {...recipe} />
+                            </CarouselItem>
+                            ))}
+                        </CarouselContent>
+                        <CarouselPrevious className="hidden lg:flex left-2" />
+                        <CarouselNext className="hidden lg:flex right-2" />
+                    </Carousel>
+                </div>
             </main>
         </div>
     );

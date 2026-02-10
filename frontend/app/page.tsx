@@ -14,7 +14,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@/components/ui/Carousel";
+} from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import { useRef } from "react";
 import Link from "next/link";
@@ -268,9 +268,9 @@ export default function Home() {
               ))}
             </CarouselContent>
 
-            <CarouselPrevious className="hidden lg:flex" />
+            <CarouselPrevious className="hidden lg:flex -left-4 xl:-left-12" />
 
-            <CarouselNext className="hidden lg:flex" />
+            <CarouselNext className="hidden lg:flex -right-4 xl:-right-12" />
           </Carousel>
         </div>
       </Section>
