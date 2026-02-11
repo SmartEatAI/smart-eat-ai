@@ -13,7 +13,11 @@ const links = [
     { href: "/progress", label: "Progress", icon: TrendingUp },
 ];
 
-const Sidebar: React.FC = () => {
+interface SidebarProps {
+    className?: string;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(true);
     const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -48,7 +52,8 @@ const Sidebar: React.FC = () => {
                     isMobileOpen ? "translate-x-0" : "-translate-x-full",
                     "md:translate-x-0 md:relative",
                     // Desktop: ancho variable
-                    isOpen ? "w-64 md:w-64" : "w-64 md:w-16 md:p-2"
+                    isOpen ? "w-64 md:w-64" : "w-64 md:w-16 md:p-2",
+                    className // Apply the passed className
                 )}
             >
                 {/* Header con botón toggle y logo */}
@@ -137,6 +142,6 @@ const Sidebar: React.FC = () => {
             </aside>
         </>
     );
-}
+};
 
 export default Sidebar;

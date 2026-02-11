@@ -12,6 +12,9 @@ import RecipeCard from "@/components/ui/cards/recipe-card";
 import MacronutrientCard from "@/components/ui/cards/macronutrient-card";
 import ProgressCard from "@/components/ui/cards/progress-card";
 import { useState, useEffect } from "react";
+import Image from "next/image";
+import Button from "@/components/ui/Button";
+import { Check } from "lucide-react";
 
 const mockMacronutrients = {
     calories: { current: 800, goal: 2100 },
@@ -53,10 +56,81 @@ const mockRecipes = [
     },
 ];
 
+interface Meal {
+    id: number;
+    name: string;
+    time: string;
+    image: string;
+    calories: number;
+    protein: number;
+    carbs: number;
+    fat: number;
+    consumed: boolean;
+}
+
+const meals: Meal[] = [
+    {
+        id: 1,
+        name: "Omelette with Ham",
+        time: "08:00 AM",
+        image: "/images/receta_1.jpg",
+        calories: 350,
+        protein: 20,
+        carbs: 5,
+        fat: 25,
+        consumed: false,
+    },
+    {
+        id: 2,
+        name: "Gnocci with Tuna",
+        time: "01:30 PM",
+        image: "/images/receta_2.jpg",
+        calories: 550,
+        protein: 30,
+        carbs: 60,
+        fat: 15,
+        consumed: false,
+    },
+    {
+        id: 3,
+        name: "Salmon with Salad",
+        time: "07:00 PM",
+        image: "/images/receta_3.jpg",
+        calories: 480,
+        protein: 40,
+        carbs: 10,
+        fat: 30,
+        consumed: false,
+    },
+    {
+        id: 4,
+        name: "Seafood Creamy Soup",
+        time: "12:00 PM",
+        image: "/images/receta_4.jpg",
+        calories: 420,
+        protein: 25,
+        carbs: 20,
+        fat: 15,
+        consumed: false,
+    },
+    {
+        id: 5,
+        name: "Sweet Potato Fries",
+        time: "04:00 PM",
+        image: "/images/receta_5.jpg",
+        calories: 390,
+        protein: 5,
+        carbs: 50,
+        fat: 20,
+        consumed: false,
+    },
+];
+
 export default function Dashboard() {
     const [macronutrients, setMacronutrients] = useState(mockMacronutrients);
     const [recipes] = useState(mockRecipes);
     const [user, setUser] = useState(mockUser);
+    const [mealList, setMealList] = useState(meals);
 
     // ========== DESARROLLO: Sincronizar con mockMacronutrients ==========
     // Comentar o eliminar este useEffect cuando se conecte con el backend real
@@ -117,10 +191,18 @@ export default function Dashboard() {
         }));
     };
 
+    const toggleConsumed = (id: number) => {
+        setMealList((prevMeals) =>
+            prevMeals.map((meal) =>
+                meal.id === id ? { ...meal, consumed: !meal.consumed } : meal
+            )
+        );
+    };
+
     return (
-        <div className="flex min-h-screen">
-            <Sidebar />
-            <main className="flex-1 p-6 pt-20 md:pt-6 bg-background text-secondary">
+        <div className="flex min-h-screen h-screen">
+            <Sidebar className="h-full" />
+            <main className="flex-1 p-6 pt-20 md:pt-6 bg-background text-secondary h-full overflow-y-auto">
                 <div className="flex items-center justify-between mb-6">
                     <h1 className="text-2xl font-bold text-primary">📊 Dashboard</h1>
                     <p className="text-lg text-muted-foreground">
@@ -146,15 +228,58 @@ export default function Dashboard() {
                     </div>
                 </div>
 
+                {/* Meal Schedule Section */}
+                <h2 className="text-xl font-semibold mb-4 text-primary">Meal Schedule</h2>
+                <div className="space-y-4">
+                    {mealList.map((meal) => (
+                        <div
+                            key={meal.id}
+                            className="flex items-center justify-between p-4 bg-card rounded-lg shadow-md"
+                        >
+                            <div className="flex items-center gap-4">
+                                <div className="w-16 h-16 relative">
+                                    <Image
+                                        src={meal.image}
+                                        alt={meal.name}
+                                        fill
+                                        className="object-cover rounded-md"
+                                    />
+                                </div>
+                                <div>
+                                    <h3 className="text-lg font-semibold text-primary">
+                                        {meal.name}
+                                    </h3>
+                                    <p className="text-sm text-muted-foreground">
+                                        {meal.time} - {meal.calories} kcal - {meal.protein}g Prot - {meal.carbs}g Carb - {meal.fat}g Fat
+                                    </p>
+                                </div>
+                            </div>
+                            <Button
+                                variant={meal.consumed ? "primary" : "secondary"}
+                                className="shadow-md flex items-center gap-2"
+                                onClick={() => toggleConsumed(meal.id)}
+                            >
+                                {meal.consumed ? (
+                                    <>
+                                        <Check className="h-4 w-4" /> Consumed
+                                    </>
+                                ) : (
+                                    "Mark as consumed"
+                                )}
+                            </Button>
+                        </div>
+                    ))}
+                </div>
+
                 {/* Recommended Recipes Carousel */}
-                <h2 className="text-xl font-semibold mb-4 text-primary">Recommended Recipes</h2>
+                <h2 className="text-xl font-semibold my-4 text-primary">Recommended Recipes</h2>
                 <div className="relative">
                     <Carousel opts={{ loop: true, align: "start" }} className="w-full">
                         <CarouselContent className="-ml-2 md:-ml-4">
                             {recipes.map((recipe, index) => (
-                            <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
-                                <RecipeCard {...recipe} />
-                            </CarouselItem>
+                                <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+                                    <RecipeCard {...recipe} />
+                                </CarouselItem>
                             ))}
                         </CarouselContent>
                         <CarouselPrevious className="hidden lg:flex left-2" />
