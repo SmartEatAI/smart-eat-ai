@@ -125,3 +125,13 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .hover-halo {
+    @apply transition-all duration-300;
+  }
+  .hover-halo:hover {
+    text-shadow: 0 0 10px rgba(72, 187, 120, 0.8), 0 0 20px rgba(72, 187, 120, 0.6); /* Match SmartEatAI logo */
+    color: rgba(134, 239, 172, 1);
+  }
+}
