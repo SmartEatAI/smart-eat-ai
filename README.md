@@ -35,6 +35,7 @@ SmartEat AI es una plataforma que combina inteligencia artificial con gestión n
 
 ### DevOps
 - Docker & Docker Compose
+- Node 20+
 
 ## 📁 Estructura del Proyecto
 
@@ -43,9 +44,10 @@ smart-eat-ai/
 ├── backend/          # Código del servidor, API y lógica de IA/ML
 ├── frontend/         # Interfaz de usuario (Next.js)
 │   └── app/          # Directorio principal de Next.js
-│       ├── layout.tsx   # Diseño global
-│       ├── page.tsx     # Página principal
-│       └── globals.css  # Estilos globales
+│   │    ├── layout.tsx   # Diseño global
+│   │    ├── page.tsx     # Página principal
+│   │    └── globals.css  # Estilos globales
+│   └── components/   # Componentes de la app
 ├── docker/           # Configuraciones de Docker
 ├── docker-compose.yml
 ├── README.md

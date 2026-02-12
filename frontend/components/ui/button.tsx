@@ -1,13 +1,15 @@
-import React from "react";
-
 type ButtonVariant = "primary" | "secondary";
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps {
+    as?: React.ElementType;
     children: React.ReactNode;
     variant?: ButtonVariant;
+    className?: string;
+    [key: string]: any;
 }
 
 const Button: React.FC<ButtonProps> = ({
+    as: Component = "button",
     children,
     variant = "primary",
     className = "",
@@ -22,9 +24,9 @@ const Button: React.FC<ButtonProps> = ({
     };
 
     return (
-        <button className={`${baseStyles} ${variants[variant]} ${className}`} {...props}>
+        <Component className={`${baseStyles} ${variants[variant]} ${className}`} {...props}>
             {children}
-        </button>
+        </Component>
     );
 };
 
