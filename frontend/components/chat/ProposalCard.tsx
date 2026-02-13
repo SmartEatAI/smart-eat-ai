@@ -23,14 +23,14 @@ export default function ProposalCard({
     return (
         <Card className="w-full overflow-hidden">
             <div className="relative h-40 md:h-52 w-full overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                 <div
                     className="w-full h-full bg-cover bg-center"
                     style={{
                         backgroundImage: `url('${image}')`,
                     }}
                 />
-                <div className="absolute bottom-3 left-4 z-20">
+                <div className="absolute bottom-3 left-4">
                     <span className="px-2 py-1 rounded text-[10px] font-bold bg-primary text-[#102216] uppercase tracking-wider mb-1 inline-block">
                         {badge}
                     </span>
