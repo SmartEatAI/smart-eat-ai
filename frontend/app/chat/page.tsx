@@ -113,7 +113,7 @@ export default function ChatPage() {
         >
             <div className="flex flex-col h-[80vh]">
                 {/* Zona de mensajes */}
-                <div className="flex-1 flex flex-col gap-4 p-4 lg:px-20">
+                <div className="flex-1 flex flex-col gap-4 p-4">
                     {messages.map((msg, i) => (
                         <Fragment key={i}>
                             <MessageBubble

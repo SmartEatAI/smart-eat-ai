@@ -26,14 +26,14 @@ export default function ProposalCard({
         <Card className="w-full md:max-w-md lg:max-w-lg">
             {/* Imagen con Badge */}
             <div className="relative h-40 md:h-52 w-full">
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                 <div
                     className="w-full h-full bg-cover bg-center"
                     style={{
                         backgroundImage: `url('${image}')`,
                     }}
                 />
-                <div className="absolute bottom-4 left-4 right-4 z-20">
+                <div className="absolute bottom-4 left-4 right-4">
                     <span className="px-3 py-1 rounded-full text-xs font-bold bg-primary text-[#102216] uppercase tracking-wider inline-block mb-2">
                         {badge}
                     </span>
