@@ -16,7 +16,7 @@ export function AppLayout({title, subtitle, children}: AppLayoutProps) {
   return (
     <div className="flex min-h-screen h-screen">
       <Sidebar className="h-full"/>
-      <div className="flex-1 p-6 pt-20 md:pt-6 h-full overflow-y-auto">
+      <div className="flex-1 p-6 pt-20 md:pt-6 h-full overflow-y-auto lg:p-10">
         <PageHeader title={title} subtitle={subtitle} />
         <main className="flex-1">
           {children}
