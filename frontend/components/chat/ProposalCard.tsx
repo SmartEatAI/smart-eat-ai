@@ -1,35 +1,70 @@
-export default function ProposalCard() {
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import Button from "@/components/ui/button";
+
+interface ProposalCardProps {
+    image: string;
+    badge: string;
+    title: string;
+    description?: string;
+    confirmText?: string;
+    cancelText?: string;
+    onConfirm?: () => void;
+    onCancel?: () => void;
+}
+
+export default function ProposalCard({
+    image,
+    badge,
+    title,
+    description,
+    onConfirm,
+    onCancel,
+}: ProposalCardProps) {
     return (
-        <div className="w-full rounded-2xl overflow-hidden bg-surface-light dark:bg-[#15261b] shadow-lg border border-gray-200 dark:border-primary/20">
+        <Card className="w-full overflow-hidden">
             <div className="relative h-40 md:h-52 w-full overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10" />
                 <div
                     className="w-full h-full bg-cover bg-center"
                     style={{
-                        backgroundImage:
-                            "url('https://lh3.googleusercontent.com/aida-public/AB6AXuBqC_uQaB_fCsD_B-BhOvy8WfnUufREXINi5-vsMZVx4xYpICl_DIRq61843DMZRXmux9ewS5ABOqCCmQkuHaWEl_JqndFWcrFv_YRlP_NBfTlpXjG5STtMS7sc-YIMcsk9X9M_DOUakZzbIBvHBzxxv3rG9NZjlq9KRryQrOQB1ssZNPlP_GFUZCy32l0P7fs40R2YIj6wLpJeP-AGlRH7txJGqWfZNV30MSqZodnTJIxR5d1KmwOuHE1q-BLTyRgHcCNFEK42EUAP')",
+                        backgroundImage: `url('${image}')`,
                     }}
                 />
                 <div className="absolute bottom-3 left-4 z-20">
                     <span className="px-2 py-1 rounded text-[10px] font-bold bg-primary text-[#102216] uppercase tracking-wider mb-1 inline-block">
-                        Sugerencia
+                        {badge}
                     </span>
                     <h3 className="text-white text-lg font-bold">
-                        Sustitución de Cena
+                        {title}
                     </h3>
+                    {description && (
+                        <p className="text-gray-200 text-xs mt-1">
+                            {description}
+                        </p>
+                    )}
                 </div>
             </div>
 
-            <div className="p-5">
-                <div className="flex flex-col md:flex-row gap-3 pt-2">
-                    <button className="w-full md:flex-1 py-3 px-4 rounded-full bg-primary text-[#102216] text-sm font-bold">
-                        Confirmar
-                    </button>
-                    <button className="w-full md:flex-1 py-3 px-4 rounded-full border text-sm font-bold">
-                        Cancelar
-                    </button>
-                </div>
-            </div>
-        </div>
+            <CardContent className="p-5">
+                {/* Contenido adicional puede ir aquí si es necesario */}
+            </CardContent>
+
+            <CardFooter className="flex flex-col md:flex-row gap-3 p-5 pt-0">
+                <Button
+                    onClick={onConfirm}
+                    variant="primary"
+                    className="w-full md:flex-1 rounded-full py-3 px-4 text-sm font-bold"
+                >
+                    Confirmar
+                </Button>
+                <Button
+                    onClick={onCancel}
+                    variant="secondary"
+                    className="w-full md:flex-1 rounded-full py-3 px-4 text-sm font-bold"
+                >
+                    Cancelar
+                </Button>
+            </CardFooter>
+        </Card>
     );
 }

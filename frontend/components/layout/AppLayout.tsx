@@ -29,9 +29,9 @@ export function AppLayout({title, subtitle, children}: AppLayoutProps) {
 
 export function PageHeader({ title, subtitle}: PageHeaderProps) {
   return (
-    <header className="flex items-start justify-between gap-4 pb-6">
+    <header className="sticky top-0 left-0 right-0 z-40 flex items-start justify-between gap-4 pb-6 bg-background border-b backdrop-blur-sm">
       <div className="space-y-1">
-        <h1 className="text-3xl font-bold tracking-tight">
+        <h1 className="text-2xl font-bold text-primary">
           {title}
         </h1>
         {subtitle && (

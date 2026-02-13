@@ -1,18 +1,25 @@
+import Button from "@/components/ui/button";
+
 export default function ChatInput() {
-    return (
-        <div className="absolute bottom-0 left-0 w-full p-4 md:p-6 bg-gradient-to-t from-background-light dark:from-background-dark via-background-light dark:via-background-dark to-transparent">
-            <div className="max-w-4xl mx-auto">
-                <div className="flex items-center gap-2 p-2 pr-2 bg-surface-light dark:bg-surface-dark rounded-full border">
-                    <input
-                        className="flex-1 bg-transparent border-none focus:ring-0 text-sm md:text-base"
-                        placeholder="Escribe tu mensaje..."
-                        type="text"
-                    />
-                    <button className="p-3 rounded-full bg-primary text-[#102216]">
-                        Enviar
-                    </button>
-                </div>
-            </div>
+  return (
+    <div className="sticky bottom-0 left-0 w-full bg-gradient-to-t from-background via-background/95 to-transparent px-4 py-4 md:px-6">
+      <div className="mx-auto max-w-4xl">
+        <div className="flex items-end gap-2 rounded-2xl border bg-card px-3 py-2 shadow-sm">
+          <textarea
+            placeholder="Escribe tu mensaje..."
+            rows={1}
+            className="flex-1 resize-none bg-transparent text-sm outline-none placeholder:text-muted-foreground md:text-base"
+          />
+
+          <Button
+            type="button"
+            variant="primary"
+            className="rounded-xl px-4 py-2 text-sm font-medium"
+          >
+            Enviar
+          </Button>
         </div>
-    );
+      </div>
+    </div>
+  );
 }
