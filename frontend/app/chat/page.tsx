@@ -108,8 +108,7 @@ export default function ChatPage() {
 
     return (
         <AppLayout
-            title="Asistente Nutricional Inteligente"
-            subtitle="A tu servicio 24/7"
+            title="🤖 Asistente Nutricional Inteligente"
         >
             <div className="flex flex-col h-[80vh]">
                 {/* Zona de mensajes */}

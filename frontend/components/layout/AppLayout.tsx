@@ -30,7 +30,7 @@ export function PageHeader({ title, subtitle}: PageHeaderProps) {
   return (
     <header className="sticky top-0 z-30 flex items-start justify-between gap-4 pb-6 bg-background border-b backdrop-blur-sm px-6 pt-6 md:px-10">
       <div className="space-y-1">
-        <h1 className="text-3xl font-bold tracking-tight text-primary">
+        <h1 className="text-2xl font-bold tracking-tight text-primary">
           {title}
         </h1>
         {subtitle && (
