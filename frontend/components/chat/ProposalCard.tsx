@@ -17,52 +17,52 @@ export default function ProposalCard({
     badge,
     title,
     description,
+    confirmText = "Confirmar",
+    cancelText = "Cancelar",
     onConfirm,
     onCancel,
 }: ProposalCardProps) {
     return (
-        <Card className="w-full overflow-hidden">
-            <div className="relative h-40 md:h-52 w-full overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+        <Card className="w-full md:max-w-md lg:max-w-lg">
+            {/* Imagen con Badge */}
+            <div className="relative h-40 md:h-52 w-full">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10" />
                 <div
                     className="w-full h-full bg-cover bg-center"
                     style={{
                         backgroundImage: `url('${image}')`,
                     }}
                 />
-                <div className="absolute bottom-3 left-4">
-                    <span className="px-2 py-1 rounded text-[10px] font-bold bg-primary text-[#102216] uppercase tracking-wider mb-1 inline-block">
+                <div className="absolute bottom-4 left-4 right-4 z-20">
+                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-primary text-[#102216] uppercase tracking-wider inline-block mb-2">
                         {badge}
                     </span>
-                    <h3 className="text-white text-lg font-bold">
+                    <h3 className="text-white text-lg font-bold line-clamp-2">
                         {title}
                     </h3>
                     {description && (
-                        <p className="text-gray-200 text-xs mt-1">
+                        <p className="text-gray-200 text-xs mt-2 line-clamp-2">
                             {description}
                         </p>
                     )}
                 </div>
             </div>
 
-            <CardContent className="p-5">
-                {/* Contenido adicional puede ir aquí si es necesario */}
-            </CardContent>
-
-            <CardFooter className="flex flex-col md:flex-row gap-3 p-5 pt-0">
+            {/* Botones */}
+            <CardFooter className="flex flex-col sm:flex-row gap-3 p-4">
                 <Button
                     onClick={onConfirm}
                     variant="primary"
-                    className="w-full md:flex-1 rounded-full py-3 px-4 text-sm font-bold"
+                    className="w-full rounded-full py-2 px-4 text-sm font-semibold"
                 >
-                    Confirmar
+                    {confirmText}
                 </Button>
                 <Button
                     onClick={onCancel}
                     variant="secondary"
-                    className="w-full md:flex-1 rounded-full py-3 px-4 text-sm font-bold"
+                    className="w-full rounded-full py-2 px-4 text-sm font-semibold"
                 >
-                    Cancelar
+                    {cancelText}
                 </Button>
             </CardFooter>
         </Card>
