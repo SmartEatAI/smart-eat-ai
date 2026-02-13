@@ -3,14 +3,14 @@
 import Button from "@/components/ui/Button";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { LogOut, ChevronLeft, ChevronRight, LayoutDashboard, ClipboardList, UtensilsCrossed, TrendingUp, Menu, X } from "lucide-react";
+import { LogOut, ChevronLeft, ChevronRight, LayoutDashboard, ClipboardList, Menu, X, MessagesSquare, UserRoundPen } from "lucide-react";
 import { useState } from "react";
 
 const links = [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/my-plan", label: "My Plan", icon: ClipboardList },
-    { href: "/recipes", label: "Recipes", icon: UtensilsCrossed },
-    { href: "/progress", label: "Progress", icon: TrendingUp },
+    { href: "/chat", label: "Chat", icon: MessagesSquare },
+    { href: "/profile", label: "Profile", icon: UserRoundPen },
 ];
 
 interface SidebarProps {
