@@ -290,7 +290,7 @@ export default function Home() {
 
         <div className="flex flex-col sm:flex-row gap-4">
           <Button variant="primary">
-            <Link href="/signup">
+            <Link href="/auth">
               Get started for free
             </Link>
           </Button>

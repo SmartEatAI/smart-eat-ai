@@ -1,10 +1,16 @@
 # Backend requirements
 fastapi
 uvicorn[standard]
+python-dotenv
 
 # Database dependencies (PostgreSQL. Cambiar si se usa otra base de datos)
-# sqlalchemy
-# psycopg2-binary
+sqlalchemy
+psycopg2-binary
+
+# Authentication dependencies
+passlib[bcrypt]
+python-jose[cryptography]
+bcrypt==4.0.1
 
 # ML/NLP dependencies (descomentar si se usan)
 # scikit-learn
