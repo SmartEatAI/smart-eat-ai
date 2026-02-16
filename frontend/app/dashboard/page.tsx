@@ -1,6 +1,7 @@
 "use client";
 
 import Sidebar from "@/components/layout/Sidebar";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import { 
     Carousel, 
     CarouselContent, 
@@ -21,11 +22,6 @@ const mockMacronutrients = {
     protein: { current: 120, goal: 150 },
     carbs: { current: 100, goal: 200 },
     fats: { current: 45, goal: 60 },
-};
-
-const mockUser = {
-    name: "testUser",
-    email: "testUser@example.com",
 };
 
 const mockRecipes = [
@@ -129,8 +125,24 @@ const meals: Meal[] = [
 export default function Dashboard() {
     const [macronutrients, setMacronutrients] = useState(mockMacronutrients);
     const [recipes] = useState(mockRecipes);
-    const [user, setUser] = useState(mockUser);
+    const [user, setUser] = useState<{ name: string; email: string } | null>(null);
     const [mealList, setMealList] = useState(meals);
+
+    // Load user data from localStorage
+    useEffect(() => {
+        const userData = localStorage.getItem("user");
+        if (userData) {
+            try {
+                const parsedUser = JSON.parse(userData);
+                setUser(parsedUser);
+            } catch (error) {
+                console.error("Error parsing user data:", error);
+                setUser({ name: "Guest", email: "" });
+            }
+        } else {
+            setUser({ name: "Guest", email: "" });
+        }
+    }, []);
 
     // ========== DESARROLLO: Sincronizar con mockMacronutrients ==========
     // Comentar o eliminar este useEffect cuando se conecte con el backend real
@@ -200,13 +212,14 @@ export default function Dashboard() {
     };
 
     return (
-        <div className="flex min-h-screen h-screen">
-            <Sidebar className="h-full" />
-            <main className="flex-1 p-6 pt-20 md:pt-6 bg-background text-secondary h-full overflow-y-auto">
+        <ProtectedRoute>
+            <div className="flex min-h-screen h-screen">
+                <Sidebar className="h-full" />
+                <main className="flex-1 p-6 pt-20 md:pt-6 bg-background text-secondary h-full overflow-y-auto">
                 <div className="flex items-center justify-between mb-6">
                     <h1 className="text-2xl font-bold text-primary">📊 Dashboard</h1>
                     <p className="text-lg text-muted-foreground">
-                        Hola, <span className="font-semibold text-primary">{user.name}</span> 👋
+                        Hello, <span className="font-semibold text-primary">{user?.name || "Guest"}</span> 👋
                     </p>
                 </div>
 
@@ -288,5 +301,6 @@ export default function Dashboard() {
                 </div>
             </main>
         </div>
+        </ProtectedRoute>
     );
 }

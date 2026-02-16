@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "@/components/ui/Button";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { LogOut, ChevronLeft, ChevronRight, LayoutDashboard, ClipboardList, UtensilsCrossed, TrendingUp, Menu, X } from "lucide-react";
 import { useState } from "react";
@@ -19,8 +19,17 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     const pathname = usePathname();
+    const router = useRouter();
     const [isOpen, setIsOpen] = useState(true);
     const [isMobileOpen, setIsMobileOpen] = useState(false);
+
+    const handleLogout = () => {
+        // Remove token and user data from localStorage
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        // Redirect to landing page
+        router.push("/");
+    };
 
     return (
         <>
@@ -130,10 +139,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
                             "w-full flex items-center gap-2 px-4 py-2 text-base font-medium text-primary hover-halo rounded-md transition-all duration-300",
                             isOpen ? "" : "md:justify-center md:px-2"
                         )}
-                        onClick={() => {
-                            // Añadir la logica de logout aquí
-                            console.log("Logout clicked");
-                        }}
+                        onClick={handleLogout}
                     >
                         <LogOut className="h-4 w-4" />
                         <span className={cn(isOpen ? "" : "md:hidden")}>Logout</span>
