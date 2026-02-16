@@ -1,8 +1,9 @@
 "use client";
 
 import { AppLayout } from "@/components/layout/AppLayout";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
-export default function MyPlanPage() {
+function MyPlanPage() {
   return (
     <AppLayout
       title="Mi Plan Nutricional"
@@ -12,5 +13,13 @@ export default function MyPlanPage() {
         Info page
       </div>
     </AppLayout>
+  );
+}
+
+export default function MyPlanPageWrapper() {
+  return (
+    <ProtectedRoute>
+      <MyPlanPage />
+    </ProtectedRoute>
   );
 }

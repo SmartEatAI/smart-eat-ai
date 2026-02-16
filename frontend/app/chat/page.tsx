@@ -2,6 +2,7 @@
 
 import { useRef, useEffect, useState, Fragment } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import MessageBubble from "@/components/chat/MessageBubble";
 import ProposalCard from "@/components/chat/ProposalCard";
 import TypingIndicator from "@/components/chat/TypingIndicator";
@@ -23,7 +24,7 @@ type Message = {
     };
 };
 
-export default function ChatPage() {
+function ChatPage() {
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -147,5 +148,13 @@ export default function ChatPage() {
                 />
             </div>
         </AppLayout>
+    );
+}
+
+export default function ChatPageWrapper() {
+    return (
+        <ProtectedRoute>
+            <ChatPage />
+        </ProtectedRoute>
     );
 }

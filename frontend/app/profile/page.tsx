@@ -1,8 +1,9 @@
 "use client";
 
 import { AppLayout } from "@/components/layout/AppLayout";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
-export default function ProfilePage() {
+function ProfilePage() {
   return (
     <AppLayout
       title="Mi Perfil"
@@ -12,5 +13,13 @@ export default function ProfilePage() {
         Info page
       </div>
     </AppLayout>
+  );
+}
+
+export default function ProfilePageWrapper() {
+  return (
+    <ProtectedRoute>
+      <ProfilePage />
+    </ProtectedRoute>
   );
 }
