@@ -260,7 +260,7 @@ const AuthForm: React.FC = () => {
             {/* Right Side - Image & Testimonial */}
             <div className="hidden lg:flex lg:w-1/2 relative group">
                 <Image
-                    src="https://tse4.mm.bing.net/th/id/OIP.lEWsl3OXBrhkX2E2VFA00gHaJQ?w=1600&h=2000&rs=1&pid=ImgDetMain&o=7&rm=3"
+                    src="/images/flat-lay-autumn-fig-salad-plate-with-walnuts.jpg"
                     alt="Healthy meal bowl"
                     fill
                     className="object-cover transition-transform duration-300 ease-in-out group-hover:brightness-75"
