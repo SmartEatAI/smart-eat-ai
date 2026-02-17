@@ -28,7 +28,7 @@ function ChatPage() {
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
-    const [messages, setMessages] = useState<Message[]>([
+    const defaultMessages: Message[] = [
         {
             role: "chef",
             time: "10:30 AM",
@@ -59,9 +59,40 @@ function ChatPage() {
                 }
             }
         }
-    ]);
+    ];
 
+    const [messages, setMessages] = useState<Message[]>(defaultMessages);
     const [isLoading, setIsLoading] = useState(false);
+
+    // Cargar mensajes desde localStorage si existen y no han pasado 24h
+    useEffect(() => {
+        const stored = localStorage.getItem("chatMessages");
+        const storedTimestamp = localStorage.getItem("chatMessagesTimestamp");
+        if (stored && storedTimestamp) {
+            const now = Date.now();
+            const timestamp = parseInt(storedTimestamp, 10);
+            const diffHours = (now - timestamp) / (1000 * 60 * 60);
+            if (diffHours < 24) {
+                try {
+                    setMessages(JSON.parse(stored));
+                } catch {
+                    setMessages(defaultMessages);
+                }
+            } else {
+                localStorage.removeItem("chatMessages");
+                localStorage.removeItem("chatMessagesTimestamp");
+                setMessages(defaultMessages);
+            }
+        }
+    }, []);
+
+    // Guardar mensajes y timestamp en localStorage cuando cambian
+    useEffect(() => {
+        if (messages.length > 0) {
+            localStorage.setItem("chatMessages", JSON.stringify(messages));
+            localStorage.setItem("chatMessagesTimestamp", Date.now().toString());
+        }
+    }, [messages]);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -78,7 +109,13 @@ function ChatPage() {
             }),
         };
 
-        setMessages((prev) => [...prev, userMessage]);
+        setMessages((prev) => {
+            const updated = [...prev, userMessage];
+            // Resetea el timestamp al enviar mensaje
+            localStorage.setItem("chatMessages", JSON.stringify(updated));
+            localStorage.setItem("chatMessagesTimestamp", Date.now().toString());
+            return updated;
+        });
         setIsLoading(true);
 
         try {
@@ -99,7 +136,13 @@ function ChatPage() {
                 }),
             };
 
-            setMessages((prev) => [...prev, assistantMessage]);
+            setMessages((prev) => {
+                const updated = [...prev, assistantMessage];
+                // Resetea el timestamp al recibir mensaje
+                localStorage.setItem("chatMessages", JSON.stringify(updated));
+                localStorage.setItem("chatMessagesTimestamp", Date.now().toString());
+                return updated;
+            });
         } catch (error) {
             console.error(error);
         } finally {
