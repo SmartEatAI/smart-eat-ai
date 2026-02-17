@@ -1,4 +1,4 @@
-type ButtonVariant = "primary" | "secondary";
+type ButtonVariant = "primary" | "secondary" | "day";
 
 interface ButtonProps {
     as?: React.ElementType;
@@ -21,6 +21,7 @@ const Button: React.FC<ButtonProps> = ({
         "bg-green-500 text-primary hover:bg-green-400 hover:shadow-[0_0_10px_2px_rgba(72,187,120,0.8)]",
         secondary:
         "text-primary hover:bg-green-400 hover:text-primary hover:shadow-[0_0_10px_2px_rgba(72,187,120,0.8)]",
+        day: "bg-surface-dark text-[#9db9ab] hover:bg-[#283930] hover:text-primary hover:shadow-[0_0_10px_2px_rgba(72,187,120,0.8)]",
     };
 
     return (
