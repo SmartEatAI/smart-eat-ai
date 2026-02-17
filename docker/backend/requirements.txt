@@ -6,11 +6,11 @@ python-dotenv
 # Database dependencies (PostgreSQL. Cambiar si se usa otra base de datos)
 sqlalchemy
 psycopg2-binary
+alembic # para migraciones de base de datos
 
 # Authentication dependencies
 passlib[bcrypt]
 PyJWT[crypto]
-bcrypt==4.0.1
 
 # ML/NLP dependencies (descomentar si se usan)
 # scikit-learn
