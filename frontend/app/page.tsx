@@ -98,12 +98,12 @@ export default function Home() {
           </div>
 
           {/* LADO DERECHO */}
-          <div className="relative w-full h-75 md:h-100">
+          <div className="relative w-full h-75 md:h-100 overflow-hidden rounded-xl group">
             <Image
-              src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c"
+              src="https://marmitafitnesssp.com.br/wp-content/uploads/2023/04/Refeicoes-Fitness-Sao-Paulo.jpg"
               alt="Healthy food"
               fill
-              className="object-cover rounded-xl"
+              className="object-cover rounded-xl transition-all duration-500 ease-in-out group-hover:scale-110 group-hover:brightness-75"
               priority
             />
           </div>
