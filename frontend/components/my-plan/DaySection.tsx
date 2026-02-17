@@ -1,6 +1,8 @@
+import { Mea_Culpa } from "next/font/google";
 import Button from "../ui/Button";
 import RecipeCard from "../ui/cards/recipe-card";
 import { RotateCw } from "lucide-react";
+import MealItem from "./MealItem";
 
 type Meal = {
   title: string;
@@ -28,12 +30,7 @@ export default function DaySection({ day }: { day: Day }) {
             key={i}
             className="flex-1 min-w-[220px] max-w-[350px]"
           >
-            <RecipeCard key={i} {...items} image={items.image || ""}>
-              <Button variant="primary" className="w-full flex items-center justify-center gap-2">
-                <RotateCw className="size-4" />
-                <span>Cambiar</span>
-              </Button>
-            </RecipeCard>
+            <MealItem meal={items} />
           </div>
         ))}
       </div>
