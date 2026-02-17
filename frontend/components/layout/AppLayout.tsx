@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import Sidebar from "./Sidebar";
 
 interface PageHeaderProps {
@@ -13,6 +13,14 @@ interface AppLayoutProps {
 }
 
 export function AppLayout({title, subtitle, children}: AppLayoutProps) {
+   useEffect(() => {
+    document.body.classList.add("overflow-hidden");
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, []);
+
+
   return (
     <div className="flex min-h-screen h-screen">
       <Sidebar className="h-full"/>

@@ -27,21 +27,25 @@ export default function ProfilePage() {
 
   return (
     <AppLayout
-      title="Configuración Nutricional"
+      title="⚙️ Configuración Nutricional"
       subtitle="Ayúdanos a calibrar tu Chef Personal Inteligente para obtener mejores resultados."
     >
-        <div className="grid lg:grid-cols-12 gap-8">
-          <div className="lg:col-span-8 flex flex-col gap-8">
-            <BiometricsSection
-              data={form}
-              onChange={updateField}
-            />
+      <div className="flex flex-col h-[80vh]">
+        {/* Zona de configuracion */}
+        <div className="flex-1 flex flex-col gap-4 p-4">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="lg:col-span-8 flex flex-col gap-8">
+              <BiometricsSection
+                data={form}
+                onChange={updateField}
+              />
 
-            <GoalSection
-              goal={form.goal}
-              setGoal={(g) => updateField("goal", g)}
-            />
-          </div>
+              <GoalSection
+                goal={form.goal}
+                setGoal={(g) => updateField("goal", g)}
+              />
+            </div>
+          
 
           <div className="lg:col-span-4 flex flex-col gap-8">
             <PreferencesSection
@@ -49,11 +53,14 @@ export default function ProfilePage() {
               setMeals={(n) => updateField("meals", n)}
             />
 
-            <Button onClick={saveProfile} className="w-full">
+            <Button onClick={saveProfile}>
               Guardar Perfil
             </Button>
           </div>
+          </div>
         </div>
+
+      </div>
     </AppLayout>
   );
 }
