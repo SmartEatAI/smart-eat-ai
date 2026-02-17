@@ -73,19 +73,18 @@ const AuthForm: React.FC = () => {
                 type: "success"
             });
 
-            if (mode === "login" && result.access_token) {
-                // Save token and user data
+            // Save token and user data (both endpoints now return the same structure)
+            if (result.access_token && result.user) {
                 localStorage.setItem("token", result.access_token);
                 localStorage.setItem("user", JSON.stringify(result.user));
-            } else if (mode === "register" && result.user) {
-                // Save user data from registration
-                localStorage.setItem("user", JSON.stringify(result.user));
+                
+                // Redirect to dashboard after a short delay
+                setTimeout(() => {
+                    router.push("/dashboard");
+                }, 1500);
+            } else {
+                throw new Error("Invalid response from server");
             }
-            
-            // Redirect to dashboard after a short delay
-            setTimeout(() => {
-                router.push("/dashboard");
-            }, 1500);
         } catch (error: any) {
             console.error("API Error:", error);
             setToast({

@@ -9,7 +9,7 @@ psycopg2-binary
 
 # Authentication dependencies
 passlib[bcrypt]
-python-jose[cryptography]
+PyJWT[crypto]
 bcrypt==4.0.1
 
 # ML/NLP dependencies (descomentar si se usan)

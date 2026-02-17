@@ -12,17 +12,43 @@ const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
     const [isChecking, setIsChecking] = useState(true);
 
     useEffect(() => {
-        // Check if user is already authenticated
-        const token = localStorage.getItem("token");
-        const user = localStorage.getItem("user");
+        const checkAuthentication = async () => {
+            const token = localStorage.getItem("token");
+            const user = localStorage.getItem("user");
 
-        if (token && user) {
-            // Already authenticated, redirect to dashboard
-            router.push("/dashboard");
-        } else {
-            // Not authenticated, allow access
-            setIsChecking(false);
-        }
+            if (!token || !user) {
+                // Not authenticated, allow access to public route
+                setIsChecking(false);
+                return;
+            }
+
+            try {
+                // Validate token with backend
+                const response = await fetch("http://localhost:8000/api/auth/me", {
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                    },
+                });
+
+                if (response.ok) {
+                    // Token is valid, user is authenticated, redirect to dashboard
+                    router.push("/dashboard");
+                } else {
+                    // Token is invalid, clean up and allow access to public route
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("user");
+                    setIsChecking(false);
+                }
+            } catch (error) {
+                console.error("Token validation error:", error);
+                // On error, clean up and allow access to public route
+                localStorage.removeItem("token");
+                localStorage.removeItem("user");
+                setIsChecking(false);
+            }
+        };
+
+        checkAuthentication();
     }, [router]);
 
     // Show loading state while checking authentication
