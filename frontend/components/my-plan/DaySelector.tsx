@@ -1,24 +1,34 @@
+import { useState } from "react";
+import Button from "../ui/Button";
+
 type Day = {
   name: string;
-  date: number;
 };
 
 export default function DaySelector({ days }: { days: Day[] }) {
+  const [selectedDay, setSelectedDay] = useState(days[0].name.toLowerCase());
+
+
   return (
-    <div className="flex overflow-x-auto gap-2 pb-2">
+    <div className="flex overflow-x-auto scrollbar-hide gap-2 py-8 justify-center">
       {days.map((day, i) => (
-        <button
-          key={day.date}
-          className={`min-w-[100px] p-3 rounded-xl flex flex-col items-center
-          ${
-            i === 0
-              ? "bg-primary text-black"
-              : "bg-surface-dark text-[#9db9ab]"
-          }`}
+        <a
+          key={i}
+          href={`#${day.name.toLowerCase()}`}
+          className="shrink-0"
+          onClick={() => setSelectedDay(day.name.toLowerCase())}
         >
-          <span className="text-xs uppercase">{day.name}</span>
-          <span className="text-lg font-bold">{day.date}</span>
-        </button>
+          <Button
+            variant="day"
+            className={`${
+              selectedDay === day.name.toLowerCase()
+                ? "bg-primary text-black"
+                : "bg-surface-dark text-[#9db9ab]"
+            }`}
+          >
+            <span className="text-xs uppercase">{day.name}</span>
+          </Button>
+        </a>
       ))}
     </div>
   );

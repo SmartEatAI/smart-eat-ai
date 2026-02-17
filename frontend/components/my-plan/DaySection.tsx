@@ -1,27 +1,40 @@
-import MealCard from "./MealCard";
+import Button from "../ui/Button";
+import RecipeCard from "../ui/cards/recipe-card";
+import { RotateCw } from "lucide-react";
 
 type Meal = {
   title: string;
-  kcal: number;
+  calories: number;
   description: string;
+  image?: string;
 };
 
 type Day = {
   name: string;
-  date: number;
   meals: Meal[];
 };
 
 export default function DaySection({ day }: { day: Day }) {
   return (
-    <section className="flex flex-col gap-4">
+    <section id={day.name.toLowerCase()} className="flex flex-col gap-4 px-6 scroll-mt-[20vh]">
       <h3 className="text-xl font-bold">
-        {day.name}, {day.date}
+        {day.name}
       </h3>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {day.meals.map((meal, i) => (
-          <MealCard key={i} meal={meal} />
+
+      <div className="flex flex-wrap gap-4 w-full">
+        {day.meals.map((items, i) => (
+          <div
+            key={i}
+            className="flex-1 min-w-[220px] max-w-[350px]"
+          >
+            <RecipeCard key={i} {...items} image={items.image || ""}>
+              <Button variant="primary" className="w-full flex items-center justify-center gap-2">
+                <RotateCw className="size-4" />
+                <span>Cambiar</span>
+              </Button>
+            </RecipeCard>
+          </div>
         ))}
       </div>
     </section>
