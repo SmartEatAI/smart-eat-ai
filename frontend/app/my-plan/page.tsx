@@ -9,170 +9,170 @@ import { Droplet, Dumbbell, Flame, Zap  } from "lucide-react";
 
 function MyPlanPage() {
   const stats = [
-    { title: "Promedio Calórico", value: "1950/2050", unit: "kcal", icon: <Flame /> },
-    { title: "Proteínas", value: "135/130", unit: "g", icon: <Dumbbell /> },
-    { title: "Carbohidratos", value: "210/250", unit: "g", icon: <Zap /> },
-    { title: "Grasas", value: "60/70", unit: "g", icon: <Droplet/> },
+    { title: "Average Calories", value: "1950/2050", unit: "kcal", icon: <Flame /> },
+    { title: "Proteins", value: "135/130", unit: "g", icon: <Dumbbell /> },
+    { title: "Carbohydrates", value: "210/250", unit: "g", icon: <Zap /> },
+    { title: "Fats", value: "60/70", unit: "g", icon: <Droplet/> },
   ];
 
   const weekData = [
     {
-      name: "Lunes",
+      name: "Monday",
       meals: [
         {
-          title: "Avena con frutos rojos",
+          title: "Oatmeal with berries",
           calories: 350,
-          description: "Avena con fresas y chía",
+          description: "Oatmeal with strawberries and chia",
         },
         {
-          title: "Bowl de quinoa",
+          title: "Quinoa bowl",
           calories: 480,
-          description: "Quinoa con garbanzos",
+          description: "Quinoa with chickpeas",
         },
         {
-          title: "Salmón al horno",
+          title: "Baked salmon",
           calories: 450,
-          description: "Salmón con espárragos",
+          description: "Salmon with asparagus",
         },
         {
-          title: "Salmón al horno",
+          title: "Baked salmon",
           calories: 450,
-          description: "Salmón con espárragos",
+          description: "Salmon with asparagus",
         },
       ],
     },
     {
-      name: "Martes",
+      name: "Tuesday",
       meals: [
         {
-          title: "Tostadas de aguacate",
+          title: "Avocado toast",
           calories: 410,
-          description: "Pan integral con aguacate",
+          description: "Whole wheat bread with avocado",
         },
         {
-          title: "Ensalada César",
+          title: "Caesar salad",
           calories: 520,
-          description: "Pollo con lechuga",
+          description: "Chicken with lettuce",
         },
         {
-          title: "Crema de calabaza",
+          title: "Pumpkin cream",
           calories: 350,
-          description: "Calabaza con coco",
+          description: "Pumpkin with coconut",
         },{
-          title: "Crema de calabaza",
+          title: "Pumpkin cream",
           calories: 350,
-          description: "Calabaza con coco",
+          description: "Pumpkin with coconut",
         },{
-          title: "Crema de calabaza",
+          title: "Pumpkin cream",
           calories: 350,
-          description: "Calabaza con coco",
+          description: "Pumpkin with coconut",
         },
       ],
     },{
-      name: "Miércoles",
+      name: "Wednesday",
       meals: [
         {
-          title: "Tostadas de aguacate",
+          title: "Avocado toast",
           calories: 410,
-          description: "Pan integral con aguacate",
+          description: "Whole wheat bread with avocado",
         },
         {
-          title: "Ensalada César",
+          title: "Caesar salad",
           calories: 520,
-          description: "Pollo con lechuga",
+          description: "Chicken with lettuce",
         },
         {
-          title: "Crema de calabaza",
+          title: "Pumpkin cream",
           calories: 350,
-          description: "Calabaza con coco",
+          description: "Pumpkin with coconut",
         },
       ],
     },{
-      name: "Jueves",
+      name: "Thursday",
       meals: [
         {
-          title: "Tostadas de aguacate",
+          title: "Avocado toast",
           calories: 410,
-          description: "Pan integral con aguacate",
+          description: "Whole wheat bread with avocado",
         },
         {
-          title: "Ensalada César",
+          title: "Caesar salad",
           calories: 520,
-          description: "Pollo con lechuga",
+          description: "Chicken with lettuce",
         },
         {
-          title: "Crema de calabaza",
+          title: "Pumpkin cream",
           calories: 350,
-          description: "Calabaza con coco",
+          description: "Pumpkin with coconut",
         },{
-          title: "Crema de calabaza",
+          title: "Pumpkin cream",
           calories: 350,
-          description: "Calabaza con coco",
+          description: "Pumpkin with coconut",
         },{
-          title: "Crema de calabaza",
+          title: "Pumpkin cream",
           calories: 350,
-          description: "Calabaza con coco",
+          description: "Pumpkin with coconut",
         },{
-          title: "Crema de calabaza",
+          title: "Pumpkin cream",
           calories: 350,
-          description: "Calabaza con coco",
+          description: "Pumpkin with coconut",
         },
       ],
     },{
-      name: "Viernes",
+      name: "Friday",
       meals: [
         {
-          title: "Tostadas de aguacate",
+          title: "Avocado toast",
           calories: 410,
-          description: "Pan integral con aguacate",
+          description: "Whole wheat bread with avocado",
         },
         {
-          title: "Ensalada César",
+          title: "Caesar salad",
           calories: 520,
-          description: "Pollo con lechuga",
+          description: "Chicken with lettuce",
         },
         {
-          title: "Crema de calabaza",
+          title: "Pumpkin cream",
           calories: 350,
-          description: "Calabaza con coco",
+          description: "Pumpkin with coconut",
         },
       ],
     },{
-      name: "Sabado",
+      name: "Saturday",
       meals: [
         {
-          title: "Tostadas de aguacate",
+          title: "Avocado toast",
           calories: 410,
-          description: "Pan integral con aguacate",
+          description: "Whole wheat bread with avocado",
         },
         {
-          title: "Ensalada César",
+          title: "Caesar salad",
           calories: 520,
-          description: "Pollo con lechuga",
+          description: "Chicken with lettuce",
         },
         {
-          title: "Crema de calabaza",
+          title: "Pumpkin cream",
           calories: 350,
-          description: "Calabaza con coco",
+          description: "Pumpkin with coconut",
         },
       ],
     },{
-      name: "Domingo",
+      name: "Sunday",
       meals: [
         {
-          title: "Tostadas de aguacate",
+          title: "Avocado toast",
           calories: 410,
-          description: "Pan integral con aguacate",
+          description: "Whole wheat bread with avocado",
         },
         {
-          title: "Ensalada César",
+          title: "Caesar salad",
           calories: 520,
-          description: "Pollo con lechuga",
+          description: "Chicken with lettuce",
         },
         {
-          title: "Crema de calabaza",
+          title: "Pumpkin cream",
           calories: 350,
-          description: "Calabaza con coco",
+          description: "Pumpkin with coconut",
         },
       ],
     },
@@ -181,8 +181,8 @@ function MyPlanPage() {
 
   return (
     <AppLayout
-      title="Mi Plan Nutricional"
-      subtitle="Tu plan personalizado"
+      title="My Nutrition Plan"
+      subtitle="Your personalized plan"
     >
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

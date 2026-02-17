@@ -32,29 +32,29 @@ function ChatPage() {
         {
             role: "chef",
             time: "10:30 AM",
-            text: "¡Hola! He analizado tu plan actual. ¿Cómo te sientes hoy o qué te gustaría ajustar en tu dieta?",
+            text: "Hello! I've analyzed your current plan. How are you feeling today or what would you like to adjust in your diet?",
         },
         {
             role: "user",
             time: "10:31 AM",
-            text: "Quiero menos carbohidratos por la noche.",
+            text: "I want fewer carbs at night.",
         },
         {
             role: "chef",
             time: "10:32 AM",
-            text: "Entiendo. Te recomendaré una cena con menos carbohidratos.",
+            text: "Understood. I'll recommend a dinner with fewer carbohydrates.",
         },
         {
             role: "chef",
             time: "10:33 AM",
-            text: "Sustitución de Cena",
+            text: "Dinner Substitution",
             sustitution: {
                 original: {
-                    name: "Pasta Alfredo",
+                    name: "Alfredo Pasta",
                     info: "850 kcal - 90g Carbs",
                 },
                 alternative: {
-                    name: "Ensalada de Pollo",
+                    name: "Chicken Salad",
                     info: "450 kcal - 20g Carbs",
                 }
             }
@@ -152,7 +152,7 @@ function ChatPage() {
 
     return (
         <AppLayout
-            title="🤖 Asistente Nutricional Inteligente"
+            title="🤖 Intelligent Nutrition Assistant"
         >
             <div className="flex flex-col h-[80vh]">
                 {/* Zona de mensajes */}
@@ -169,11 +169,11 @@ function ChatPage() {
                             {msg.sustitution && (
                                 <ProposalCard
                                     image="https://lh3.googleusercontent.com/aida-public/AB6AXuBqC_uQaB_fCsD_B-BhOvy8WfnUufREXINi5-vsMZVx4xYpICl_DIRq61843DMZRXmux9ewS5ABOqCCmQkuHaWEl_JqndFWcrFv_YRlP_NBfTlpXjG5STtMS7sc-YIMcsk9X9M_DOUakZzbIBvHBzxxv3rG9NZjlq9KRryQrOQB1ssZNPlP_GFUZCy32l0P7fs40R2YIj6wLpJeP-AGlRH7txJGqWfZNV30MSqZodnTJIxR5d1KmwOuHE1q-BLTyRgHcCNFEK42EUAP"
-                                    badge="Sugerencia"
+                                    badge="Suggestion"
                                     title={msg.text}
                                     description={`${msg.sustitution.original.name} (${msg.sustitution.original.info}) -> ${msg.sustitution.alternative.name} (${msg.sustitution.alternative.info})`}
-                                    onConfirm={() => console.log("Propuesta confirmada")}
-                                    onCancel={() => console.log("Propuesta cancelada")}
+                                    onConfirm={() => console.log("Suggestion confirmed")}
+                                    onCancel={() => console.log("Suggestion cancelled")}
                                 />
                             )}
                         </Fragment>

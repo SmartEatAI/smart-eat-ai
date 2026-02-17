@@ -5,14 +5,14 @@ type Props = {
 
 export default function BiometricsSection({ data, onChange }: Props) {
   const inputs = [
-    { label: "Edad", field: "age", unit: "años" },
-    { label: "Peso", field: "weight", unit: "kg" },
-    { label: "Altura", field: "height", unit: "cm" },
+    { label: "Age", field: "age", unit: "years" },
+    { label: "Weight", field: "weight", unit: "kg" },
+    { label: "Height", field: "height", unit: "cm" },
   ];
 
   return (
     <section className="bg-[#15201b] border border-surface-border rounded-xl p-6">
-      <h2 className="text-xl font-bold mb-6">Datos Corporales</h2>
+      <h2 className="text-xl font-bold mb-6">Body Data</h2>
 
       <div className="grid md:grid-cols-3 gap-6">
         {inputs.map((input) => (

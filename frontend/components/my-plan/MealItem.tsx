@@ -25,39 +25,39 @@ export default function MealItem({ meal }: { meal: Meal }) {
       // Simulación de delay y datos de vuelta
       await new Promise(resolve => setTimeout(resolve, 1500));
       const mockNewMeal = {
-        title: "Nueva Receta Sugerida",
+        title: "New Suggested Recipe",
         calories: 450,
-        description: "Una alternativa saludable basada en tus gustos.",
+        description: "A healthy alternative based on your preferences.",
         image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c"
       };
 
       setProposal(mockNewMeal);
     } catch (error) {
-      console.error("Error al cambiar la receta", error);
+      console.error("Error changing recipe", error);
     } finally {
       setLoading(false);
     }
   };
 
-  // Si hay una propuesta, mostramos la ProposalCard
+  // If there is a proposal, show the ProposalCard
   if (proposal) {
     return (
       <ProposalCard
         image={proposal.image || ""}
-        badge="Sugerencia Nueva"
+        badge="New Suggestion"
         title={proposal.title}
         description={proposal.description}
         onConfirm={() => {
-          // Aquí lógica para guardar en DB
-          console.log("Confirmado");
-          // Podrías actualizar el estado global o simplemente limpiar la propuesta si ya se guardó
+          // Logic to save in DB
+          console.log("Confirmed");
+          // You could update global state or simply clear the proposal if already saved
         }}
-        onCancel={() => setProposal(null)} // Volver a la original
+        onCancel={() => setProposal(null)} // Return to original
       />
     );
   }
 
-  // Si no hay propuesta, mostramos la RecipeCard original
+  // If there is no proposal, show the original RecipeCard
   return (
     <RecipeCard {...meal} image={meal.image || ""}>
       <Button 
@@ -71,7 +71,7 @@ export default function MealItem({ meal }: { meal: Meal }) {
         ) : (
           <RotateCw className="size-4" />
         )}
-        <span>{loading ? "Buscando..." : "Cambiar"}</span>
+        <span>{loading ? "Searching..." : "Change"}</span>
       </Button>
     </RecipeCard>
   );

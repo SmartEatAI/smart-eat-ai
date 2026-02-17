@@ -28,8 +28,8 @@ function ProfilePage() {
 
   return (
     <AppLayout
-      title="⚙️ Configuración Nutricional"
-      subtitle="Ayúdanos a calibrar tu Chef Personal Inteligente para obtener mejores resultados."
+      title="⚙️ Nutrition Settings"
+      subtitle="Help us calibrate your Intelligent Personal Chef for better results."
     >
       <div className="flex flex-col h-[80vh]">
         {/* Zona de configuracion */}
@@ -55,7 +55,7 @@ function ProfilePage() {
             />
 
             <Button onClick={saveProfile}>
-              Guardar Perfil
+              Save Profile
             </Button>
           </div>
           </div>

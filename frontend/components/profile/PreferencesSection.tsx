@@ -15,7 +15,7 @@ export default function PreferencesSection({ meals, setMeals }: Props) {
   const [allergies, setAllergies] = useState<string[]>(["Gluten"]);
   const [inputValue, setInputValue] = useState("");
 
-  const dietOptions = ["Omnívoro", "Vegano", "Keto", "Paleo", "Vegetariano"];
+  const dietOptions = ["Omnivore", "Vegan", "Keto", "Paleo", "Vegetarian"];
 
   const toggleDiet = (diet: string) => {
     setDiets((prev) =>
@@ -38,11 +38,11 @@ export default function PreferencesSection({ meals, setMeals }: Props) {
 
   return (
     <section className="bg-[#15201b] border border-surface-border rounded-xl p-6 flex flex-col gap-6">
-      <h2 className="text-xl font-bold mb-4">Preferencias</h2>
+      <h2 className="text-xl font-bold mb-4">Preferences</h2>
 
       {/* Comidas por día */}
       <div>
-        <p className="text-text-secondary text-sm mb-3">Comidas por día</p>
+        <p className="text-text-secondary text-sm mb-3">Meals per day</p>
         <div className="flex flex-wrap gap-2">
           {options.map((n) => (
             <button
@@ -60,10 +60,10 @@ export default function PreferencesSection({ meals, setMeals }: Props) {
         </div>
       </div>
 
-      {/* Estilo de alimentación */}
+      {/* Eating style */}
       <div className="flex flex-col gap-2">
         <span className="text-text-secondary text-sm font-medium">
-          Estilo de Alimentación
+          Eating Style
         </span>
         <div className="flex flex-wrap gap-2">
           {dietOptions.map((diet) => (
@@ -82,10 +82,10 @@ export default function PreferencesSection({ meals, setMeals }: Props) {
         </div>
       </div>
 
-      {/* Alergias e intolerancias */}
+      {/* Allergies and intolerances */}
       <div className="flex flex-col gap-2">
         <span className="text-text-secondary text-sm font-medium">
-          Alergias e Intolerancias
+          Allergies and Intolerances
         </span>
         <div className="bg-surface-dark border border-surface-border rounded-lg p-2 flex flex-wrap gap-2 items-center focus-within:ring-1 focus-within:ring-primary focus-within:border-primary transition-all min-h-[48px]">
           {allergies.map((allergy) => (
@@ -108,14 +108,14 @@ export default function PreferencesSection({ meals, setMeals }: Props) {
           <input
             type="text"
             className="bg-transparent border-none text-white text-sm focus:ring-0 placeholder:text-surface-border min-w-[100px] p-1 flex-grow"
-            placeholder="Añadir..."
+            placeholder="Add..."
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={addAllergy}
           />
         </div>
         <p className="text-xs text-text-secondary">
-          Escribe y presiona enter para añadir.
+          Type and press enter to add.
         </p>
       </div>
     </section>

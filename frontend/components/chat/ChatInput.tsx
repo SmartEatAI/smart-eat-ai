@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, KeyboardEvent } from "react";
-import Button from "@/components/ui/button";
+import Button from "@/components/ui/Button";
 
 interface ChatInputProps {
   onSendMessage: (message: string) => Promise<void> | void;
@@ -34,7 +34,7 @@ export default function ChatInput({
       <div className="mx-auto max-w-4xl">
         <div className="flex items-end gap-2 rounded-2xl border bg-card px-3 py-2 shadow-sm">
           <textarea
-            placeholder="Escribe tu mensaje..."
+            placeholder="Type your message..."
             rows={1}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
@@ -50,7 +50,7 @@ export default function ChatInput({
             disabled={isLoading || !message.trim()}
             className="rounded-xl px-4 py-2 text-sm font-medium"
           >
-            {isLoading ? "Enviando..." : "Enviar"}
+            {isLoading ? "Sending..." : "Send"}
           </Button>
         </div>
       </div>
