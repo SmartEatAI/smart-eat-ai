@@ -7,9 +7,9 @@ type Props = {
 
 export default function GoalSection({ goal, setGoal }: Props) {
   const goals = [
-    { id: "lose", label: "Perder Grasa" },
-    { id: "maintain", label: "Mantener" },
-    { id: "gain", label: "Ganar Músculo" },
+    { id: "lose", label: "Lose Fat" },
+    { id: "maintain", label: "Maintain" },
+    { id: "gain", label: "Gain Muscle" },
   ];
 
   const [activityLevel, setActivityLevel] = useState(3);
@@ -17,15 +17,15 @@ export default function GoalSection({ goal, setGoal }: Props) {
   const getLevelLabel = (value: number) => {
     switch (value) {
       case 1:
-        return "Sedentario";
+        return "Sedentary";
       case 2:
-        return "Ligero";
+        return "Light";
       case 3:
-        return "Moderado";
+        return "Moderate";
       case 4:
-        return "Activo";
+        return "Active";
       case 5:
-        return "Atleta";
+        return "Athlete";
       default:
         return "";
     }
@@ -33,7 +33,7 @@ export default function GoalSection({ goal, setGoal }: Props) {
 
   return (
     <section className="bg-[#15201b] border border-surface-border rounded-xl p-6">
-      <h2 className="text-xl font-bold mb-6">Objetivo Principal</h2>
+      <h2 className="text-xl font-bold mb-6">Main Goal</h2>
 
       <div className="grid md:grid-cols-3 gap-4 mb-6">
         {goals.map((g) => (
@@ -53,7 +53,7 @@ export default function GoalSection({ goal, setGoal }: Props) {
 
       <div className="pt-6 border-t border-surface-border/50">
         <div className="flex justify-between items-end mb-4">
-          <label className="text-white font-medium">Nivel de Actividad</label>
+          <label className="text-white font-medium">Activity Level</label>
           <span className="text-primary text-sm font-bold bg-primary/10 px-3 py-1 rounded-full">
             {getLevelLabel(activityLevel)}
           </span>

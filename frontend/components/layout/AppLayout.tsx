@@ -13,7 +13,7 @@ interface AppLayoutProps {
 }
 
 export function AppLayout({title, subtitle, children}: AppLayoutProps) {
-   useEffect(() => {
+  useEffect(() => {
     document.body.classList.add("overflow-hidden");
     return () => {
       document.body.classList.remove("overflow-hidden");

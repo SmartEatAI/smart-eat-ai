@@ -1,14 +1,14 @@
 "use client";
 
 import { AppLayout } from "@/components/layout/AppLayout";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import { useState } from "react";
-import Sidebar from "@/components/layout/Sidebar";
 import BiometricsSection from "@/components/profile/BiometricsSection";
 import GoalSection from "@/components/profile/GoalSection";
 import PreferencesSection from "@/components/profile/PreferencesSection";
 import Button from "@/components/ui/Button";
 
-export default function ProfilePage() {
+function ProfilePage() {
   const [form, setForm] = useState({
     age: 30,
     weight: 75,
@@ -25,10 +25,11 @@ export default function ProfilePage() {
     console.log("Perfil guardado:", form);
   };
 
+
   return (
     <AppLayout
-      title="⚙️ Configuración Nutricional"
-      subtitle="Ayúdanos a calibrar tu Chef Personal Inteligente para obtener mejores resultados."
+      title="⚙️ Nutrition Settings"
+      subtitle="Help us calibrate your Intelligent Personal Chef for better results."
     >
       <div className="flex flex-col h-[80vh]">
         {/* Zona de configuracion */}
@@ -54,7 +55,7 @@ export default function ProfilePage() {
             />
 
             <Button onClick={saveProfile}>
-              Guardar Perfil
+              Save Profile
             </Button>
           </div>
           </div>
@@ -62,5 +63,13 @@ export default function ProfilePage() {
 
       </div>
     </AppLayout>
+  );
+}
+
+export default function ProfilePageWrapper() {
+  return (
+    <ProtectedRoute>
+      <ProfilePage />
+    </ProtectedRoute>
   );
 }

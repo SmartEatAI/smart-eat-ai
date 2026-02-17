@@ -1,5 +1,5 @@
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import Button from "@/components/ui/button";
+import Button from "@/components/ui/Button";
 
 interface ProposalCardProps {
     image: string;
@@ -17,8 +17,8 @@ export default function ProposalCard({
     badge,
     title,
     description,
-    confirmText = "Confirmar",
-    cancelText = "Cancelar",
+    confirmText = "Confirm",
+    cancelText = "Cancel",
     onConfirm,
     onCancel,
 }: ProposalCardProps) {

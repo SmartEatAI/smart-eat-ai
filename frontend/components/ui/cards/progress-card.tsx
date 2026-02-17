@@ -8,12 +8,12 @@ const ProgressCard: React.FC = () => {
             <CardContent className="p-6 h-full flex flex-col">
                 <div className="flex items-start justify-between mb-6">
                     <div>
-                        <h2 className="text-lg font-semibold text-primary">Tendencia</h2>
-                        <h3 className="text-lg font-semibold text-primary">Semanal</h3>
+                        <h2 className="text-lg font-semibold text-primary">Weekly</h2>
+                        <h3 className="text-lg font-semibold text-primary">Trend</h3>
                     </div>
                     <div className="text-right">
                         <span className="text-primary text-sm font-semibold">+2% vs</span>
-                        <div className="text-primary text-sm">media</div>
+                        <div className="text-primary text-sm">average</div>
                     </div>
                 </div>
 

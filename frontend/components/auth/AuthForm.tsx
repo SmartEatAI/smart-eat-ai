@@ -10,15 +10,22 @@ import { FaApple } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 
 import Button from "@/components/ui/Button";
+import Toast from "@/components/ui/Toast";
 import { loginSchema, registerSchema } from "@/schemas/auth.schema";
 
 import "@/app/globals.css";
 
 type AuthMode = "login" | "register";
 
+interface ToastState {
+    message: string;
+    type: "success" | "error";
+}
+
 const AuthForm: React.FC = () => {
     const [mode, setMode] = useState<AuthMode>("register");
     const [showPassword, setShowPassword] = useState(false);
+    const [toast, setToast] = useState<ToastState | null>(null);
 
     interface LoginFormData {
         email: string;
@@ -41,31 +48,49 @@ const AuthForm: React.FC = () => {
 
     const router = useRouter();
 
-    // LLAMADA SIMULADA A LA API
+    // LLAMADA REAL A LA API
     const onSubmit = async (data: FormData) => {
-        console.log(mode, data);
-
         try {
-            const response: any = await new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    if (data.email === "test@example.com" && data.password === "Password123") {
-                        resolve({ success: true, message: "Login successful!" });
-                    } else {
-                        reject({ success: false, message: "Invalid credentials." });
-                    }
-                }, 1000);
+            const endpoint = mode === "login" ? "/api/auth/login" : "/api/auth/register";
+            const response = await fetch(`http://localhost:8000${endpoint}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
             });
 
-            if (response && response.message) {
-                console.log("API Response:", response);
-                alert(response.message);
-                router.push("/"); // Redirigir al dashboard o página principal después del login/registro exitoso
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.detail || "An error occurred");
+            }
+
+            const result = await response.json();
+            
+            // Show success toast
+            setToast({
+                message: mode === "login" ? "Welcome back!" : "Account created successfully!",
+                type: "success"
+            });
+
+            // Save token and user data (both endpoints now return the same structure)
+            if (result.access_token && result.user) {
+                localStorage.setItem("token", result.access_token);
+                localStorage.setItem("user", JSON.stringify(result.user));
+                
+                // Redirect to dashboard after a short delay
+                setTimeout(() => {
+                    router.push("/dashboard");
+                }, 1500);
             } else {
-                throw new Error("Unexpected response format.");
+                throw new Error("Invalid response from server");
             }
         } catch (error: any) {
             console.error("API Error:", error);
-            alert(error?.message || "An unexpected error occurred.");
+            setToast({
+                message: error.message || "An unexpected error occurred.",
+                type: "error"
+            });
         }
     };
 
@@ -235,12 +260,21 @@ const AuthForm: React.FC = () => {
             {/* Right Side - Image & Testimonial */}
             <div className="hidden lg:flex lg:w-1/2 relative group">
                 <Image
-                    src="https://tse4.mm.bing.net/th/id/OIP.lEWsl3OXBrhkX2E2VFA00gHaJQ?w=1600&h=2000&rs=1&pid=ImgDetMain&o=7&rm=3"
+                    src="/images/flat-lay-autumn-fig-salad-plate-with-walnuts.jpg"
                     alt="Healthy meal bowl"
                     fill
                     className="object-cover transition-transform duration-300 ease-in-out group-hover:brightness-75"
                 />
             </div>
+
+            {/* Toast Notification */}
+            {toast && (
+                <Toast
+                    message={toast.message}
+                    type={toast.type}
+                    onClose={() => setToast(null)}
+                />
+            )}
         </div>
     );
 }

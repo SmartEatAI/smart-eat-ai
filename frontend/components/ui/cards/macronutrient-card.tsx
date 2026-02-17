@@ -26,7 +26,7 @@ const MacronutrientCard: React.FC<MacronutrientCardProps> = ({
             <CardContent className="p-6 h-full flex flex-col">
                 <div className="flex flex-col items-center mb-6">
                     <h2 className="text-xl font-semibold text-primary flex items-center gap-2">
-                        Calorías y Macros
+                        Calories & Macros
                     </h2>
                 </div>
 
@@ -60,9 +60,9 @@ const MacronutrientCard: React.FC<MacronutrientCardProps> = ({
                                 />
                             </svg>
                             <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                <p className="text-xs text-muted-foreground uppercase tracking-wider">Restantes</p>
+                                <p className="text-xs text-muted-foreground uppercase tracking-wider">Remaining</p>
                                 <p className="text-4xl font-bold text-primary">{caloriesRemaining}</p>
-                                <p className="text-xs text-muted-foreground">de {calories.goal} kcal</p>
+                                <p className="text-xs text-muted-foreground">of {calories.goal} kcal</p>
                             </div>
                         </div>
                     </div>
@@ -74,7 +74,7 @@ const MacronutrientCard: React.FC<MacronutrientCardProps> = ({
                             <div className="flex items-center justify-between mb-2">
                                 <div className="flex items-center gap-2">
                                     <div className="w-3 h-3 rounded-full bg-chart-1"></div>
-                                    <span className="text-sm font-medium text-primary">Proteína</span>
+                                    <span className="text-sm font-medium text-primary">Protein</span>
                                 </div>
                                 <span className="text-sm text-muted-foreground">
                                     {protein.current}g / {protein.goal}g
@@ -93,7 +93,7 @@ const MacronutrientCard: React.FC<MacronutrientCardProps> = ({
                             <div className="flex items-center justify-between mb-2">
                                 <div className="flex items-center gap-2">
                                     <div className="w-3 h-3 rounded-full bg-chart-2"></div>
-                                    <span className="text-sm font-medium text-primary">Carbohidratos</span>
+                                    <span className="text-sm font-medium text-primary">Carbs</span>
                                 </div>
                                 <span className="text-sm text-muted-foreground">
                                     {carbs.current}g / {carbs.goal}g
@@ -112,7 +112,7 @@ const MacronutrientCard: React.FC<MacronutrientCardProps> = ({
                             <div className="flex items-center justify-between mb-2">
                                 <div className="flex items-center gap-2">
                                     <div className="w-3 h-3 rounded-full bg-chart-3"></div>
-                                    <span className="text-sm font-medium text-primary">Grasas</span>
+                                    <span className="text-sm font-medium text-primary">Fats</span>
                                 </div>
                                 <span className="text-sm text-muted-foreground">
                                     {fats.current}g / {fats.goal}g

@@ -28,7 +28,7 @@ export default function MessageBubble({
                     }`}
             >
                 <span className="text-gray-500 dark:text-[#9db9a6] text-[11px] font-medium">
-                    {isUser ? "Tú" : "Chef Inteligente"} • {time}
+                    {isUser ? "You" : "Intelligent Chef"} • {time}
                 </span>
 
                 <div

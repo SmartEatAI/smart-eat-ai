@@ -8,6 +8,8 @@ services:
       - "8000:8000"
     volumes:
       - ./backend:/app
+    env_file:
+      - .env
     depends_on:
       - db
 
@@ -30,13 +32,23 @@ services:
     image: postgres:15 # cambiar si se usa otra base de datos
     container_name: smarteatai_db
     environment:
-      POSTGRES_USER: smarteatai
-      POSTGRES_PASSWORD: smarteatai
-      POSTGRES_DB: smarteatai
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  adminer: # Herramienta de administración de bases de datos (navegador)
+    image: adminer
+    container_name: smarteatai_adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      ADMINER_DEFAULT_SERVER: db
 
 volumes:
   postgres_data:

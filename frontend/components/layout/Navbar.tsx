@@ -32,8 +32,8 @@ const Navbar: React.FC = () => {
 
             {/* Buttons */}
             <div className="flex gap-3">
-                <Button variant="secondary">Log in</Button>
-                <Button variant="primary">Sign up</Button>
+                <Button variant="secondary" as="a" href="/auth">Log in</Button>
+                <Button variant="primary" as="a" href="/auth">Sign up</Button>
             </div>
         </div>
     </nav>
