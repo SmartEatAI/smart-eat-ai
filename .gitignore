@@ -56,3 +56,4 @@ htmlcov/
 
 # Node modules (if using npm/yarn)
 node_modules/
+.env.example

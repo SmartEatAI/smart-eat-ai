@@ -1,11 +1,16 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, TIMESTAMP
+from sqlalchemy.orm import relationship
 from app.database import Base
 
-
-class User(Base):
-    __tablename__ = "users"
-
+class Usuario(Base):
+    __tablename__ = "usuario"
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, nullable=False)
-    email = Column(String, unique=True, nullable=False)
-    hashed_password = Column(String, nullable=False)
+    nombre = Column(String)
+    correo = Column(String, unique=True, index=True)
+    contrasena = Column(String)
+    fecha_registro = Column(TIMESTAMP)
+    fecha_actualizacion = Column(TIMESTAMP)
+    url_foto_perfil = Column(String)
+
+    perfil = relationship("Perfil", back_populates="usuario", uselist=False)
+    planes = relationship("Plan", back_populates="usuario")
