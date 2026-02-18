@@ -22,4 +22,4 @@ class Perfil(Base):
     usuario = relationship("Usuario", back_populates="perfil")
     gustos = relationship("PerfilGusto", back_populates="perfil")
     restricciones = relationship("PerfilRestriccion", back_populates="perfil")
-    sitios_alimentacion = relationship("PerfilSitioAlimentacion", back_populates="perfil")
+    estilos_alimentacion = relationship("PerfilEstiloAlimentacion", back_populates="perfil")

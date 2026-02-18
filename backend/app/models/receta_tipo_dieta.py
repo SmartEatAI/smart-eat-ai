@@ -6,6 +6,6 @@ class RecetaTipoDieta(Base):
     __tablename__ = "receta_tipo_dieta"
     id = Column(Integer, primary_key=True, index=True)
     receta_id = Column(Integer, ForeignKey("receta.id"))
-    nombre = Column(Enum("keto", "vegana", "vegetariana", "normal", name="tipo_dieta_enum"))
+    nombre = Column(Enum("alta_en_proteina", "baja_en_carbohidratos", "vegana", "vegetariana", "baja_en_calorias", "alta_en_fibra", "alta_en_carbohidratos", name="tipo_dieta_enum"))
 
     receta = relationship("Receta", back_populates="tipos_dieta")
