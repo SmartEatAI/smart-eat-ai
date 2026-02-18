@@ -58,3 +58,4 @@ htmlcov/
 node_modules/
 .env.example
 /backend/app/__pycache__
+*.pyc
