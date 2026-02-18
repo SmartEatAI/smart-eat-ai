@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.models.user import User
+from backend.app.models.usuario import Usuario
 from app.schemas.user import UserCreate, UserLogin
 from app.core.security import hash_password, verify_password, create_access_token
 from fastapi import HTTPException, status
@@ -12,7 +12,7 @@ class AuthService:
     def register_user(db: Session, user_data: UserCreate) -> dict:
         """Register a new user."""
         # Check if user already exists
-        existing_user = db.query(User).filter(User.email == user_data.email.lower()).first()
+        existing_user = db.query(Usuario).filter(Usuario.email == user_data.email.lower()).first()
         if existing_user:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
@@ -21,7 +21,7 @@ class AuthService:
         
         # Create new user
         hashed_password = hash_password(user_data.password)
-        db_user = User(
+        db_user = Usuario(
             name=user_data.name,
             email=user_data.email.lower(),
             hashed_password=hashed_password
@@ -43,7 +43,7 @@ class AuthService:
     @staticmethod
     def authenticate_user(db: Session, user_data: UserLogin) -> dict:
         """Authenticate user and return access token."""
-        user = db.query(User).filter(User.email == user_data.email.lower()).first()
+        user = db.query(Usuario).filter(Usuario.email == user_data.email.lower()).first()
         
         if not user or not verify_password(user_data.password, user.hashed_password):
             raise HTTPException(
@@ -61,9 +61,9 @@ class AuthService:
         }
     
     @staticmethod
-    def get_user_by_email(db: Session, email: str) -> User:
+    def get_user_by_email(db: Session, email: str) -> Usuario:
         """Get user by email."""
-        user = db.query(User).filter(User.email == email).first()
+        user = db.query(Usuario).filter(Usuario.email == email).first()
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,

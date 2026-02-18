@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.realpath(os.path.join(os.path.dirname(__file__), '..'
 
 from app.database import Base
 from app.config import settings
-from app.models.user import User  # Import all models here
+from backend.app.models import *  # Import all models here
 
 # this is the Alembic Config object
 config = context.config
