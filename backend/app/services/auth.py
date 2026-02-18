@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from backend.app.models.usuario import Usuario
+from app.models.usuario import Usuario
 from app.schemas.user import UserCreate, UserLogin
 from app.core.security import hash_password, verify_password, create_access_token
 from fastapi import HTTPException, status

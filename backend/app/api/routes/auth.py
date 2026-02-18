@@ -4,7 +4,7 @@ from app.database import get_db
 from app.schemas.user import UserCreate, UserLogin, UserResponse, Token
 from app.services.auth import AuthService
 from app.api.deps import get_current_user
-from backend.app.models.usuario import Usuario
+from app.models.usuario import Usuario
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
