@@ -16,6 +16,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Button from "@/components/ui/Button";
 import { Check } from "lucide-react";
+import type { User } from "@/types/user";
 
 const mockMacronutrients = {
     calories: { current: 800, goal: 2100 },
@@ -125,7 +126,7 @@ const meals: Meal[] = [
 export default function Dashboard() {
     const [macronutrients, setMacronutrients] = useState(mockMacronutrients);
     const [recipes] = useState(mockRecipes);
-    const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+    const [user, setUser] = useState<User | null>(null);
     const [mealList, setMealList] = useState(meals);
 
     // Load user data from localStorage
@@ -137,10 +138,8 @@ export default function Dashboard() {
                 setUser(parsedUser);
             } catch (error) {
                 console.error("Error parsing user data:", error);
-                setUser({ name: "Guest", email: "" });
+                setUser(null);
             }
-        } else {
-            setUser({ name: "Guest", email: "" });
         }
     }, []);
 
@@ -219,7 +218,7 @@ export default function Dashboard() {
                 <div className="flex items-center justify-between mb-6">
                     <h1 className="text-2xl font-bold text-primary">📊 Dashboard</h1>
                     <p className="text-lg text-muted-foreground">
-                        Hello, <span className="font-semibold text-primary">{user?.name || "Guest"}</span> 👋
+                        Hello, <span className="font-semibold text-primary">{user?.nombre || "Guest"}</span> 👋
                     </p>
                 </div>
 

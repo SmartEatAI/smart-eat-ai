@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import Button from "@/components/ui/Button";
 import Toast from "@/components/ui/Toast";
 import { loginSchema, registerSchema } from "@/schemas/auth.schema";
+import type { AuthResponse } from "@/types/user";
 
 import "@/app/globals.css";
 
@@ -86,7 +87,7 @@ const AuthForm: React.FC = () => {
                 throw new Error(errorData.detail || "An error occurred");
             }
 
-            const result = await response.json();
+            const result: AuthResponse = await response.json();
             
             // Show success toast
             setToast({
