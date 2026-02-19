@@ -25,15 +25,17 @@ class Perfil(Base):
     nivel_actividad = Column(Enum("bajo", "medio", "alto", name="nivel_actividad_enum"))
     fecha_nacimiento = Column(Date)
 
-    usuario = relationship("Usuario", back_populates="perfil")
+    usuario = relationship("Usuario", back_populates="perfil", uselist=False)
     gustos = relationship(
-        "PerfilGusto",
+        "Gusto",
+        secondary="perfil_gusto",
         back_populates="perfil",
         cascade="all, delete-orphan",
         passive_deletes=True
     )
     restricciones = relationship(
-        "PerfilRestriccion",
+        "Restriccion",
+        secondary="perfil_restriccion",
         back_populates="perfil",
         cascade="all, delete-orphan",
         passive_deletes=True
