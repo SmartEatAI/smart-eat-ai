@@ -11,6 +11,6 @@ class MealType(Base):
         "Recipe",
         back_populates="meal_types",
         secondary="recipe_meal_types", 
-        cascade="all, delete-orphan",
+        cascade="all",
         passive_deletes=True
     )

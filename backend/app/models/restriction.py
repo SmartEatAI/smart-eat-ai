@@ -8,6 +8,6 @@ class Restriction(Base):
     name = Column(String)
 
     profiles = relationship(
-        "ProfileRestriction",
+        "Profile",
         secondary="profiles_restrictions",
         back_populates="restrictions")
