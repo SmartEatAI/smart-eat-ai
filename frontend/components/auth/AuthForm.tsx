@@ -52,16 +52,37 @@ const AuthForm: React.FC = () => {
     const onSubmit = async (data: FormData) => {
         try {
             const endpoint = mode === "login" ? "/api/auth/login" : "/api/auth/register";
+            
+            // Map frontend fields (English) to backend fields (Spanish)
+            const backendData = mode === "login" 
+                ? {
+                    correo: (data as LoginFormData).email,
+                    contrasena: data.password,
+                  }
+                : {
+                    nombre: (data as RegisterFormData).name,
+                    correo: (data as RegisterFormData).email,
+                    contrasena: data.password,
+                  };
+            
             const response = await fetch(`http://localhost:8000${endpoint}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(data),
+                body: JSON.stringify(backendData),
             });
 
             if (!response.ok) {
                 const errorData = await response.json();
+                
+                // Handle Pydantic validation errors (array of objects)
+                if (Array.isArray(errorData.detail)) {
+                    const errorMessages = errorData.detail.map((err: any) => err.msg).join(", ");
+                    throw new Error(errorMessages);
+                }
+                
+                // Handle simple string errors
                 throw new Error(errorData.detail || "An error occurred");
             }
 
