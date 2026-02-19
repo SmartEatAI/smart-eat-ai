@@ -5,8 +5,18 @@ from app.database import Base
 class MenuDiario(Base):
     __tablename__ = "menu_diario"
     id = Column(Integer, primary_key=True, index=True)
-    plan_id = Column(Integer, ForeignKey("plan.id"))
+    plan_id = Column(
+        Integer,
+        ForeignKey("plan.id", ondelete="CASCADE", onupdate="CASCADE"),
+        nullable=False,
+        index=True
+    )
     dia_semana = Column(SmallInteger)
 
     plan = relationship("Plan", back_populates="menus_diarios")
-    detalles_comida = relationship("DetalleComida", back_populates="menu_diario")
+    detalles_comida = relationship(
+        "DetalleComida",
+        back_populates="menu_diario",
+        cascade="all, delete-orphan",
+        passive_deletes=True
+    )

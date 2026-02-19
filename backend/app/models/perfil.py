@@ -5,7 +5,13 @@ from app.database import Base
 class Perfil(Base):
     __tablename__ = "perfil"
     id = Column(Integer, primary_key=True, index=True)
-    usuario_id = Column(Integer, ForeignKey("usuario.id"))
+    usuario_id = Column(
+        Integer,
+        ForeignKey("usuario.id", ondelete="CASCADE", onupdate="CASCADE"),
+        nullable=False,
+        unique=True,
+        index=True
+    )
     objetivo = Column(Enum("perder_peso", "mantener_peso", "ganar_peso", name="objetivo_enum"))
     altura = Column(DECIMAL)
     peso = Column(DECIMAL)
@@ -20,6 +26,21 @@ class Perfil(Base):
     fecha_nacimiento = Column(Date)
 
     usuario = relationship("Usuario", back_populates="perfil")
-    gustos = relationship("PerfilGusto", back_populates="perfil")
-    restricciones = relationship("PerfilRestriccion", back_populates="perfil")
-    estilos_alimentacion = relationship("PerfilEstiloAlimentacion", back_populates="perfil")
+    gustos = relationship(
+        "PerfilGusto",
+        back_populates="perfil",
+        cascade="all, delete-orphan",
+        passive_deletes=True
+    )
+    restricciones = relationship(
+        "PerfilRestriccion",
+        back_populates="perfil",
+        cascade="all, delete-orphan",
+        passive_deletes=True
+    )
+    estilos_alimentacion = relationship(
+        "PerfilEstiloAlimentacion",
+        back_populates="perfil",
+        cascade="all, delete-orphan",
+        passive_deletes=True
+    )

@@ -5,8 +5,18 @@ from app.database import Base
 class DetalleComida(Base):
     __tablename__ = "detalle_comida"
     id = Column(Integer, primary_key=True, index=True)
-    receta_id = Column(Integer, ForeignKey("receta.id"))
-    menu_diario_id = Column(Integer, ForeignKey("menu_diario.id"))
+    receta_id = Column(
+        Integer,
+        ForeignKey("receta.id", ondelete="RESTRICT", onupdate="CASCADE"),
+        nullable=False,
+        index=True
+    )
+    menu_diario_id = Column(
+        Integer,
+        ForeignKey("menu_diario.id", ondelete="CASCADE", onupdate="CASCADE"),
+        nullable=False,
+        index=True
+    )
     horario = Column(Time)
     estado = Column(SmallInteger)
     tipo_comida = Column(Enum("desayuno", "almuerzo", "cena", "snack", name="tipo_comida_enum"))

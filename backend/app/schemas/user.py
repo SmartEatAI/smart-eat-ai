@@ -3,11 +3,11 @@ import re
 
 
 class UserCreate(BaseModel):
-    name: str
-    email: str
-    password: str
+    nombre: str
+    correo: str
+    contrasena: str
 
-    @validator('password')
+    @validator('contrasena')
     def validate_password(cls, v):
         if len(v) < 8:
             raise ValueError('Password must be at least 8 characters long')
@@ -19,7 +19,7 @@ class UserCreate(BaseModel):
             raise ValueError('Password must contain at least one number')
         return v
 
-    @validator('email')
+    @validator('correo')
     def validate_email(cls, v):
         if not re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', v):
             raise ValueError('Invalid email format')
@@ -27,14 +27,14 @@ class UserCreate(BaseModel):
 
 
 class UserLogin(BaseModel):
-    email: str
-    password: str
+    correo: str
+    contrasena: str
 
 
 class UserResponse(BaseModel):
     id: int
-    name: str
-    email: str
+    nombre: str
+    correo: str
     
     class Config:
         from_attributes = True
