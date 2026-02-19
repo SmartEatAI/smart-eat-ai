@@ -3,11 +3,11 @@ from sqlalchemy.orm import relationship
 from app.database import Base
 
 class RecipeDietType(Base):
-    __tablename__ = "recipe_diet_type"
+    __tablename__ = "recipe_diet_types"
     id = Column(Integer, primary_key=True, index=True)
     recipe_id = Column(
         Integer,
-        ForeignKey("recipe.id", ondelete="CASCADE", onupdate="CASCADE"),
+        ForeignKey("recipes.id", ondelete="CASCADE", onupdate="CASCADE"),
         nullable=False,
         index=True
     )
