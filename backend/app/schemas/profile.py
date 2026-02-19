@@ -45,9 +45,13 @@ class ProfileBase(BaseModel):
     birth_date: Optional[date] = None
 
 class ProfileCreate(ProfileBase):
-    #### pasar ids o objetos completos? #### REVISAR
-    taste_ids: Optional[List[int]] = []
-    restriction_ids: Optional[List[int]] = []
+    tastes: Optional[List[TasteResponse]] = []
+    restrictions: Optional[List[RestrictionResponse]] = []
+    eating_styles: Optional[List[EatingStyleEnum]] = []
+
+class ProfileUpdate(ProfileBase):
+    tastes: Optional[List[TasteResponse]] = []
+    restrictions: Optional[List[RestrictionResponse]] = []
     eating_styles: Optional[List[EatingStyleEnum]] = []
 
 class ProfileResponse(ProfileBase):
