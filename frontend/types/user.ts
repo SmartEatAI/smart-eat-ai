@@ -1,12 +1,12 @@
 /**
  * User types matching backend UserResponse schema
- * Backend fields are in Spanish (nombre, correo)
+ * All fields are in English
  */
 
 export interface User {
     id: number;
-    nombre: string;
-    correo: string;
+    name: string;
+    email: string;
 }
 
 export interface AuthResponse {

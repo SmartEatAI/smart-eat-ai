@@ -2,9 +2,9 @@ from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 from app.database import Base
 
-class Restriccion(Base):
-    __tablename__ = "restriccion"
+class Taste(Base):
+    __tablename__ = "taste"
     id = Column(Integer, primary_key=True, index=True)
-    nombre = Column(String)
+    name = Column(String)
 
-    perfiles = relationship("PerfilRestriccion", back_populates="restriccion")
+    profiles = relationship("ProfileTaste", back_populates="taste")

@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.models.usuario import Usuario
+from app.models.user import User
 from app.schemas.user import UserCreate, UserLogin
 from app.core.security import hash_password, verify_password, create_access_token
 from fastapi import HTTPException, status
@@ -12,7 +12,7 @@ class AuthService:
     def register_user(db: Session, user_data: UserCreate) -> dict:
         """Register a new user."""
         # Check if user already exists
-        existing_user = db.query(Usuario).filter(Usuario.correo == user_data.correo.lower()).first()
+        existing_user = db.query(User).filter(User.email == user_data.email.lower()).first()
         if existing_user:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
@@ -20,11 +20,11 @@ class AuthService:
             )
         
         # Create new user
-        hashed_password = hash_password(user_data.contrasena)
-        db_user = Usuario(
-            nombre=user_data.nombre,
-            correo=user_data.correo.lower(),
-            contrasena_hash=hashed_password
+        hashed_password = hash_password(user_data.password)
+        db_user = User(
+            name=user_data.name,
+            email=user_data.email.lower(),
+            hashed_password=hashed_password
         )
         
         db.add(db_user)
@@ -32,7 +32,7 @@ class AuthService:
         db.refresh(db_user)
         
         # Generate JWT token for automatic login
-        access_token = create_access_token({"sub": db_user.correo})
+        access_token = create_access_token({"sub": db_user.email})
         
         return {
             "access_token": access_token,
@@ -43,16 +43,16 @@ class AuthService:
     @staticmethod
     def authenticate_user(db: Session, user_data: UserLogin) -> dict:
         """Authenticate user and return access token."""
-        user = db.query(Usuario).filter(Usuario.correo == user_data.correo.lower()).first()
+        user = db.query(User).filter(User.email == user_data.email.lower()).first()
         
-        if not user or not verify_password(user_data.contrasena, user.contrasena_hash):
+        if not user or not verify_password(user_data.password, user.hashed_password):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid email or password"
             )
         
         # Generate JWT token
-        access_token = create_access_token({"sub": user.correo})
+        access_token = create_access_token({"sub": user.email})
         
         return {
             "access_token": access_token,
@@ -61,9 +61,9 @@ class AuthService:
         }
     
     @staticmethod
-    def get_user_by_email(db: Session, correo: str) -> Usuario:
+    def get_user_by_email(db: Session, email: str) -> User:
         """Get user by email."""
-        user = db.query(Usuario).filter(Usuario.correo == correo).first()
+        user = db.query(User).filter(User.email == email).first()
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,

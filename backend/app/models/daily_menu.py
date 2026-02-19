@@ -2,8 +2,8 @@ from sqlalchemy import Column, Integer, ForeignKey, SmallInteger
 from sqlalchemy.orm import relationship
 from app.database import Base
 
-class MenuDiario(Base):
-    __tablename__ = "menu_diario"
+class DailyMenu(Base):
+    __tablename__ = "daily_menu"
     id = Column(Integer, primary_key=True, index=True)
     plan_id = Column(
         Integer,
@@ -11,12 +11,12 @@ class MenuDiario(Base):
         nullable=False,
         index=True
     )
-    dia_semana = Column(SmallInteger)
+    day_of_week = Column(SmallInteger)
 
-    plan = relationship("Plan", back_populates="menus_diarios")
-    detalles_comida = relationship(
-        "DetalleComida",
-        back_populates="menu_diario",
+    plan = relationship("Plan", back_populates="daily_menus")
+    meal_details = relationship(
+        "MealDetail",
+        back_populates="daily_menu",
         cascade="all, delete-orphan",
         passive_deletes=True
     )

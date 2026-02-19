@@ -218,7 +218,7 @@ export default function Dashboard() {
                 <div className="flex items-center justify-between mb-6">
                     <h1 className="text-2xl font-bold text-primary">📊 Dashboard</h1>
                     <p className="text-lg text-muted-foreground">
-                        Hello, <span className="font-semibold text-primary">{user?.nombre || "Guest"}</span> 👋
+                        Hello, <span className="font-semibold text-primary">{user?.name || "Guest"}</span> 👋
                     </p>
                 </div>
 

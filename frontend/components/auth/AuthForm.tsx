@@ -54,24 +54,12 @@ const AuthForm: React.FC = () => {
         try {
             const endpoint = mode === "login" ? "/api/auth/login" : "/api/auth/register";
             
-            // Map frontend fields (English) to backend fields (Spanish)
-            const backendData = mode === "login" 
-                ? {
-                    correo: (data as LoginFormData).email,
-                    contrasena: data.password,
-                  }
-                : {
-                    nombre: (data as RegisterFormData).name,
-                    correo: (data as RegisterFormData).email,
-                    contrasena: data.password,
-                  };
-            
             const response = await fetch(`http://localhost:8000${endpoint}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(backendData),
+                body: JSON.stringify(data),
             });
 
             if (!response.ok) {
