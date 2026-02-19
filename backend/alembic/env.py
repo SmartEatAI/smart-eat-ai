@@ -10,6 +10,7 @@ sys.path.insert(0, os.path.realpath(os.path.join(os.path.dirname(__file__), '..'
 from app.database import Base
 from app.config import settings
 from app.models import *  # Import all models here
+from sqlalchemy import text
 
 # this is the Alembic Config object
 config = context.config
@@ -47,12 +48,14 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, 
-            target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
+            # Drop all tables before applying migrations
+            # This ensures a clean slate for the database schema
+            connection.execute(text("DROP SCHEMA public CASCADE"))
+            connection.execute(text("CREATE SCHEMA public"))
+            # Apply migrations after resetting the schema
             context.run_migrations()
 
 
