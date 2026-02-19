@@ -4,8 +4,8 @@ from datetime import date
 from decimal import Decimal
 from enum import Enum
 
-from backend.app.schemas.profile_eating_style import EatingStyleEnum, ProfileEatingStyleResponse
-from backend.app.schemas.taste import TasteResponse
+from .profile_eating_style import EatingStyleEnum, ProfileEatingStyleResponse
+from .taste import TasteResponse
 
 
 # Definicion de Enums para que Pydantic valide los strings permitidos
