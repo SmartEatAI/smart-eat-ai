@@ -3,17 +3,17 @@ from sqlalchemy.orm import relationship
 from app.database import Base
 
 class MealDetail(Base):
-    __tablename__ = "meal_detail"
+    __tablename__ = "meal_details"
     id = Column(Integer, primary_key=True, index=True)
     recipe_id = Column(
         Integer,
-        ForeignKey("recipe.id", ondelete="RESTRICT", onupdate="CASCADE"),
+        ForeignKey("recipes.id", ondelete="RESTRICT", onupdate="CASCADE"),
         nullable=False,
         index=True
     )
     daily_menu_id = Column(
         Integer,
-        ForeignKey("daily_menu.id", ondelete="CASCADE", onupdate="CASCADE"),
+        ForeignKey("daily_menus.id", ondelete="CASCADE", onupdate="CASCADE"),
         nullable=False,
         index=True
     )

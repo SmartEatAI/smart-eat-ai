@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 from app.database import Base
 
 class Recipe(Base):
-    __tablename__ = "recipe"
+    __tablename__ = "recipes"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
     calories = Column(Integer)
@@ -13,5 +13,5 @@ class Recipe(Base):
     image_url = Column(String)
     recipe_url = Column(String)
 
-    meal_types = relationship("RecipeMealType", back_populates="recipe")
-    diet_types = relationship("RecipeDietType", back_populates="recipe")
+    meal_types = relationship("RecipeMealType", back_populates="recipes")
+    diet_types = relationship("RecipeDietType", back_populates="recipes")

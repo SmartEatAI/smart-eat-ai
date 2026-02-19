@@ -7,7 +7,7 @@ class Profile(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(
         Integer,
-        ForeignKey("user.id", ondelete="CASCADE", onupdate="CASCADE"),
+        ForeignKey("users.id", ondelete="CASCADE", onupdate="CASCADE"),
         nullable=False,
         unique=True,
         index=True

@@ -3,11 +3,11 @@ from sqlalchemy.orm import relationship
 from app.database import Base
 
 class Plan(Base):
-    __tablename__ = "plan"
+    __tablename__ = "plans"
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(
         Integer,
-        ForeignKey("user.id", ondelete="CASCADE", onupdate="CASCADE"),
+        ForeignKey("users.id", ondelete="CASCADE", onupdate="CASCADE"),
         nullable=False,
         index=True
     )
@@ -18,7 +18,7 @@ class Plan(Base):
     user = relationship("User", back_populates="plans")
     daily_menus = relationship(
         "DailyMenu",
-        back_populates="plan",
+        back_populates="plans",
         cascade="all, delete-orphan",
         passive_deletes=True
     )

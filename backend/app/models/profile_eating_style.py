@@ -3,11 +3,11 @@ from sqlalchemy.orm import relationship
 from app.database import Base
 
 class ProfileEatingStyle(Base):
-    __tablename__ = "profile_eating_style"
+    __tablename__ = "profile_eating_styles"
     id = Column(Integer, primary_key=True, index=True)
     profile_id = Column(
         Integer,
-        ForeignKey("profile.id", ondelete="CASCADE", onupdate="CASCADE"),
+        ForeignKey("profiles.id", ondelete="CASCADE", onupdate="CASCADE"),
         nullable=False,
         index=True
     )
