@@ -11,8 +11,21 @@ class AuthService:
     @staticmethod
     def register_user(db: Session, user_data: UserCreate) -> dict:
         """Register a new user."""
-        # Check if user already exists
-        existing_user = db.query(User).filter(User.email == user_data.email.lower()).first()
+        if db is None:
+            print("ERROR: La sesión de DB es None")
+            raise HTTPException(status_code=500, detail="Error de conexión a la base de datos")
+
+        if not user_data.email:
+            raise HTTPException(status_code=400, detail="El email es requerido")
+
+        # 2. Búsqueda con limpieza de datos
+        email_limpio = user_data.email.lower().strip()
+        
+        try:
+            existing_user = db.query(User).filter(User.email == email_limpio).first()
+        except Exception as e:
+            print(f"Error en la consulta: {e}")
+            raise HTTPException(status_code=500, detail="Error interno al consultar el usuario")
         if existing_user:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
