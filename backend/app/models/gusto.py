@@ -7,4 +7,4 @@ class Gusto(Base):
     id = Column(Integer, primary_key=True, index=True)
     nombre = Column(String)
 
-    perfiles = relationship("PerfilGusto", back_populates="gusto")
+    perfiles = relationship("Perfil", secondary="perfil_gusto", back_populates="gusto")

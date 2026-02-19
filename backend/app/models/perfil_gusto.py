@@ -1,5 +1,4 @@
 from sqlalchemy import Column, Integer, ForeignKey
-from sqlalchemy.orm import relationship
 from app.database import Base
 
 class PerfilGusto(Base):
@@ -14,6 +13,3 @@ class PerfilGusto(Base):
         ForeignKey("gusto.id", ondelete="CASCADE", onupdate="CASCADE"),
         primary_key=True
     )
-
-    perfil = relationship("Perfil", back_populates="gustos")
-    gusto = relationship("Gusto", back_populates="perfiles")

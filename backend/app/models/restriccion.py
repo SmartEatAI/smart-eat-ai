@@ -7,4 +7,4 @@ class Restriccion(Base):
     id = Column(Integer, primary_key=True, index=True)
     nombre = Column(String)
 
-    perfiles = relationship("PerfilRestriccion", back_populates="restriccion")
+    perfiles = relationship("Perfil", secondary="perfil_restriccion", back_populates="restriccion")

@@ -1,5 +1,4 @@
 from sqlalchemy import Column, Integer, ForeignKey
-from sqlalchemy.orm import relationship
 from app.database import Base
 
 class PerfilRestriccion(Base):
@@ -14,6 +13,3 @@ class PerfilRestriccion(Base):
         ForeignKey("restriccion.id", ondelete="CASCADE", onupdate="CASCADE"),
         primary_key=True
     )
-
-    perfil = relationship("Perfil", back_populates="restricciones")
-    restriccion = relationship("Restriccion", back_populates="perfiles")
