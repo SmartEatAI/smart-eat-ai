@@ -57,5 +57,7 @@ htmlcov/
 # Node modules (if using npm/yarn)
 node_modules/
 .env.example
-/backend/app/__pycache__
-*.pyc
+
+# Specific to the backend application
+backend/app/__pycache__
+*.cpython-*.pyc
