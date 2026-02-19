@@ -1,0 +1,21 @@
+nombre,calorias,proteinas,carbohidratos,grasas,url_imagen,url_receta
+"Ensalada César con Pollo",350,35,15,18,https://example.com/ensalada-cesar.jpg,https://example.com/receta/ensalada-cesar
+"Salmón al Horno con Verduras",420,38,12,25,https://example.com/salmon-horno.jpg,https://example.com/receta/salmon-horno
+"Bowl de Quinoa con Aguacate",380,12,48,15,https://example.com/bowl-quinoa.jpg,https://example.com/receta/bowl-quinoa
+"Pechuga de Pollo a la Plancha",220,42,0,5,https://example.com/pollo-plancha.jpg,https://example.com/receta/pollo-plancha
+"Pasta Integral con Tomate y Albahaca",320,11,52,8,https://example.com/pasta-tomate.jpg,https://example.com/receta/pasta-tomate
+"Tortilla de Espinacas",280,18,8,20,https://example.com/tortilla-espinacas.jpg,https://example.com/receta/tortilla-espinacas
+"Batido Proteico de Plátano",240,25,32,3,https://example.com/batido-proteico.jpg,https://example.com/receta/batido-proteico
+"Lasaña de Berenjenas",310,22,28,12,https://example.com/lasana-berenjenas.jpg,https://example.com/receta/lasana-berenjenas
+"Yogur Griego con Frutos Rojos",180,15,22,4,https://example.com/yogur-frutos.jpg,https://example.com/receta/yogur-frutos
+"Tacos de Pescado",295,28,32,8,https://example.com/tacos-pescado.jpg,https://example.com/receta/tacos-pescado
+"Chili con Carne Saludable",340,32,38,8,https://example.com/chili-carne.jpg,https://example.com/receta/chili-carne
+"Risotto de Champiñones",360,12,58,10,https://example.com/risotto-champinones.jpg,https://example.com/receta/risotto-champinones
+"Wrap de Atún con Vegetales",290,25,35,6,https://example.com/wrap-atun.jpg,https://example.com/receta/wrap-atun
+"Curry de Garbanzos",315,13,48,9,https://example.com/curry-garbanzos.jpg,https://example.com/receta/curry-garbanzos
+"Pancakes Proteicos",260,20,32,6,https://example.com/pancakes-proteicos.jpg,https://example.com/receta/pancakes-proteicos
+"Batido Verde Detox",150,8,28,2,https://example.com/batido-verde.jpg,https://example.com/receta/batido-verde
+"Pollo al Curry con Arroz Integral",390,36,42,10,https://example.com/pollo-curry.jpg,https://example.com/receta/pollo-curry
+"Ensalada Mediterránea",280,10,18,20,https://example.com/ensalada-mediterranea.jpg,https://example.com/receta/ensalada-mediterranea
+"Burrito Bowl Vegetariano",340,14,52,9,https://example.com/burrito-bowl.jpg,https://example.com/receta/burrito-bowl
+"Sopa de Lentejas",250,16,38,4,https://example.com/sopa-lentejas.jpg,https://example.com/receta/sopa-lentejas

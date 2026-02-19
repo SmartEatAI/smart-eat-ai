@@ -14,3 +14,8 @@ class Usuario(Base):
 
     perfil = relationship("Perfil", back_populates="usuario", uselist=False)
     planes = relationship("Plan", back_populates="usuario")
+    chats = relationship("Chat", back_populates="usuario", cascade="all, delete-orphan")
+    
+    # DEPRECATED: Mantener compatibilidad temporal con código antiguo
+    # conversaciones = relationship("Conversacion", back_populates="usuario")
+    # logs_recomendaciones = relationship("LogRecomendacion", back_populates="usuario")

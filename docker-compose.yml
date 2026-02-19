@@ -8,10 +8,12 @@ services:
       - "8000:8000"
     volumes:
       - ./backend:/app
+      - ./models:/app/models  # Mount directory for ML models
     env_file:
       - .env
     depends_on:
       - db
+      - ollama
 
   frontend:
     build:
@@ -29,7 +31,7 @@ services:
       - CHOKIDAR_USEPOLLING=true
 
   db:
-    image: postgres:15 # cambiar si se usa otra base de datos
+    image: pgvector/pgvector:pg15  # PostgreSQL with pgvector extension
     container_name: smarteatai_db
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -39,6 +41,8 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./docker/db/init.sql:/docker-entrypoint-initdb.d/init.sql  # Init script for pgvector
+    command: postgres -c shared_preload_libraries=vector
 
   adminer: # Herramienta de administración de bases de datos (navegador)
     image: adminer
@@ -50,5 +54,18 @@ services:
     environment:
       ADMINER_DEFAULT_SERVER: db
 
+  ollama:
+    image: ollama/ollama:latest
+    container_name: smarteatai_ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama  # Persist downloaded models
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+    # Optional: Pull model on startup (uncomment after first run)
+    # command: ["pull", "mistral"]
+
 volumes:
   postgres_data:
+  ollama_data:
