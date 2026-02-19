@@ -14,6 +14,3 @@ class ProfileRestriction(Base):
         ForeignKey("restriction.id", ondelete="CASCADE", onupdate="CASCADE"),
         primary_key=True
     )
-
-    profile = relationship("Profile", back_populates="restrictions")
-    restriction = relationship("Restriction", back_populates="profiles")

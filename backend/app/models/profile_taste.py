@@ -14,6 +14,3 @@ class ProfileTaste(Base):
         ForeignKey("taste.id", ondelete="CASCADE", onupdate="CASCADE"),
         primary_key=True
     )
-
-    profile = relationship("Profile", back_populates="tastes")
-    taste = relationship("Taste", back_populates="profiles")
