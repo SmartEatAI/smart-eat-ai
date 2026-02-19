@@ -9,6 +9,6 @@ class Taste(Base):
     
     profiles = relationship(
         "Profile", 
-        back_populates="taste",
-        secondary="profile_taste"
+        secondary="profiles_tastes",
+        back_populates="tastes",
     )

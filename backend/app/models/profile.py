@@ -28,11 +28,13 @@ class Profile(Base):
     user = relationship("User", back_populates="profile")
     tastes = relationship(
         "Taste",
-        secondary="profiles_tastes"
+        secondary="profiles_tastes",
+        back_populates="profiles"
     )
     restrictions = relationship(
         "Restriction",
-        secondary="profiles_restrictions"
+        secondary="profiles_restrictions",
+        back_populates="profiles"
     )
     eating_styles = relationship(
         "ProfileEatingStyle",
