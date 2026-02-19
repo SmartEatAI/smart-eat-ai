@@ -13,5 +13,15 @@ class Recipe(Base):
     image_url = Column(String)
     recipe_url = Column(String)
 
-    meal_types = relationship("RecipeMealType", back_populates="recipes")
-    diet_types = relationship("RecipeDietType", back_populates="recipes")
+    meal_types = relationship(
+        "MealType", 
+        secondary="recipe_meal_types",
+        back_populates="recipes",
+        cascade="all, delete"
+    )
+    diet_types = relationship(
+        "DietType", 
+        secondary="recipe_diet_types",
+        back_populates="recipes",
+        cascade="all, delete"
+    )

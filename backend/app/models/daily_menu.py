@@ -14,9 +14,10 @@ class DailyMenu(Base):
     day_of_week = Column(SmallInteger)
 
     plan = relationship("Plan", back_populates="daily_menus")
+    
     meal_details = relationship(
         "MealDetail",
-        back_populates="daily_menus",
+        back_populates="daily_menu",
         cascade="all, delete-orphan",
         passive_deletes=True
     )

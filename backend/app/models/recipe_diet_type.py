@@ -1,16 +1,15 @@
-from sqlalchemy import Column, Integer, ForeignKey, Enum
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, ForeignKey
 from app.database import Base
 
 class RecipeDietType(Base):
     __tablename__ = "recipe_diet_types"
-    id = Column(Integer, primary_key=True, index=True)
     recipe_id = Column(
         Integer,
         ForeignKey("recipes.id", ondelete="CASCADE", onupdate="CASCADE"),
-        nullable=False,
-        index=True
+        primary_key=True
     )
-    name = Column(Enum("high_protein", "low_carb", "vegan", "vegetarian", "low_calorie", "high_fiber", "high_carb", name="diet_type_enum"))
-
-    recipe = relationship("Recipe", back_populates="diet_types")
+    diet_type_id = Column(
+        Integer,
+        ForeignKey("diet_types.id", ondelete="CASCADE", onupdate="CASCADE"),
+        primary_key=True
+    )

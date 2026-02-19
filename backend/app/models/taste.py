@@ -6,5 +6,9 @@ class Taste(Base):
     __tablename__ = "tastes"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
-
-    profiles = relationship("ProfileTaste", back_populates="tastes")
+    
+    profiles = relationship(
+        "Profile", 
+        back_populates="taste",
+        secondary="profile_taste"
+    )

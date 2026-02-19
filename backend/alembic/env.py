@@ -51,11 +51,6 @@ def run_migrations_online() -> None:
         context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
-            # Drop all tables before applying migrations
-            # This ensures a clean slate for the database schema
-            connection.execute(text("DROP SCHEMA public CASCADE"))
-            connection.execute(text("CREATE SCHEMA public"))
-            # Apply migrations after resetting the schema
             context.run_migrations()
 
 

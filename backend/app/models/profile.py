@@ -25,24 +25,18 @@ class Profile(Base):
     activity_level = Column(Enum("low", "medium", "high", name="activity_level_enum"))
     birth_date = Column(Date)
 
-    user = relationship("User", back_populates="profiles")
+    user = relationship("User", back_populates="profile")
     tastes = relationship(
         "Taste",
-        secondary="profile_tastes",
-        back_populates="profiles",
-        cascade="all, delete-orphan",
-        passive_deletes=True
+        secondary="profiles_tastes"
     )
     restrictions = relationship(
         "Restriction",
-        secondary="profile_restrictions",
-        back_populates="profiles",
-        cascade="all, delete-orphan",
-        passive_deletes=True
+        secondary="profiles_restrictions"
     )
     eating_styles = relationship(
         "ProfileEatingStyle",
-        back_populates="profiles",
+        back_populates="profile",
         cascade="all, delete-orphan",
         passive_deletes=True
     )

@@ -11,3 +11,5 @@ from .recipe_diet_type import RecipeDietType
 from .recipe import Recipe
 from .restriction import Restriction
 from .user import User
+from .diet_type import DietType
+from .meal_type import MealType

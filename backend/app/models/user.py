@@ -14,14 +14,14 @@ class User(Base):
 
     profile = relationship(
         "Profile",
-        back_populates="users",
+        back_populates="user",
         uselist=False,
         cascade="all, delete-orphan",
         passive_deletes=True
     )
     plans = relationship(
         "Plan",
-        back_populates="users",
+        back_populates="user",
         cascade="all, delete-orphan",
         passive_deletes=True
     )

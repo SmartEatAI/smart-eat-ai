@@ -18,7 +18,7 @@ class Plan(Base):
     user = relationship("User", back_populates="plans")
     daily_menus = relationship(
         "DailyMenu",
-        back_populates="plans",
+        back_populates="plan",
         cascade="all, delete-orphan",
         passive_deletes=True
     )
