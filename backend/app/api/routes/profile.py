@@ -15,6 +15,6 @@ def read_profile(
 ):
     profile = get_profile(db, user_id=current_user.id)
     if not profile:
-        raise HTTPException(status_code=404, detail="Perfil no encontrado")
+        raise HTTPException(status_code=404, detail="Profile not found.")
     return profile
 
