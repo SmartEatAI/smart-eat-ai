@@ -1,6 +1,5 @@
 from sqlalchemy.orm import Session
 from app.models.profile import Profile
-from app.models.profile_eating_style import ProfileEatingStyle
 from app.models.taste import Taste
 from app.models.restriction import Restriction
 from app.schemas.profile import ProfileCreate, ProfileUpdate

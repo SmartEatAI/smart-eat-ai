@@ -1,4 +1,4 @@
-from backend.app.schemas.category import CategoryResponse
+from app.schemas.category import CategoryResponse
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db

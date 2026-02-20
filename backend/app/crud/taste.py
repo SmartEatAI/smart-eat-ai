@@ -1,4 +1,4 @@
-from backend.app.schemas.category import CategoryBase
+from app.schemas.category import CategoryBase
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from app.models.taste import Taste
