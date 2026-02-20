@@ -20,7 +20,7 @@ def get_recipe_by_id(db: Session, recipe_id: int):
 def get_recipes_by_meal_type(db: Session, meal_type: str):
   """Obtiene las recetas por su tipo de comida."""
   try:
-    return db.query(Recipe).filter(Recipe.meal_types.contains(meal_type)).all()
+    return db.query(Recipe).filter(Recipe.meal_types.name.contains(meal_type)).all()
   except Exception as e:
     print(f"Error al obtener receta por tipo de comida: {str(e)}")
 
@@ -32,7 +32,7 @@ def get_recipes_by_meal_type(db: Session, meal_type: str):
 def get_recipes_by_diet_type(db: Session, diet_type: str):
   """Obtiene las recetas por su tipo de dieta."""
   try:
-    return db.query(Recipe).filter(Recipe.diet_types.contains(diet_type)).all()
+    return db.query(Recipe).filter(Recipe.diet_types.name.contains(diet_type)).all()
   except Exception as e:
     print(f"Error al obtener receta por tipo de dieta: {str(e)}")
 
