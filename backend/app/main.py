@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes import auth
+from app.api.routes import profile
+from app.api.routes import restriction
 from app.config import settings
 from app.database import engine, Base
 
@@ -24,6 +26,8 @@ app.add_middleware(
 
 # Include routers
 app.include_router(auth.router, prefix="/api")
+app.include_router(profile.router, prefix="/api")
+app.include_router(restriction.router, prefix="/api")
 
 
 @app.get("/")

@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from app.models.user import User
+from app.models.profile import Profile
 from app.schemas.user import UserCreate, UserLogin
 from app.core.security import hash_password, verify_password, create_access_token
 from fastapi import HTTPException, status
@@ -18,7 +19,6 @@ class AuthService:
         if not user_data.email:
             raise HTTPException(status_code=400, detail="El email es requerido")
 
-        # 2. Búsqueda con limpieza de datos
         email_limpio = user_data.email.lower().strip()
         
         try:
@@ -44,6 +44,13 @@ class AuthService:
         db.commit()
         db.refresh(db_user)
         
+        # Create new profile for the user
+        profile = Profile(user_id=db_user.id)
+        db.add(profile)
+        db.commit()
+        db.refresh(profile)
+
+
         # Generate JWT token for automatic login
         access_token = create_access_token({"sub": db_user.email})
         
