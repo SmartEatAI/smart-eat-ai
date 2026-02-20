@@ -1,14 +1,6 @@
 from pydantic import BaseModel, HttpUrl
 from typing import List, Optional
-
-# Esquema aplicable a MealType y DietType, ya que ambos comparten el mismo formato de datos
-class CategoryBase(BaseModel):
-    name: str
-
-class CategoryResponse(CategoryBase):
-    id: int
-    class Config:
-        from_attributes = True
+from .category import CategoryResponse
 
 # Esquema para la receta
 class RecipeBase(BaseModel):

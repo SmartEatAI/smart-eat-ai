@@ -4,9 +4,8 @@ from datetime import date
 from decimal import Decimal
 from enum import Enum
 
+from .category import CategoryResponse
 from .profile_eating_style import EatingStyleEnum, ProfileEatingStyleResponse
-from .taste import TasteResponse
-
 
 # Definicion de Enums para que Pydantic valide los strings permitidos
 class GoalEnum(str, Enum):
@@ -18,16 +17,6 @@ class ActivityLevelEnum(str, Enum):
     low = "low"
     medium = "medium"
     high = "high"
-
-# Esquemas para Restricciones
-class RestrictionBase(BaseModel):
-    name: str
-
-class RestrictionResponse(RestrictionBase):
-    id: int
-    class Config:
-        from_attributes = True
-
 
 # Esquemas para Perfil
 class ProfileBase(BaseModel):
@@ -45,20 +34,20 @@ class ProfileBase(BaseModel):
     birth_date: Optional[date] = None
 
 class ProfileCreate(ProfileBase):
-    tastes: Optional[List[TasteResponse]] = []
-    restrictions: Optional[List[RestrictionResponse]] = []
+    tastes: Optional[List[CategoryResponse]] = []
+    restrictions: Optional[List[CategoryResponse]] = []
     eating_styles: Optional[List[EatingStyleEnum]] = []
 
 class ProfileUpdate(ProfileBase):
-    tastes: Optional[List[TasteResponse]] = []
-    restrictions: Optional[List[RestrictionResponse]] = []
+    tastes: Optional[List[CategoryResponse]] = []
+    restrictions: Optional[List[CategoryResponse]] = []
     eating_styles: Optional[List[EatingStyleEnum]] = []
 
 class ProfileResponse(ProfileBase):
     id: int
     user_id: int
-    tastes: List[TasteResponse] = []
-    restrictions: List[RestrictionResponse] = []
+    tastes: List[CategoryResponse] = []
+    restrictions: List[CategoryResponse] = []
     eating_styles: List[ProfileEatingStyleResponse] = []
 
     class Config:
