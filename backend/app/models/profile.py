@@ -37,8 +37,6 @@ class Profile(Base):
         back_populates="profiles"
     )
     eating_styles = relationship(
-        "ProfileEatingStyle",
-        back_populates="profile",
-        cascade="all, delete-orphan",
-        passive_deletes=True
+        "EatingStyle",
+        secondary="profiles_eating_styles",
     )

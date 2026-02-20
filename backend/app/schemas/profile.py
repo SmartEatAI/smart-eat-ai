@@ -5,7 +5,6 @@ from decimal import Decimal
 from enum import Enum
 
 from .category import CategoryResponse
-from .profile_eating_style import EatingStyleEnum, ProfileEatingStyleResponse
 
 # Definicion de Enums para que Pydantic valide los strings permitidos
 class GoalEnum(str, Enum):
@@ -17,6 +16,15 @@ class ActivityLevelEnum(str, Enum):
     low = "low"
     medium = "medium"
     high = "high"
+
+class EatingStyleEnum(str, Enum):
+    high_protein = "high_protein"
+    low_carb = "low_carb"
+    vegan = "vegan"
+    vegetarian = "vegetarian"
+    low_calorie = "low_calorie"
+    high_fiber = "high_fiber"
+    high_carb = "high_carb"
 
 # Esquemas para Perfil
 class ProfileBase(BaseModel):
@@ -48,7 +56,7 @@ class ProfileResponse(ProfileBase):
     user_id: int
     tastes: List[CategoryResponse] = []
     restrictions: List[CategoryResponse] = []
-    eating_styles: List[ProfileEatingStyleResponse] = []
+    eating_styles: List[EatingStyleEnum] = []
 
     class Config:
         from_attributes = True

@@ -13,3 +13,4 @@ from .restriction import Restriction
 from .user import User
 from .diet_type import DietType
 from .meal_type import MealType
+from .eating_style import EatingStyle
