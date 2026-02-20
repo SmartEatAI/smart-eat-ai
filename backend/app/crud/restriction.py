@@ -1,7 +1,7 @@
+from backend.app.schemas.category import CategoryBase
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from app.models.restriction import Restriction
-from app.schemas.restriction import RestrictionBase
 from app.models.profile import Profile
 
 
@@ -45,7 +45,7 @@ def get_restrictions_by_profile(db: Session, profile_id: int):
         print(f"Error al obtener restricciones: {e}")
         raise HTTPException(status_code=500, detail="Error en la base de datos")
 
-def create_restriction_for_profile(db: Session, obj_in: RestrictionBase, profile_id: int):
+def create_restriction_for_profile(db: Session, obj_in: CategoryBase, profile_id: int):
     """Crea una nueva restricción y la asocia a un perfil específico."""
 
     db_profile = db.query(Profile).filter(Profile.id == profile_id).first()

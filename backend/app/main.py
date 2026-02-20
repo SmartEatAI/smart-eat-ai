@@ -1,12 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.routes import auth
-from app.api.routes import profile
-from app.api.routes import restriction
+from app.api.routes import auth, profile, restriction, eating_style, taste
 from app.config import settings
-from app.database import engine, Base
 
 # Create database tables - solo si se gestiona la db con sqlalchemy, si se usa alembic no es necesario
+#from app.database import engine, Base
 # Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
@@ -28,6 +26,8 @@ app.add_middleware(
 app.include_router(auth.router, prefix="/api")
 app.include_router(profile.router, prefix="/api")
 app.include_router(restriction.router, prefix="/api")
+app.include_router(eating_style.router, prefix="/api")
+app.include_router(taste.router, prefix="/api")
 
 
 @app.get("/")
