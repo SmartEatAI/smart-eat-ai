@@ -1,8 +1,7 @@
 from sqlalchemy.orm import Session
+from fastapi import HTTPException
 from app.models.restriction import Restriction
 from app.schemas.restriction import RestrictionBase
-from sqlalchemy.orm import Session
-from fastapi import HTTPException
 from app.models.profile import Profile
 
 
