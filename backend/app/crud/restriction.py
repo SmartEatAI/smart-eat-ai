@@ -83,6 +83,7 @@ def create_restriction_for_profile(db: Session, obj_in: CategoryBase, profile_id
     
 def add_restriction_to_profile(db: Session, restriction_id: int, profile_id: int):
     """Asocia una restricción existente a un perfil específico."""
+    
     # Buscamos el perfil y la restricción
     profile = get_profile(db, user_id=profile_id)
     restriction = get_restriction_by_id(db, restriction_id=restriction_id)

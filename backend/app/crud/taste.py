@@ -1,9 +1,20 @@
 from app.schemas.category import CategoryBase
+from app.crud.profile import get_profile
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from app.models.taste import Taste
 from app.models.profile import Profile
 
+def existing_taste(db: Session, name: str):
+    """Verifica si ya existe un gusto con el mismo nombre."""
+    try:
+        return db.query(Taste).filter(Taste.name == name.lower()).first()
+    except Exception as e:
+        print(f"Error al verificar gusto existente: {str(e)}")
+        raise HTTPException(
+            status_code=500, 
+            detail="Error interno al consultar los gustos en la base de datos"
+        )
 
 def get_tastes(db: Session):
     """Obtiene todas los gustos de la base de datos."""
@@ -64,6 +75,34 @@ def create_taste_for_profile(db: Session, obj_in: CategoryBase, profile_id: int)
         db.commit()
         db.refresh(db_taste)
         return db_taste
+    
+    except Exception as e:
+        db.rollback()
+        print(f"Error: {e}")
+        raise HTTPException(status_code=500, detail="Error al asociar gusto")
+
+def add_taste_to_profile(db: Session, taste_id: int, profile_id: int):
+    """Asocia un gusto existente a un perfil específico."""
+
+    # Buscamos el perfil y el gusto
+    profile = get_profile(db, user_id=profile_id)
+    taste = get_taste_by_id(db, taste_id=taste_id)
+    
+    if not profile:
+        raise HTTPException(status_code=404, detail="Perfil no encontrado")
+    
+    if not taste:
+        raise HTTPException(status_code=404, detail="Gusto no encontrado")
+    
+    # Verificamos si el gusto ya está asociado al perfil
+    if taste in profile.tastes:
+        raise HTTPException(status_code=400, detail="El gusto ya está asociado al perfil")
+        
+    try:
+        # Asociamos el gusto al perfil
+        profile.tastes.append(taste)
+        db.commit()
+        return taste
     
     except Exception as e:
         db.rollback()

@@ -18,5 +18,4 @@ def create_restriction(
     existing = crud.existing_restriction(db, name=restriction_in.name)
     if existing:
         return crud.add_restriction_to_profile(db, restriction_id=existing.id, profile_id=current_user.profile.id)
-    else:
-        return crud.create_restriction_for_profile(db, obj_in=restriction_in, profile_id=current_user.profile.id)
+    return crud.create_restriction_for_profile(db, obj_in=restriction_in, profile_id=current_user.profile.id)

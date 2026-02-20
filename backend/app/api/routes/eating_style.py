@@ -15,7 +15,7 @@ def create_eating_style(
     current_user: User = Depends(get_current_user) 
 ):
     # Verificamos si ya tiene perfil
-    if crud.get_eating_styles_by_profile(db, profile_id=current_user.profile.id):
-        raise HTTPException(status_code=400, detail="The user already has that eating style.")
-    
+    existing = crud.existing_eating_style(db, name=eating_style_in.name)
+    if existing:        
+        return crud.add_eating_style_to_profile(db, eating_style_id=existing.id, profile_id=current_user.profile.id)
     return crud.create_eating_style_for_profile(db, obj_in=eating_style_in, profile_id=current_user.profile.id)
