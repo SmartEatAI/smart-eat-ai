@@ -1,14 +1,25 @@
+from http.client import HTTPException
+from typing import Dict, Any
 from sqlalchemy.orm import Session
 from app.models.profile import Profile
 from app.models.taste import Taste
 from app.models.restriction import Restriction
 from app.schemas.profile import ProfileCreate, ProfileUpdate
+from app.crud.category import process_profile_categories
+
+def exist_profile(db: Session, user_id: int) -> bool:
+    """Verifica si un perfil existe para un usuario específico."""
+    try:
+        return db.query(Profile).filter(Profile.user_id == user_id).first() is not None
+    except Exception as e:
+        print(f"Error al verificar si existe el perfil: {e}")
+        raise e
 
 def get_profile(db: Session, user_id: int):
     """Obtiene el perfil asociado a un usuario específico."""
     return db.query(Profile).filter(Profile.user_id == user_id).first()
 
-def create(db: Session, obj_in: ProfileCreate, user_id: int):
+def create_user_profile(db: Session, obj_in: ProfileCreate, user_id: int):
     """Crea un nuevo perfil para un usuario específico."""
     try:
         db_profile = Profile(**obj_in.model_dump(), user_id=user_id)
@@ -18,27 +29,34 @@ def create(db: Session, obj_in: ProfileCreate, user_id: int):
         return db_profile
     except Exception as e:
         db.rollback()
+        print(f"Error al crear el perfil: {e}")
         raise e
 
-def update(db: Session, db_obj: Profile, obj_in: ProfileUpdate):
-    """Actualiza un perfil existente con los datos proporcionados."""
-    # Convertimos los datos de entrada a diccionario ignorando los valores no enviados (None)
-    update_data = obj_in.dict(exclude_unset=True)
-    
-    # Manejo especial para relaciones si se incluyen en el update
-    if "taste_ids" in update_data:
-        ids = update_data.pop("taste_ids")
-        db_obj.tastes = db.query(Taste).filter(Taste.id.in_(ids)).all()
-        
-    if "restriction_ids" in update_data:
-        ids = update_data.pop("restriction_ids")
-        db_obj.restrictions = db.query(Restriction).filter(Restriction.id.in_(ids)).all()
+def update_user_profile(db: Session, *, db_obj: Profile, obj_in: Dict[str, Any]) -> Profile:
+    """
+    Actualiza el perfil. 
+    obj_in debe ser el diccionario de datos (puedes usar model_dump(exclude_unset=True)).
+    """
+    try:
+        # Procesar Tastes
+        if "tastes" in obj_in:
+            db_obj.tastes = process_profile_categories(db, Taste, obj_in.pop("tastes"))
 
-    # Actualizar campos directos (peso, altura, etc.)
-    for field in update_data:
-        setattr(db_obj, field, update_data[field])
+        # Procesar Restrictions
+        if "restrictions" in obj_in:
+            db_obj.restrictions = process_profile_categories(db, Restriction, obj_in.pop("restrictions"))
 
-    db.add(db_obj)
-    db.commit()
-    db.refresh(db_obj)
-    return db_obj
+        # Actualizar campos directos y Enums (goal, eating_styles, etc.)
+        for field, value in obj_in.items():
+            if hasattr(db_obj, field):
+                setattr(db_obj, field, value)
+
+        db.add(db_obj)
+        db.commit()
+        db.refresh(db_obj)
+        return db_obj
+
+    except Exception as e:
+        db.rollback()
+        print(f"Error en update_user_profile: {e}")
+        raise HTTPException(status_code=500, detail="Error al actualizar el perfil")

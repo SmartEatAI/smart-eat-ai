@@ -4,7 +4,7 @@ from datetime import date
 from decimal import Decimal
 from enum import Enum
 
-from .category import CategoryResponse
+from .category import CategoryResponse, CategoryUpdate
 
 # Definicion de Enums para que Pydantic valide los strings permitidos
 class GoalEnum(str, Enum):
@@ -47,9 +47,9 @@ class ProfileCreate(ProfileBase):
     eating_styles: Optional[List[EatingStyleEnum]] = []
 
 class ProfileUpdate(ProfileBase):
-    tastes: Optional[List[CategoryResponse]] = []
-    restrictions: Optional[List[CategoryResponse]] = []
-    eating_styles: Optional[List[EatingStyleEnum]] = []
+    tastes: Optional[List[CategoryUpdate]] = None
+    restrictions: Optional[List[CategoryUpdate]] = None
+    eating_styles: Optional[List[EatingStyleEnum]] = None
 
 class ProfileResponse(ProfileBase):
     id: int

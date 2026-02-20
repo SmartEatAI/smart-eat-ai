@@ -45,10 +45,10 @@ class AuthService:
         db.refresh(db_user)
         
         # Create new profile for the user
-        profile = Profile(user_id=db_user.id)
-        db.add(profile)
-        db.commit()
-        db.refresh(profile)
+        #profile = Profile(user_id=db_user.id)
+        #db.add(profile)
+        #db.commit()
+        #db.refresh(profile)
 
 
         # Generate JWT token for automatic login
