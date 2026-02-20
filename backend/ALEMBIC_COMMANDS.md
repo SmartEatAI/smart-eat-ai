@@ -4,17 +4,31 @@ Este documento contiene los comandos esenciales de Alembic utilizados para migra
 
 ## Requisitos Previos
 
+### Dentro del Contenedor Docker
 Todos los comandos deben ejecutarse desde el directorio raíz del proyecto y con el prefijo:
 ```bash
 docker-compose exec backend alembic <comando>
+```
+
+### Fuera del Contenedor Docker
+Si estás ejecutando los comandos directamente en tu máquina (sin usar Docker), asegúrate de tener configurada la conexión a la base de datos en tu entorno local. Los comandos se ejecutan simplemente como:
+```bash
+alembic <comando>
 ```
 
 ## Comandos Comunes de Migración
 
 ### 1. Crear una Nueva Migración (Auto-generada)
 Genera automáticamente una migración detectando cambios entre los modelos y la base de datos:
+
+**Dentro del Contenedor Docker:**
 ```bash
 docker-compose exec backend alembic revision --autogenerate -m "Descripción de los cambios"
+```
+
+**Fuera del Contenedor Docker:**
+```bash
+alembic revision --autogenerate -m "Descripción de los cambios"
 ```
 
 **Ejemplo:**
@@ -24,62 +38,139 @@ docker-compose exec backend alembic revision --autogenerate -m "Add ON DELETE an
 
 ### 2. Crear una Nueva Migración (Manual)
 Crea un archivo de migración vacío para operaciones SQL manuales:
+
+**Dentro del Contenedor Docker:**
 ```bash
 docker-compose exec backend alembic revision -m "Descripción de los cambios"
 ```
 
+**Fuera del Contenedor Docker:**
+```bash
+alembic revision -m "Descripción de los cambios"
+```
+
 ### 3. Aplicar Migraciones
 Actualizar la base de datos a la última migración:
+
+**Dentro del Contenedor Docker:**
 ```bash
 docker-compose exec backend alembic upgrade head
 ```
 
+**Fuera del Contenedor Docker:**
+```bash
+alembic upgrade head
+```
+
 Actualizar a una revisión específica:
+
+**Dentro del Contenedor Docker:**
 ```bash
 docker-compose exec backend alembic upgrade <revision_id>
 ```
 
+**Fuera del Contenedor Docker:**
+```bash
+alembic upgrade <revision_id>
+```
+
 Actualizar un paso hacia adelante:
+
+**Dentro del Contenedor Docker:**
 ```bash
 docker-compose exec backend alembic upgrade +1
 ```
 
+**Fuera del Contenedor Docker:**
+```bash
+alembic upgrade +1
+```
+
 ### 4. Revertir Migraciones
 Retroceder un paso:
+
+**Dentro del Contenedor Docker:**
 ```bash
 docker-compose exec backend alembic downgrade -1
 ```
 
+**Fuera del Contenedor Docker:**
+```bash
+alembic downgrade -1
+```
+
 Retroceder a una revisión específica:
+
+**Dentro del Contenedor Docker:**
 ```bash
 docker-compose exec backend alembic downgrade <revision_id>
 ```
 
+**Fuera del Contenedor Docker:**
+```bash
+alembic downgrade <revision_id>
+```
+
 Retroceder a la base (eliminar todas las migraciones):
+
+**Dentro del Contenedor Docker:**
 ```bash
 docker-compose exec backend alembic downgrade base
 ```
 
+**Fuera del Contenedor Docker:**
+```bash
+alembic downgrade base
+```
+
 ### 5. Verificar Estado Actual de Migraciones
 Mostrar la versión de migración actual:
+
+**Dentro del Contenedor Docker:**
 ```bash
 docker-compose exec backend alembic current
 ```
 
+**Fuera del Contenedor Docker:**
+```bash
+alembic current
+```
+
 Mostrar historial de migraciones:
+
+**Dentro del Contenedor Docker:**
 ```bash
 docker-compose exec backend alembic history
 ```
 
+**Fuera del Contenedor Docker:**
+```bash
+alembic history
+```
+
 Mostrar historial detallado de migraciones:
+
+**Dentro del Contenedor Docker:**
 ```bash
 docker-compose exec backend alembic history --verbose
 ```
 
+**Fuera del Contenedor Docker:**
+```bash
+alembic history --verbose
+```
+
 ### 6. Mostrar Detalles de una Migración
 Mostrar el SQL para una migración específica sin aplicarla:
+
+**Dentro del Contenedor Docker:**
 ```bash
 docker-compose exec backend alembic show <revision_id>
+```
+
+**Fuera del Contenedor Docker:**
+```bash
+alembic show <revision_id>
 ```
 
 ## Comandos de Solución de Problemas
@@ -208,17 +299,6 @@ docker-compose exec backend alembic upgrade head
 5. **Nunca edites migraciones ya aplicadas** - crea una nueva en su lugar
 6. **Haz backup de la base de datos** antes de migraciones importantes
 7. **Usa el comando `stamp` con cuidado** - no aplica SQL, solo marca el estado de la BD
-
-## Variables de Entorno
-
-La conexión a la base de datos está configurada en `backend/app/database.py`:
-```
-Database: smarteatai
-User: smarteatai
-Password: smarteatai123
-Host: db (en la red Docker)
-Port: 5432
-```
 
 ## Archivos de Configuración de Alembic
 
