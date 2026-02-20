@@ -14,8 +14,8 @@ def create_restriction(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user) 
 ):
-    # Verificamos si ya tiene perfil
+    # Verificamos si ya tiene restricciones
     if crud.get_restrictions_by_profile(db, profile_id=current_user.profile.id):
-        raise HTTPException(status_code=400, detail="El usuario ya tiene una restricción asociada.")
+        raise HTTPException(status_code=400, detail="The user already has that restriction.")
     
     return crud.create_restriction_for_profile(db, obj_in=restriction_in, profile_id=current_user.profile.id)

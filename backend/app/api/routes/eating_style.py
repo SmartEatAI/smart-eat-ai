@@ -16,6 +16,6 @@ def create_eating_style(
 ):
     # Verificamos si ya tiene perfil
     if crud.get_eating_styles_by_profile(db, profile_id=current_user.profile.id):
-        raise HTTPException(status_code=400, detail="El usuario ya tiene un estilo de alimentación asociado.")
+        raise HTTPException(status_code=400, detail="The user already has that eating style.")
     
     return crud.create_eating_style_for_profile(db, obj_in=eating_style_in, profile_id=current_user.profile.id)
