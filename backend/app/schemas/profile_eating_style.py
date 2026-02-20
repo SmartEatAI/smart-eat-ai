@@ -12,6 +12,7 @@ class EatingStyleEnum(str, Enum):
 
 # Esquema para Estilos de Alimentación
 class ProfileEatingStyleBase(BaseModel):
+    profile_id: int
     name: EatingStyleEnum
 
 class ProfileEatingStyleResponse(ProfileEatingStyleBase):
