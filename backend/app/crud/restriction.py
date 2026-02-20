@@ -1,9 +1,20 @@
 from app.schemas.category import CategoryBase
+from app.crud.profile import get_profile
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from app.models.restriction import Restriction
 from app.models.profile import Profile
 
+def existing_restriction(db: Session, name: str):
+    """Verifica si ya existe una restricción con el mismo nombre."""
+    try:
+        return db.query(Restriction).filter(Restriction.name == name.lower()).first()
+    except Exception as e:
+        print(f"Error al verificar restricción existente: {str(e)}")
+        raise HTTPException(
+            status_code=500, 
+            detail="Error interno al consultar las restricciones en la base de datos"
+        )
 
 def get_restrictions(db: Session):
     """Obtiene todas las restricciones de la base de datos."""
@@ -68,4 +79,32 @@ def create_restriction_for_profile(db: Session, obj_in: CategoryBase, profile_id
     except Exception as e:
         db.rollback()
         print(f"Error: {e}")
+        raise HTTPException(status_code=500, detail="Error al asociar restricción")
+    
+def add_restriction_to_profile(db: Session, restriction_id: int, profile_id: int):
+    """Asocia una restricción existente a un perfil específico."""
+    # Buscamos el perfil y la restricción
+    profile = get_profile(db, user_id=profile_id)
+    restriction = get_restriction_by_id(db, restriction_id=restriction_id)
+    
+    if not profile:
+        raise HTTPException(status_code=404, detail="Perfil no encontrado")
+    
+    if not restriction:
+        raise HTTPException(status_code=404, detail="Restricción no encontrada")
+    
+    # Verificamos si la restricción ya está asociada al perfil
+    if restriction in profile.restrictions:
+        raise HTTPException(status_code=400, detail="La restricción ya está asociada al perfil")
+        
+    try:
+        # Asociamos la restricción al perfil
+        profile.restrictions.append(restriction)
+        db.commit()
+        return restriction
+    
+    except Exception as e:
+        db.rollback()
+        print(f"Error: {e}")
+        
         raise HTTPException(status_code=500, detail="Error al asociar restricción")
