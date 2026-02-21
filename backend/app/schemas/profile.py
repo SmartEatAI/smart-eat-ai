@@ -65,7 +65,7 @@ class ProfileResponse(ProfileBase):
     user_id: int
     tastes: List[CategoryResponse] = []
     restrictions: List[CategoryResponse] = []
-    eating_styles: List[EatingStyleEnum] = []
+    eating_styles: List[CategoryResponse] = []
 
     class Config:
         from_attributes = True

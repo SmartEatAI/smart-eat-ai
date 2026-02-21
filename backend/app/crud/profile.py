@@ -1,5 +1,4 @@
 from http.client import HTTPException
-from typing import Dict, Any
 from app.utils.calculations import calculate_macros
 from sqlalchemy.orm import Session
 from app.models.profile import Profile
@@ -53,7 +52,31 @@ def update_user_profile(db: Session, *, db_obj: Profile, obj_in: ProfileUpdate) 
         if "restrictions" in db_profile:
             db_obj.restrictions = process_profile_categories(db, Restriction, db_profile.pop("restrictions"))
 
-        # Actualizar campos directos y Enums (goal, eating_styles, etc.)
+        # Procesar Eating Styles
+        if "eating_styles" in db_profile:
+            styles_input = db_profile.pop("eating_styles")
+    
+            styles_instances = []
+    
+            for style in styles_input:
+                style_name = style.value if hasattr(style, "value") else style
+                style_name = style_name.lower()
+
+                # Solucion temporal para evitar error de importación circular entre profile.py y eating_style.py
+                from app.crud.eating_style import existing_eating_style
+                db_style = existing_eating_style(db, style_name)
+    
+                if not db_style:
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"Eating style '{style_name}' no existe"
+                    )
+
+                styles_instances.append(db_style)
+
+            db_obj.eating_styles = styles_instances
+
+        # Actualizar resto de campos del perfil
         for field, value in db_profile.items():
             setattr(db_obj, field, value)
             
