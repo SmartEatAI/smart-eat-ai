@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.schemas.profile import ProfileBase, ProfileCreate, ProfileResponse
+from app.schemas.profile import ProfileBase, ProfileCreate, ProfileResponse, ProfileUpdate
 from app.models import User
 from app.api.deps import get_current_user
 from app.crud.profile import create_user_profile, update_user_profile, get_profile
@@ -33,7 +33,7 @@ def create_profile(
 
 @router.put("/", response_model=ProfileResponse)
 def update_profile(
-    profile_in: ProfileCreate,
+    profile_in: ProfileUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user) 
 ):
@@ -41,5 +41,5 @@ def update_profile(
     if not db_obj:
         raise HTTPException(status_code=404, detail="Profile not existing.")
     
-    profile = update_user_profile(db, db_obj=db_obj, obj_in=profile_in.model_dump())
+    profile = update_user_profile(db, db_obj=db_obj, obj_in=profile_in)
     return profile

@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from app.models.profile import Profile
 from app.models.taste import Taste
 from app.models.restriction import Restriction
-from app.schemas.profile import ProfileCreate
+from app.schemas.profile import ProfileCreate, ProfileUpdate
 from app.crud.category import process_profile_categories
 
 def exist_profile(db: Session, user_id: int) -> bool:
@@ -35,22 +35,26 @@ def create_user_profile(db: Session, obj_in: ProfileCreate, user_id: int):
         print(f"Error al crear el perfil: {e}")
         raise e
 
-def update_user_profile(db: Session, *, db_obj: Profile, obj_in: Dict[str, Any]) -> Profile:
+def update_user_profile(db: Session, *, db_obj: Profile, obj_in: ProfileUpdate) -> Profile:
     """
     Actualiza el perfil. 
     obj_in debe ser el diccionario de datos (puedes usar model_dump(exclude_unset=True)).
     """
+    update_profile = calculate_macros(obj_in)
+
+    db_profile = update_profile.model_dump()
+
     try:
         # Procesar Tastes
-        if "tastes" in obj_in:
-            db_obj.tastes = process_profile_categories(db, Taste, obj_in.pop("tastes"))
+        if "tastes" in db_profile:
+            db_obj.tastes = process_profile_categories(db, Taste, db_profile.pop("tastes"))
 
         # Procesar Restrictions
-        if "restrictions" in obj_in:
-            db_obj.restrictions = process_profile_categories(db, Restriction, obj_in.pop("restrictions"))
+        if "restrictions" in db_profile:
+            db_obj.restrictions = process_profile_categories(db, Restriction, db_profile.pop("restrictions"))
 
         # Actualizar campos directos y Enums (goal, eating_styles, etc.)
-        for field, value in obj_in.items():
+        for field, value in db_profile.items():
             setattr(db_obj, field, value)
             
         db.commit()

@@ -44,22 +44,18 @@ class ProfileBase(BaseModel):
     meals_per_day: int = Field(ge=1, le=20)
     activity_level: ActivityLevelEnum
     birth_date: date
-
-class ProfileCreate(ProfileBase):
     body_fat_percentage: Optional[float] = 0.0
     calories_target: Optional[float] = 0.0
     protein_target: Optional[float] = 0.0
     carbs_target: Optional[float] = 0.0
     fat_target: Optional[float] = 0.0
+
+class ProfileCreate(ProfileBase):
     tastes: Optional[List[CategoryResponse]] = []
     restrictions: Optional[List[CategoryResponse]] = []
     eating_styles: Optional[List[EatingStyleEnum]] = []
 
 class ProfileUpdate(ProfileBase):
-    calories_target: Optional[float] = 0.0
-    protein_target: Optional[float] = 0.0
-    carbs_target: Optional[float] = 0.0
-    fat_target: Optional[float] = 0.0
     tastes: Optional[List[CategoryUpdate]] = []
     restrictions: Optional[List[CategoryUpdate]] = []
     eating_styles: Optional[List[EatingStyleEnum]] = []
@@ -67,10 +63,6 @@ class ProfileUpdate(ProfileBase):
 class ProfileResponse(ProfileBase):
     id: int
     user_id: int
-    calories_target: float
-    protein_target: float
-    carbs_target: float
-    fat_target: float
     tastes: List[CategoryResponse] = []
     restrictions: List[CategoryResponse] = []
     eating_styles: List[EatingStyleEnum] = []

@@ -1,5 +1,5 @@
 from datetime import date
-from app.schemas.profile import ProfileCreate
+from app.schemas.profile import ProfileCreate, ProfileUpdate
 
 def calculate_age(birth_date: date) -> int:
     today = date.today()
@@ -8,7 +8,7 @@ def calculate_age(birth_date: date) -> int:
     )
 
 
-def calculate_macros(profile: ProfileCreate) -> ProfileCreate:
+def calculate_macros(profile: ProfileCreate | ProfileUpdate) -> ProfileCreate | ProfileUpdate:
     """
     Calcula macros diarios según el modelo Profile.
     """
