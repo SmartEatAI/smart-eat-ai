@@ -1,5 +1,5 @@
-from typing import Dict
 from datetime import date
+from app.schemas.profile import ProfileCreate
 
 
 def calculate_age(birth_date: date) -> int:
@@ -9,29 +9,21 @@ def calculate_age(birth_date: date) -> int:
     )
 
 
-def calculate_macros(
-    gender: str,
-    birth_date: date,
-    height: float,
-    weight: float,
-    body_fat_percentage: float,
-    activity_level: str,
-    goal: str,
-) -> Dict[str, int]:
+def calculate_macros(profile: ProfileCreate):
     """
     Calcula macros diarios según el modelo Profile.
     """
 
-    age = calculate_age(birth_date)
+    age = calculate_age(profile.birth_date)
 
     # Masa magra
-    lean_mass = weight * (1 - body_fat_percentage / 100)
+    lean_mass = profile.weight * (1 - profile.body_fat_percentage / 100)
 
     # BMR (Mifflin-St Jeor)
-    if gender.lower() == "male":
-        bmr = 10 * weight + 6.25 * height - 5 * age + 5
+    if profile.gender.lower() == "male":
+        bmr = 10 * profile.weight + 6.25 * profile.height - 5 * age + 5
     else:
-        bmr = 10 * weight + 6.25 * height - 5 * age - 161
+        bmr = 10 * profile.weight + 6.25 * profile.height - 5 * age - 161
 
     # Factores alineados con tu Enum: low / medium / high
     activity_factors = {
@@ -40,13 +32,13 @@ def calculate_macros(
         "high": 1.725,
     }
 
-    tdee = bmr * activity_factors[activity_level]
+    tdee = bmr * activity_factors[profile.activity_level]
 
     # Objetivos alineados con tu Enum: lose_weight / maintain_weight / gain_weight
-    if goal == "gain_weight":
+    if profile.goal == "gain_weight":
         calories = tdee * 1.1 + 150
         protein = lean_mass * 2.2
-    elif goal == "lose_weight":
+    elif profile.goal == "lose_weight":
         calories = tdee * 0.8
         protein = lean_mass * 2.2
     else:  # maintain_weight
@@ -55,10 +47,10 @@ def calculate_macros(
 
     fats = (calories * 0.25) / 9
     carbs = (calories - (protein * 4 + fats * 9)) / 4
-
-    return {
-        "calories": int(calories),
-        "protein": int(protein),
-        "fat": int(fats),
-        "carbs": int(carbs),
-    }
+    
+    profile.calories_target = calories
+    profile.protein_target = protein
+    profile.carbs_target = carbs
+    profile.fat_target = fats
+    
+    return profile

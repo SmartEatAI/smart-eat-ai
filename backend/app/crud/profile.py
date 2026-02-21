@@ -1,5 +1,6 @@
 from http.client import HTTPException
 from typing import Dict, Any
+from app.utils.calculations import calculate_macros
 from sqlalchemy.orm import Session
 from app.models.profile import Profile
 from app.models.taste import Taste
@@ -21,8 +22,11 @@ def get_profile(db: Session, user_id: int):
 
 def create_user_profile(db: Session, obj_in: ProfileCreate, user_id: int):
     """Crea un nuevo perfil para un usuario específico."""
+    profile = calculate_macros(obj_in)
+    
     try:
-        db_profile = Profile(**obj_in.model_dump(), user_id=user_id)
+        db_profile = Profile(**profile.model_dump(), user_id=user_id)
+        
         db.add(db_profile)
         db.commit()
         db.refresh(db_profile)

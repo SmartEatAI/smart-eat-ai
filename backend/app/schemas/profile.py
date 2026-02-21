@@ -28,20 +28,20 @@ class EatingStyleEnum(str, Enum):
 
 # Esquemas para Perfil
 class ProfileBase(BaseModel):
-    goal: Optional[GoalEnum] = None
-    height: Optional[Decimal] = None
-    weight: Optional[Decimal] = None
-    body_fat_percentage: Optional[int] = Field(None, ge=0, le=100)
-    calories_target: Optional[int] = None
-    protein_target: Optional[int] = None
-    carbs_target: Optional[int] = None
-    fat_target: Optional[int] = None
-    gender: Optional[str] = None
-    meals_per_day: Optional[int] = Field(None, ge=1, le=20)
-    activity_level: Optional[ActivityLevelEnum] = None
-    birth_date: Optional[date] = None
+    goal: GoalEnum
+    height: Decimal
+    weight: Decimal
+    body_fat_percentage: int = Field(None, ge=0, le=100)
+    gender: str
+    meals_per_day: int = Field(None, ge=1, le=20)
+    activity_level: ActivityLevelEnum
+    birth_date: date
 
 class ProfileCreate(ProfileBase):
+    calories_target: Optional[int]
+    protein_target: Optional[int]
+    carbs_target: Optional[int]
+    fat_target: Optional[int]
     tastes: Optional[List[CategoryResponse]] = []
     restrictions: Optional[List[CategoryResponse]] = []
     eating_styles: Optional[List[EatingStyleEnum]] = []
