@@ -37,8 +37,9 @@ def update_profile(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user) 
 ):
-    profile = update_user_profile(db, obj_in=profile_in, user_id=current_user.id)
-    if not profile:
+    db_obj = get_profile(db, user_id=current_user.id)
+    if not db_obj:
         raise HTTPException(status_code=404, detail="Profile not existing.")
-
+    
+    profile = update_user_profile(db, db_obj=db_obj, obj_in=profile_in.model_dump())
     return profile

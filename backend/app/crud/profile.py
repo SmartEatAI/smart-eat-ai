@@ -51,10 +51,8 @@ def update_user_profile(db: Session, *, db_obj: Profile, obj_in: Dict[str, Any])
 
         # Actualizar campos directos y Enums (goal, eating_styles, etc.)
         for field, value in obj_in.items():
-            if hasattr(db_obj, field):
-                setattr(db_obj, field, value)
-
-        db.add(db_obj)
+            setattr(db_obj, field, value)
+            
         db.commit()
         db.refresh(db_obj)
         return db_obj
