@@ -17,11 +17,3 @@ def get_meal_type_by_id(meal_type_id: int, db: Session = Depends(get_db)):
   if not meal_type:
     raise HTTPException(status_code=404, detail="Tipo de comida no encontrado")
   return meal_type
-
-@router.get("/{meal_type}/recipes", response_model=list[MealTypeResponse])
-def get_recipes_by_meal_type(meal_type: str, db: Session = Depends(get_db)):
-  """Obtiene las recetas por su tipo de comida."""
-  recipes = crud.get_recipes_by_meal_type(db, meal_type)
-  if not recipes:
-    raise HTTPException(status_code=404, detail="Recetas no encontradas para este tipo de comida")
-  return recipes

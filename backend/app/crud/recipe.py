@@ -2,7 +2,6 @@ from sqlalchemy.orm import Session
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from app.models.recipe import Recipe
-from app.schemas.recipe import RecipeBase
 
 def get_recipe_by_id(db: Session, recipe_id: int):
   """Obtiene una receta por su ID."""
@@ -29,10 +28,10 @@ def get_recipes_by_meal_type(db: Session, meal_type: str):
       detail="Error interno al consultar las recetas en la base de datos"
     )
 
-def get_recipes_by_diet_type(db: Session, diet_type: str):
+def get_recipes_by_diet_type(db: Session, diet_type: int):
   """Obtiene las recetas por su tipo de dieta."""
   try:
-    return db.query(Recipe).filter(Recipe.diet_types.name.contains(diet_type)).all()
+    return db.query(Recipe).filter(Recipe.diet_types.id == diet_type).all()
   except Exception as e:
     print(f"Error al obtener receta por tipo de dieta: {str(e)}")
 
