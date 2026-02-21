@@ -20,7 +20,7 @@ def read_profile(
 
 @router.post("/", response_model=ProfileResponse)
 def create_profile(
-    profile_in: ProfileBase,
+    profile_in: ProfileCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user) 
 ):

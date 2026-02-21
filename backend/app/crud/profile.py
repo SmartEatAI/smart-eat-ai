@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from app.models.profile import Profile
 from app.models.taste import Taste
 from app.models.restriction import Restriction
-from app.schemas.profile import ProfileBase, ProfileCreate, ProfileUpdate
+from app.schemas.profile import ProfileCreate
 from app.crud.category import process_profile_categories
 
 def exist_profile(db: Session, user_id: int) -> bool:
@@ -20,13 +20,12 @@ def get_profile(db: Session, user_id: int):
     """Obtiene el perfil asociado a un usuario específico."""
     return db.query(Profile).filter(Profile.user_id == user_id).first()
 
-def create_user_profile(db: Session, obj_in: ProfileBase, user_id: int):
+def create_user_profile(db: Session, obj_in: ProfileCreate, user_id: int):
     """Crea un nuevo perfil para un usuario específico."""
     profile = calculate_macros(obj_in)
-    
+
+    db_profile = Profile(**profile.model_dump(), user_id=user_id)
     try:
-        db_profile = Profile(**profile.model_dump(), user_id=user_id)
-        
         db.add(db_profile)
         db.commit()
         db.refresh(db_profile)

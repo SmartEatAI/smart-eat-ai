@@ -41,28 +41,28 @@ class ProfileBase(BaseModel):
     weight: float
     body_type: BodyTypeEnum
     gender: GenderEnum
-    meals_per_day: int = Field(None, ge=1, le=20)
+    meals_per_day: int = Field(ge=1, le=20)
     activity_level: ActivityLevelEnum
     birth_date: date
 
 class ProfileCreate(ProfileBase):
-    body_fat_percentage: Optional[float] = None
-    calories_target: Optional[float] = None
-    protein_target: Optional[float] = None
-    carbs_target: Optional[float] = None
-    fat_target: Optional[float] = None
+    body_fat_percentage: Optional[float] = 0.0
+    calories_target: Optional[float] = 0.0
+    protein_target: Optional[float] = 0.0
+    carbs_target: Optional[float] = 0.0
+    fat_target: Optional[float] = 0.0
     tastes: Optional[List[CategoryResponse]] = []
     restrictions: Optional[List[CategoryResponse]] = []
     eating_styles: Optional[List[EatingStyleEnum]] = []
 
 class ProfileUpdate(ProfileBase):
-    calories_target: Optional[float] = None
-    protein_target: Optional[float] = None
-    carbs_target: Optional[float] = None
-    fat_target: Optional[float] = None
-    tastes: Optional[List[CategoryUpdate]] = None
-    restrictions: Optional[List[CategoryUpdate]] = None
-    eating_styles: Optional[List[EatingStyleEnum]] = None
+    calories_target: Optional[float] = 0.0
+    protein_target: Optional[float] = 0.0
+    carbs_target: Optional[float] = 0.0
+    fat_target: Optional[float] = 0.0
+    tastes: Optional[List[CategoryUpdate]] = []
+    restrictions: Optional[List[CategoryUpdate]] = []
+    eating_styles: Optional[List[EatingStyleEnum]] = []
 
 class ProfileResponse(ProfileBase):
     id: int
