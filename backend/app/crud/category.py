@@ -1,7 +1,9 @@
-from typing import Any, Type, List
+from typing import List
+from app.models.taste import Taste
+from app.models.restriction import Restriction
 from sqlalchemy.orm import Session
 
-def get_or_create_category(db: Session, model: Type, name: str):
+def get_or_create_category(db: Session, model: Taste | Restriction, name: str):
     """Busca una categoría por nombre (case-insensitive) o la crea si no existe."""
     name_low = name.strip().lower()
     instance = db.query(model).filter(model.name == name_low).first()
@@ -11,7 +13,7 @@ def get_or_create_category(db: Session, model: Type, name: str):
         db.flush()  # Obtenemos el ID sin confirmar la transacción completa aún
     return instance
 
-def process_profile_categories(db: Session, model: Type, items: List[Any]) -> List:
+def process_profile_categories(db: Session, model: Taste | Restriction, items: List[Taste | Restriction]) -> List:
     """
     Procesa objetos CategoryUpdate. 
     Si traen ID, los busca; si no, busca por nombre o crea.
