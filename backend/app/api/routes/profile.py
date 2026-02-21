@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.schemas.profile import ProfileCreate, ProfileResponse
+from app.schemas.profile import ProfileBase, ProfileCreate, ProfileResponse
 from app.models import User
 from app.api.deps import get_current_user
 from app.crud.profile import create_user_profile, update_user_profile, get_profile
@@ -20,7 +20,7 @@ def read_profile(
 
 @router.post("/", response_model=ProfileResponse)
 def create_profile(
-    profile_in: ProfileCreate,
+    profile_in: ProfileBase,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user) 
 ):

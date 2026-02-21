@@ -47,6 +47,10 @@ class ProfileCreate(ProfileBase):
     eating_styles: Optional[List[EatingStyleEnum]] = []
 
 class ProfileUpdate(ProfileBase):
+    calories_target: Optional[int]
+    protein_target: Optional[int]
+    carbs_target: Optional[int]
+    fat_target: Optional[int]
     tastes: Optional[List[CategoryUpdate]] = None
     restrictions: Optional[List[CategoryUpdate]] = None
     eating_styles: Optional[List[EatingStyleEnum]] = None
@@ -54,6 +58,10 @@ class ProfileUpdate(ProfileBase):
 class ProfileResponse(ProfileBase):
     id: int
     user_id: int
+    calories_target: int
+    protein_target: int
+    carbs_target: int
+    fat_target: int
     tastes: List[CategoryResponse] = []
     restrictions: List[CategoryResponse] = []
     eating_styles: List[EatingStyleEnum] = []

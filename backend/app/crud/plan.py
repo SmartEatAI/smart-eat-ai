@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from app.models.plan import Plan
 from app.schemas.plan import PlanBase
-from app.crud.profile import exist_profile, update_profile_macros
+from app.crud.profile import exist_profile
 from app.utils.calculations import calculate_macros
 
 
