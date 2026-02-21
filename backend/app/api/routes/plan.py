@@ -13,7 +13,10 @@ def get_current_plan(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user) 
 ):
-    return crud.get_plan_by_current_user(db, user_id=current_user.id)
+    plan = crud.get_plan_by_current_user(db, user_id=current_user.id)
+    if not plan:
+        raise HTTPException(status_code=404, detail="Plan activo no encontrado para el usuario actual")
+    return plan
 
 @router.post("/", response_model=PlanResponse)
 def create_plan(
@@ -22,12 +25,3 @@ def create_plan(
     current_user: User = Depends(get_current_user) 
 ):
     return crud.create_plan(db, obj_in=plan_in, user_id=current_user.id)
-
-@router.put("/{plan_id}/status", response_model=PlanResponse)
-def update_plan_status(
-    plan_id: int, 
-    active: bool, 
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user) 
-):
-    return crud.update_plan_status(db, plan_id=plan_id, active=active)

@@ -17,7 +17,10 @@ def get_meal_details_by_daily_menu_id(
     daily_menu_id: int, 
     db: Session = Depends(get_db)
 ):
-    return crud.get_meal_details_by_daily_menu_id(db, daily_menu_id=daily_menu_id)
+    daily_menu =  crud.get_meal_details_by_daily_menu_id(db, daily_menu_id=daily_menu_id)
+    if not daily_menu:
+        raise HTTPException(status_code=404, detail="Detalles de comida no encontrados para el menú diario especificado")
+    return daily_menu
   
 @router.post("/", response_model=MealDetailResponse)
 def create_meal_detail(
