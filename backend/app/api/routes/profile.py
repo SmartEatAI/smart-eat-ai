@@ -24,10 +24,11 @@ def create_profile(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user) 
 ):
-    profile = create_user_profile(db, obj_in=profile_in, user_id=current_user.id)
-    if profile:
+    existing_profile = get_profile(db, user_id=current_user.id)
+    if existing_profile:
         raise HTTPException(status_code=400, detail="Profile already exists.")
-
+    
+    profile = create_user_profile(db, obj_in=profile_in, user_id=current_user.id)
     return profile
 
 @router.put("/", response_model=ProfileResponse)
