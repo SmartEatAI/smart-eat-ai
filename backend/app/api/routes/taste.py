@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.crud import taste as crud
 
-router = APIRouter(prefix="/taste", tags=["Taste"])
+router = APIRouter(prefix="/taste")
 
 @router.get("/", response_model=list[CategoryBase])
 def read_tastes(

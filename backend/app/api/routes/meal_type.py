@@ -4,7 +4,7 @@ from app.database import get_db
 from app.schemas.meal_type import MealTypeBase, MealTypeResponse
 from app.crud import meal_type as crud
 
-router = APIRouter(prefix="/meal-types", tags=["Meal Types"])
+router = APIRouter(prefix="/meal-types")
 @router.get("/", response_model=list[MealTypeResponse])
 def get_meal_types(db: Session = Depends(get_db)):
   """Obtiene todos los tipos de comida."""

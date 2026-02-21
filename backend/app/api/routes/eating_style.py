@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.crud import eating_style as crud
 
-router = APIRouter(prefix="/eating_style", tags=["Eating Style"])
+router = APIRouter(prefix="/eating_style")
 
 
 @router.get("/", response_model=list[CategoryBase])

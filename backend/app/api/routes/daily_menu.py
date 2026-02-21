@@ -6,7 +6,7 @@ from app.crud import daily_menu as crud
 from app.models import User
 from app.api.deps import get_current_user
 
-router = APIRouter(prefix="/daily-menu", tags=["Daily Menu"])
+router = APIRouter(prefix="/daily-menu")
 
 @router.get("/{daily_menu_id}", response_model=list[DailyMenuResponse])
 def get_daily_menu_by_id(

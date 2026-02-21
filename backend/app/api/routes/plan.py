@@ -6,7 +6,7 @@ from app.crud import plan as crud
 from app.models import User
 from app.api.deps import get_current_user
 
-router = APIRouter(prefix="/plan", tags=["Plan"])
+router = APIRouter(prefix="/plan")
 
 @router.get("/current", response_model=PlanResponse)
 def get_current_plan(

@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.crud import restriction as crud
 
-router = APIRouter(prefix="/restriction", tags=["Restriction"])
+router = APIRouter(prefix="/restriction")
 
 @router.get("/", response_model=list[CategoryBase])
 def read_restrictions(

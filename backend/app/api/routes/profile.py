@@ -6,7 +6,7 @@ from app.models import User
 from app.api.deps import get_current_user
 from app.crud.profile import create_user_profile, update_user_profile, get_profile
 
-router = APIRouter(prefix="/profile", tags=["Profile"])
+router = APIRouter(prefix="/profile")
 
 @router.get("/", response_model=ProfileResponse)
 def read_profile(

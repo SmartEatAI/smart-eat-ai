@@ -4,7 +4,7 @@ from app.database import get_db
 from app.schemas.meal_detail import MealDetailBase, MealDetailResponse
 from app.crud import meal_detail as crud
 
-router = APIRouter(prefix="/meal-detail", tags=["Meal Detail"])
+router = APIRouter(prefix="/meal-detail")
 @router.get("/{meal_detail_id}", response_model=MealDetailResponse)
 def get_meal_detail_by_id(
     meal_detail_id: int, 

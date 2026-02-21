@@ -4,7 +4,7 @@ from app.database import get_db
 from app.schemas.diet_type import DietTypeBase, DietTypeResponse
 from app.crud import diet_type as crud
 
-router = APIRouter(prefix="/diet-type", tags=["Diet Type"])
+router = APIRouter(prefix="/diet-type")
 
 @router.get("/", response_model=list[DietTypeResponse])
 def get_diet_types(db: Session = Depends(get_db)):
