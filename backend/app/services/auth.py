@@ -2,8 +2,10 @@ from sqlalchemy.orm import Session
 from app.models.user import User
 from app.models.profile import Profile
 from app.schemas.user import UserCreate, UserLogin
-from app.core.security import hash_password, verify_password, create_access_token
+from app.core.security import verify_password, create_access_token
 from fastapi import HTTPException, status
+
+from app.crud.user import create_user, get_user_by_email
 
 
 class AuthService:
@@ -16,40 +18,7 @@ class AuthService:
             print("ERROR: La sesión de DB es None")
             raise HTTPException(status_code=500, detail="Error de conexión a la base de datos")
 
-        if not user_data.email:
-            raise HTTPException(status_code=400, detail="El email es requerido")
-
-        email_limpio = user_data.email.lower().strip()
-        
-        try:
-            existing_user = db.query(User).filter(User.email == email_limpio).first()
-        except Exception as e:
-            print(f"Error en la consulta: {e}")
-            raise HTTPException(status_code=500, detail="Error interno al consultar el usuario")
-        if existing_user:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Email already registered"
-            )
-        
-        # Create new user
-        hashed_password = hash_password(user_data.password)
-        db_user = User(
-            name=user_data.name,
-            email=user_data.email.lower(),
-            hashed_password=hashed_password
-        )
-        
-        db.add(db_user)
-        db.commit()
-        db.refresh(db_user)
-        
-        # Create new profile for the user
-        #profile = Profile(user_id=db_user.id)
-        #db.add(profile)
-        #db.commit()
-        #db.refresh(profile)
-
+        db_user = create_user(db, user_data)
 
         # Generate JWT token for automatic login
         access_token = create_access_token({"sub": db_user.email})
@@ -63,7 +32,7 @@ class AuthService:
     @staticmethod
     def authenticate_user(db: Session, user_data: UserLogin) -> dict:
         """Authenticate user and return access token."""
-        user = db.query(User).filter(User.email == user_data.email.lower()).first()
+        user = get_user_by_email(db, user_data.email.lower())
         
         if not user or not verify_password(user_data.password, user.hashed_password):
             raise HTTPException(
@@ -79,14 +48,3 @@ class AuthService:
             "token_type": "bearer",
             "user": user
         }
-    
-    @staticmethod
-    def get_user_by_email(db: Session, email: str) -> User:
-        """Get user by email."""
-        user = db.query(User).filter(User.email == email).first()
-        if not user:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="User not found"
-            )
-        return user
