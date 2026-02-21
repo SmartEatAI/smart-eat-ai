@@ -2,6 +2,9 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from app.models.plan import Plan
 from app.schemas.plan import PlanBase
+from app.crud.profile import exist_profile, update_profile_macros
+from app.utils.calculations import calculate_macros
+
 
 def get_plan_by_current_user(db: Session, user_id: int):
   """Obtiene el plan del usuario actual."""
@@ -34,6 +37,15 @@ def deactivate_current_plan(db: Session, user_id: int):
 def create_plan(db: Session, obj_in: PlanBase, user_id: int):
   """Crea un nuevo plan para el usuario actual."""
 
+  profile = exist_profile(db, user_id=user_id)
+    
+  if not profile:
+    raise ValueError(f"No existe un profile asociado al user_id: {user_id}")
+
+  # calcula los macros para este perfil y los actualiza
+  macros = calculate_macros(**profile)
+  update_profile_macros(db, user_id, **macros)
+  
   # Desactiva el plan activo actual antes de crear uno nuevo
   deactivate_current_plan(db, user_id)
 
