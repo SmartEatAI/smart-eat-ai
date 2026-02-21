@@ -38,22 +38,8 @@ def create_plan(db: Session, obj_in: PlanBase, user_id: int):
   """Crea un nuevo plan para el usuario actual."""
 
   profile = exist_profile(db, user_id=user_id)
-    
   if not profile:
     raise ValueError(f"No existe un profile asociado al user_id: {user_id}")
-
-  # calcula los macros para este perfil y los actualiza
-  macros = calculate_macros(
-    gender=profile.gender,
-    birth_date=profile.birth_date,
-    height=float(profile.height),
-    weight=float(profile.weight),
-    body_fat_percentage=profile.body_fat_percentage,
-    activity_level=profile.activity_level,
-    goal=profile.goal,
-  )
-  
-  update_profile_macros(db, user_id, **macros)
   
   # Desactiva el plan activo actual antes de crear uno nuevo
   deactivate_current_plan(db, user_id)
