@@ -1,74 +1,61 @@
-from typing import Dict, List, Union
+from typing import Dict
+from datetime import date
 
-def estimate_bodyfat(sex: str, category: str) -> float:
-    """
-    Estima el porcentaje de grasa corporal según tipo corporal.
-    
-    Args:
-        sex (str): "Male" o "Female"
-        category (str): "Lean", "Normal", "Stocky", "Obese"
-    
-    Returns:
-        float: Porcentaje de grasa corporal
-    """
-    mapping = {
-        "Male": {"Lean": 12, "Normal": 18, "Stocky": 25, "Obese": 32},
-        "Female": {"Lean": 20, "Normal": 26, "Stocky": 33, "Obese": 40}
-    }
-    return mapping[sex][category]
 
-def calculate_macros(sex: str, age: int, height: float, weight: float, 
-                    bodyfat_pct: float, activity: str, goal: str) -> Dict[str, Union[int, float, List[str]]]:
+def calculate_age(birth_date: date) -> int:
+    today = date.today()
+    return today.year - birth_date.year - (
+        (today.month, today.day) < (birth_date.month, birth_date.day)
+    )
+
+
+def calculate_macros(
+    gender: str,
+    birth_date: date,
+    height: float,
+    weight: float,
+    body_fat_percentage: float,
+    activity_level: str,
+    goal: str,
+) -> Dict[str, int]:
     """
-    Calcula los macros diarios según perfil del usuario.
-    
-    Args:
-        sex (str): "Male" o "Female"
-        age (int): Edad del usuario
-        height (float): Altura en cm
-        weight (float): Peso en kg
-        bodyfat_pct (float): Porcentaje de grasa corporal
-        activity (str): Nivel de actividad física
-        goal (str): Objetivo del usuario
-    
-    Returns:
-        Dict: Macros calculados y dietas recomendadas
+    Calcula macros diarios según el modelo Profile.
     """
-    # Calcular masa magra
-    lean_mass = weight * (1 - bodyfat_pct / 100)
-    
-    # Metabolismo basal (BMR) según sexo
-    if sex == "Male":
+
+    age = calculate_age(birth_date)
+
+    # Masa magra
+    lean_mass = weight * (1 - body_fat_percentage / 100)
+
+    # BMR (Mifflin-St Jeor)
+    if gender.lower() == "male":
         bmr = 10 * weight + 6.25 * height - 5 * age + 5
     else:
         bmr = 10 * weight + 6.25 * height - 5 * age - 161
-    
-    # Factores de actividad física
-    factors = {
-        "Sedentary": 1.2,
-        "Light": 1.375,
-        "Moderate": 1.55,
-        "High": 1.725,
-        "Very High": 1.9
+
+    # Factores alineados con tu Enum: low / medium / high
+    activity_factors = {
+        "low": 1.2,
+        "medium": 1.55,
+        "high": 1.725,
     }
-    
-    # Gasto energético diario total (TDEE)
-    tdee = bmr * factors[activity]
-    
-    # Recomendaciones personalizadas según objetivo
-    if goal == "Gain Muscle":
+
+    tdee = bmr * activity_factors[activity_level]
+
+    # Objetivos alineados con tu Enum: lose_weight / maintain_weight / gain_weight
+    if goal == "gain_weight":
         calories = tdee * 1.1 + 150
         protein = lean_mass * 2.2
-    elif goal == "Lose Weight":
+    elif goal == "lose_weight":
         calories = tdee * 0.8
         protein = lean_mass * 2.2
-    else:
+    else:  # maintain_weight
         calories = tdee
         protein = lean_mass * 2.0
-    
+
     fats = (calories * 0.25) / 9
     carbs = (calories - (protein * 4 + fats * 9)) / 4
-    
+
     return {
         "calories": int(calories),
         "protein": int(protein),
