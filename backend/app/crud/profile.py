@@ -60,6 +60,7 @@ def update_user_profile(db: Session, *, db_obj: Profile, obj_in: Dict[str, Any])
         db.rollback()
         print(f"Error en update_user_profile: {e}")
         raise HTTPException(status_code=500, detail="Error al actualizar el perfil")
+
 def update_profile_macros(
     db: Session,
     user_id: int,
