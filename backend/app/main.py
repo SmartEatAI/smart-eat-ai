@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.routes import auth, daily_menu, diet_type, eating_style, meal_detail, meal_type, plan, profile, recipe, restriction, taste
+from app.api.routes import auth, eating_style, meal_type, profile, restriction, taste, diet_type, recipe, meal_detail, daily_menu, plan
 from app.config import settings
 
 # Create database tables - solo si se gestiona la db con sqlalchemy, si se usa alembic no es necesario
