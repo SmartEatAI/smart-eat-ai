@@ -1,24 +1,25 @@
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
+from fastapi import HTTPException, status
 from app.crud.profile import (
-    exist_profile, 
-    get_profile, 
-    create_user_profile, 
-    update_user_profile
+    exist_profile,
+    get_profile,
+    create_profile,
+    update_profile
 )
-from app.schemas.profile import ProfileCreate, ProfileUpdate
-from app.models.profile import Profile
+from app.models.taste import Taste
+from app.models.restriction import Restriction
+from app.crud.category import process_profile_categories
+from app.schemas.profile import ProfileCreate
+from app.utils.calculations import calculate_macros, calculate_fat_percentage
 from app.core.database import DatabaseService
 from app.core.validation import ValidationService
-from fastapi import HTTPException, status
-
 
 class ProfileService:
     """Servicio para manejar operaciones relacionadas con el perfil del usuario."""
-    
+
     @staticmethod
     def profile_exists(db: Session, user_id: int) -> bool:
-        """Verifica si un perfil existe para un usuario específico."""
         try:
             return exist_profile(db, user_id)
         except SQLAlchemyError as e:
@@ -27,13 +28,11 @@ class ProfileService:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Error checking profile"
             )
-    
+
     @staticmethod
-    def get_user_profile(db: Session, user_id: int) -> Profile:
-        """Obtiene el perfil asociado a un usuario específico."""
+    def get_user_profile(db: Session, user_id: int):
         try:
             profile = get_profile(db, user_id)
-            # Usar ValidationService en lugar de validación manual
             ValidationService.validate_profile_exists(profile)
             return profile
         except HTTPException:
@@ -46,42 +45,57 @@ class ProfileService:
             )
 
     @staticmethod
-    def create_profile(db: Session, user_id: int, profile_data: ProfileCreate) -> Profile:
-        """Crea un nuevo perfil para un usuario específico."""
-        # Validate database connection
+    def upsert_user_profile(db: Session, obj_in: ProfileCreate, user_id: int):
+        """
+        Crea o actualiza el perfil de usuario.
+        Calcula macros y porcentaje de grasa, luego actualiza o crea el perfil.
+        Procesa gustos, restricciones y estilos de alimentación.
+        """
         DatabaseService.validate_db_session(db)
-        
-        try:
-            existing_profile = get_profile(db, user_id) if exist_profile(db, user_id) else None
-            # Usar ValidationService en lugar de validación manual
-            ValidationService.validate_profile_not_exists(existing_profile)
-            
-            return create_user_profile(db, profile_data, user_id)
-        except HTTPException:
-            raise
-        except SQLAlchemyError as e:
-            DatabaseService.rollback_on_error(db)
-            print(f"Error creating profile: {e}")
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Error creating profile"
-            )
+        profile_data = calculate_macros(obj_in)
+        fat_percentage = calculate_fat_percentage(obj_in)
+        profile_dict = profile_data.model_dump()
+        profile_dict["body_fat_percentage"] = fat_percentage
 
-    @staticmethod
-    def update_profile(db: Session, user_id: int, profile_data: ProfileUpdate) -> Profile:
-        """Actualiza el perfil de un usuario específico."""
+        db_profile = get_profile(db, user_id)
         try:
-            profile = get_profile(db, user_id)
-            # Usar ValidationService en lugar de validación manual
-            ValidationService.validate_profile_exists(profile)
-            
-            return update_user_profile(db, db_obj=profile, obj_in=profile_data.model_dump(exclude_unset=True))
+            if db_profile is None:
+                # Crear perfil
+                new_profile = create_profile(db, profile_dict, user_id)
+                return new_profile
+            else:
+                # Actualizar perfil
+                updated_profile = update_profile(db, db_profile, profile_dict)
+
+                # Procesar Tastes y Restrictions si están en obj_in
+                if hasattr(obj_in, "tastes"):
+                    updated_profile.tastes = process_profile_categories(db, Taste, obj_in.tastes)
+                if hasattr(obj_in, "restrictions"):
+                    updated_profile.restrictions = process_profile_categories(db, Restriction, obj_in.restrictions)
+
+                # Procesar Eating Styles si están en obj_in
+                if hasattr(obj_in, "eating_styles"):
+                    styles_input = obj_in.eating_styles
+                    styles_instances = []
+                    for style in styles_input:
+                        style_name = style.value if hasattr(style, "value") else style
+                        style_name = style_name.lower()
+                        from app.crud.eating_style import existing_eating_style
+                        db_style = existing_eating_style(db, style_name)
+                        if not db_style:
+                            raise HTTPException(
+                                status_code=400,
+                                detail=f"Eating style '{style_name}' does not exist"
+                            )
+                        styles_instances.append(db_style)
+                    updated_profile.eating_styles = styles_instances
+
+                db.commit()
+                db.refresh(updated_profile)
+                return updated_profile
         except HTTPException:
             raise
-        except SQLAlchemyError as e:
-            DatabaseService.rollback_on_error(db)
-            print(f"Error updating profile: {e}")
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Error updating profile"
-            )
+        except Exception as e:
+            db.rollback()
+            print(f"Error in upsert_user_profile: {e}")
+            raise HTTPException(status_code=500, detail="Error while creating/updating profile")
