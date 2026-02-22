@@ -87,3 +87,73 @@ class ValidationService:
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Restriction already exists"
             )
+            
+    # Validaciones relacionadas con detalles de comidas y recetas
+    @staticmethod
+    def validate_meal_detail_exists(meal_detail: any) -> None:
+        if not meal_detail:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Meal detail not found"
+            )
+
+    @staticmethod
+    def validate_recipe_exists(recipe: any) -> None:
+        if not recipe:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Recipe not found"
+            )
+            
+    # Validaciones relacionadas con estilos de alimentación
+    @staticmethod
+    def validate_eating_style_exists(eating_style: any) -> None:
+        if not eating_style:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Eating style not found"
+            )
+
+    @staticmethod
+    def validate_eating_style_not_exists(eating_style: any) -> None:
+        if eating_style:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Eating style already exists"
+            )
+            
+    # Validaciones relacionadas con daily menu
+    @staticmethod
+    def validate_daily_menu_exists(daily_menu: any) -> None:
+        if not daily_menu:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Daily menu not found"
+            )
+            
+    # Validaciones relacionadas con tipos de dieta
+    @staticmethod
+    def validate_diet_type_exists(diet_type: any) -> None:
+        if not diet_type:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Diet type not found"
+            )
+            
+    # Validaciones relacionadas con recipe
+    @staticmethod
+    def validate_recipe_exists(recipe: any) -> None:
+        if not recipe:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Recipe not found"
+            )
+            
+    # Validaciones relacionadas con tipos de comida
+    @staticmethod
+    def validate_meal_type_exists(meal_type: any) -> None:
+        if not meal_type:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Meal type not found"
+            )
