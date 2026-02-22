@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from app.models.user import User
+from app.models.profile import Profile
 from app.schemas.user import UserCreate, UserLogin
 from app.core.security import hash_password, verify_password, create_access_token
 from fastapi import HTTPException, status
@@ -11,8 +12,20 @@ class AuthService:
     @staticmethod
     def register_user(db: Session, user_data: UserCreate) -> dict:
         """Register a new user."""
-        # Check if user already exists
-        existing_user = db.query(User).filter(User.email == user_data.email.lower()).first()
+        if db is None:
+            print("ERROR: La sesión de DB es None")
+            raise HTTPException(status_code=500, detail="Error de conexión a la base de datos")
+
+        if not user_data.email:
+            raise HTTPException(status_code=400, detail="El email es requerido")
+
+        email_limpio = user_data.email.lower().strip()
+        
+        try:
+            existing_user = db.query(User).filter(User.email == email_limpio).first()
+        except Exception as e:
+            print(f"Error en la consulta: {e}")
+            raise HTTPException(status_code=500, detail="Error interno al consultar el usuario")
         if existing_user:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
@@ -31,6 +44,13 @@ class AuthService:
         db.commit()
         db.refresh(db_user)
         
+        # Create new profile for the user
+        #profile = Profile(user_id=db_user.id)
+        #db.add(profile)
+        #db.commit()
+        #db.refresh(profile)
+
+
         # Generate JWT token for automatic login
         access_token = create_access_token({"sub": db_user.email})
         

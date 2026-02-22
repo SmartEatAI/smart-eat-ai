@@ -1,7 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.routes import auth
+from app.api.routes import auth, eating_style, meal_type, profile, restriction, taste, diet_type, recipe, meal_detail, daily_menu, plan
 from app.config import settings
+
+# Create database tables - solo si se gestiona la db con sqlalchemy, si se usa alembic no es necesario
+#from app.database import engine, Base
+# Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="SmartEat AI API",
@@ -18,8 +22,24 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include routers
+# Include routers - definidos en routes/*.py
 app.include_router(auth.router, prefix="/api")
+
+# Profile
+app.include_router(profile.router, prefix="/api", tags=["Profile"])
+app.include_router(restriction.router, prefix="/api", tags=["Profile"])
+app.include_router(eating_style.router, prefix="/api", tags=["Profile"])
+app.include_router(taste.router, prefix="/api", tags=["Profile"])
+
+# Planning
+app.include_router(plan.router, prefix="/api", tags=["Plan"])
+app.include_router(daily_menu.router, prefix="/api", tags=["Plan"])
+app.include_router(meal_detail.router, prefix="/api", tags=["Plan"])
+
+# Recipes
+app.include_router(recipe.router, prefix="/api", tags=["Recipe"])
+app.include_router(diet_type.router, prefix="/api", tags=["Recipe"])
+app.include_router(meal_type.router, prefix="/api", tags=["Recipe"])
 
 
 @app.get("/")
