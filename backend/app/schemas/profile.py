@@ -36,19 +36,19 @@ class GenderEnum(str, Enum):
 
 # Esquemas para Perfil
 class ProfileBase(BaseModel):
-    goal: GoalEnum
-    height: float
-    weight: float
-    body_type: BodyTypeEnum
-    gender: GenderEnum
-    meals_per_day: int = Field(ge=1, le=20)
-    activity_level: ActivityLevelEnum
-    birth_date: date
-    body_fat_percentage: Optional[float] = 0.0
-    calories_target: Optional[float] = 0.0
-    protein_target: Optional[float] = 0.0
-    carbs_target: Optional[float] = 0.0
-    fat_target: Optional[float] = 0.0
+    goal: GoalEnum = Field(..., description="User's fitness goal")
+    height: float = Field(..., gte=140, lte=220, description="User's height in cm")
+    weight: float = Field(..., gte=35, lte=300, description="User's weight in kg")
+    body_type: BodyTypeEnum = Field(..., description="User's body type")
+    gender: GenderEnum = Field(..., description="User's gender")
+    meals_per_day: int = Field(..., gte=1, lte=6, description="Number of meals per day")
+    activity_level: ActivityLevelEnum = Field(..., description="User's activity level")
+    birth_date: date = Field(..., description="User's birth date")
+    body_fat_percentage: Optional[float] = Field(default=0.0, description="User's body fat percentage")
+    calories_target: Optional[float] = Field(default=0.0, description="User's target calories")
+    protein_target: Optional[float] = Field(default=0.0, description="User's target protein in grams")
+    carbs_target: Optional[float] = Field(default=0.0, description="User's target carbs in grams")
+    fat_target: Optional[float] = Field(default=0.0, description="User's target fat in grams")
 
 class ProfileCreate(ProfileBase):
     tastes: Optional[List[CategoryResponse]] = []
@@ -61,8 +61,8 @@ class ProfileUpdate(ProfileBase):
     eating_styles: Optional[List[EatingStyleEnum]] = []
 
 class ProfileResponse(ProfileBase):
-    id: int
-    user_id: int
+    id: int = Field(..., description="Profile ID")
+    user_id: int = Field(..., description="Associated User ID")
     tastes: List[CategoryResponse] = []
     restrictions: List[CategoryResponse] = []
     eating_styles: List[CategoryResponse] = []

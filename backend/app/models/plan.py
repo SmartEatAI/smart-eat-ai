@@ -1,3 +1,4 @@
+import datetime
 from sqlalchemy import Column, Integer, ForeignKey, TIMESTAMP, Boolean
 from sqlalchemy.orm import relationship
 from app.database import Base
@@ -11,9 +12,9 @@ class Plan(Base):
         nullable=False,
         index=True
     )
-    created_at = Column(TIMESTAMP)
-    updated_at = Column(TIMESTAMP)
-    active = Column(Boolean, default=True)
+    created_at = Column(TIMESTAMP, nullable=False, default=datetime.datetime.now)
+    updated_at = Column(TIMESTAMP, nullable=False, onupdate=datetime.datetime.now)
+    active = Column(Boolean, default=True, nullable=False)
 
     user = relationship("User", back_populates="plans")
     daily_menus = relationship(

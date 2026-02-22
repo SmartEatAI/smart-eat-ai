@@ -1,10 +1,10 @@
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, field_validator, Field
 from typing import Optional
 
 # Esquema aplicable a MealType, DietType, Taste y Restriction
 # ya que comparten el mismo formato de datos
 class CategoryBase(BaseModel):
-    name: str
+    name: str = Field(..., description="Name of the category")
 
     @field_validator('name')
     @classmethod
@@ -12,8 +12,8 @@ class CategoryBase(BaseModel):
         return v.strip().lower()
     
 class CategoryUpdate(BaseModel):
-    id: Optional[int] = None
-    name: str
+    id: int = Field(..., description="ID of the category to update")
+    name: str = Field(..., description="Name of the category")
 
     @field_validator('name')
     @classmethod
@@ -21,6 +21,6 @@ class CategoryUpdate(BaseModel):
         return v.strip().lower()
 
 class CategoryResponse(CategoryBase):
-    id: int
+    id: int = Field(..., description="ID of the category")
     class Config:
         from_attributes = True
