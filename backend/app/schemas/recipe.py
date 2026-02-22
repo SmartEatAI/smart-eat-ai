@@ -1,19 +1,19 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List, Optional
 from .category import CategoryResponse
 
 # Esquema para la receta
 class RecipeBase(BaseModel):
-    name: str
-    calories: int
-    protein: int
-    carbs: int
-    fat: int
-    image_url: Optional[str] = None
-    recipe_url: Optional[str] = None
+    name: str = Field(..., example="Spaghetti Carbonara")
+    calories: int = Field(..., example=400)
+    protein: int = Field(..., example=20)
+    carbs: int = Field(..., example=50)
+    fat: int = Field(..., example=15)
+    image_url: Optional[str] = Field(default=None, example="https://example.com/image.jpg")
+    recipe_url: Optional[str] = Field(default=None, example="https://example.com/recipe")
 
 class RecipeResponse(RecipeBase):
-    id: int
+    id: int = Field(..., example=1)
     meal_types: List[CategoryResponse] = []
     diet_types: List[CategoryResponse] = []
     
