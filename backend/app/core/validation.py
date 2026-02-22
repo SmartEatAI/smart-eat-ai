@@ -51,3 +51,39 @@ class ValidationService:
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Profile already exists for this user"
             )
+            
+    # Validaciones relacionadas con gustos
+    @staticmethod
+    def validate_taste_exists(taste: Any) -> None:
+        """Valida que un gusto exista."""
+        if not taste:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Taste not found"
+            )
+            
+    @staticmethod
+    def validate_taste_not_exists(taste: Optional[Any]) -> None:
+        """Valida que un gusto no exista."""
+        if taste:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Taste already exists"
+            )
+            
+    # Validaciones relacionadas con restricciones
+    @staticmethod
+    def validate_restriction_exists(restriction: any) -> None:
+        if not restriction:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Restriction not found"
+            )
+
+    @staticmethod
+    def validate_restriction_not_exists(restriction: any) -> None:
+        if restriction:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Restriction already exists"
+            )
