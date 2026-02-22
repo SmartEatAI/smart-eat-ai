@@ -53,3 +53,15 @@ def calculate_macros(profile: ProfileCreate | ProfileUpdate) -> ProfileCreate | 
     profile.carbs_target = round(carbs)
 
     return profile
+
+def calculate_fat_percentage(profile: ProfileCreate | ProfileUpdate) -> float:
+    """
+    Estima el porcentaje de grasa corporal según sexo y tipo corporal.
+    """
+    mapping = {
+        "male": {"lean": 12, "normal": 18, "stocky": 25, "obese": 32},
+        "female": {"lean": 20, "normal": 26, "stocky": 33, "obese": 40}
+    }
+    sex = profile.gender.lower()
+    category = profile.body_type.lower()
+    return mapping[sex][category]
