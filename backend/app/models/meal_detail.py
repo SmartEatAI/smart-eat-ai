@@ -17,9 +17,9 @@ class MealDetail(Base):
         nullable=False,
         index=True
     )
-    schedule = Column(Time)
-    status = Column(SmallInteger)
-    meal_type = Column(Enum("breakfast", "lunch", "dinner", "snack", name="meal_type_enum"))
+    schedule = Column(SmallInteger, nullable=False)
+    status = Column(SmallInteger, default=False, nullable=False)
+    meal_type = Column(Enum("breakfast", "lunch", "dinner", "snack", name="meal_type_enum"), nullable=False)
 
     recipe = relationship("Recipe")
     daily_menu = relationship("DailyMenu", back_populates="meal_details")

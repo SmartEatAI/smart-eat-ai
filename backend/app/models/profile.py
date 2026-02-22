@@ -12,19 +12,19 @@ class Profile(Base):
         unique=True,
         index=True
     )
-    goal = Column(Enum("lose_weight", "maintain_weight", "gain_weight", name="goal_enum"))
-    height = Column(Float)
-    weight = Column(Float)
-    body_type = Column(Enum("lean", "normal", "stocky", "obese", name="body_type_enum"))
+    goal = Column(Enum("lose_weight", "maintain_weight", "gain_weight", name="goal_enum"), nullable=False)
+    height = Column(Float, nullable=False)
+    weight = Column(Float, nullable=False)
+    body_type = Column(Enum("lean", "normal", "stocky", "obese", name="body_type_enum"), nullable=False)
     body_fat_percentage = Column(Float)
     calories_target = Column(Float)
     protein_target = Column(Float)
     carbs_target = Column(Float)
     fat_target = Column(Float)
-    gender = Column(Enum("male", "female", name="gender_enum"))
-    meals_per_day = Column(SmallInteger)
-    activity_level = Column(Enum("low", "medium", "high", name="activity_level_enum"))
-    birth_date = Column(Date)
+    gender = Column(Enum("male", "female", name="gender_enum"), nullable=False)
+    meals_per_day = Column(SmallInteger, nullable=False, default=3)
+    activity_level = Column(Enum("low", "medium", "high", name="activity_level_enum"), nullable=False)
+    birth_date = Column(Date, nullable=False)
 
     user = relationship("User", back_populates="profile")
     tastes = relationship(

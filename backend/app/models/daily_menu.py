@@ -11,7 +11,7 @@ class DailyMenu(Base):
         nullable=False,
         index=True
     )
-    day_of_week = Column(SmallInteger)
+    day_of_week = Column(SmallInteger, nullable=False)
 
     plan = relationship("Plan", back_populates="daily_menus")
     
