@@ -5,7 +5,7 @@ from app.database import Base
 class MealType(Base):
     __tablename__ = "meal_types"
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(50), unique=True, index=True, nullable=True)
+    name = Column(String(50), unique=True, index=True, nullable=False)
     
     recipes = relationship(
         "Recipe",
