@@ -1,13 +1,13 @@
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, EmailStr, field_validator
 import re
 
 
 class UserCreate(BaseModel):
     name: str
-    email: str
+    email: EmailStr
     password: str
 
-    @validator('password')
+    @field_validator('password')
     def validate_password(cls, v):
         if len(v) < 8:
             raise ValueError('Password must be at least 8 characters long')
@@ -19,22 +19,16 @@ class UserCreate(BaseModel):
             raise ValueError('Password must contain at least one number')
         return v
 
-    @validator('email')
-    def validate_email(cls, v):
-        if not re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', v):
-            raise ValueError('Invalid email format')
-        return v.lower()
-
 
 class UserLogin(BaseModel):
-    email: str
+    email: EmailStr
     password: str
 
 
 class UserResponse(BaseModel):
     id: int
     name: str
-    email: str
+    email: EmailStr
     
     class Config:
         from_attributes = True
