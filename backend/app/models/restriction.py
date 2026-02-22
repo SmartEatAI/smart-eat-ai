@@ -5,7 +5,7 @@ from app.database import Base
 class Restriction(Base):
     __tablename__ = "restrictions"
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String)
+    name = Column(String, nullable=False, unique=True)
 
     profiles = relationship(
         "Profile",

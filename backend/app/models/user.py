@@ -1,3 +1,4 @@
+import datetime
 from sqlalchemy import Column, Integer, String, TIMESTAMP
 from sqlalchemy.orm import relationship
 from app.database import Base
@@ -8,8 +9,8 @@ class User(Base):
     name = Column(String, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
-    created_at = Column(TIMESTAMP)
-    updated_at = Column(TIMESTAMP)
+    created_at = Column(TIMESTAMP, nullable=False, default=datetime.datetime.now)
+    updated_at = Column(TIMESTAMP, nullable=False, onupdate=datetime.datetime.now)
     profile_picture_url = Column(String)
 
     profile = relationship(

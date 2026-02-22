@@ -5,7 +5,7 @@ from app.database import Base
 class Taste(Base):
     __tablename__ = "tastes"
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String)
+    name = Column(String, nullable=False, unique=True)
     
     profiles = relationship(
         "Profile", 
