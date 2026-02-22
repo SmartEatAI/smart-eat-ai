@@ -5,12 +5,12 @@ from app.database import Base
 class Recipe(Base):
     __tablename__ = "recipes"
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String)
-    calories = Column(Integer)
-    protein = Column(Integer)
-    carbs = Column(Integer)
-    fat = Column(Integer)
-    image_url = Column(String)
+    name = Column(String, nullable=False)
+    calories = Column(Integer, nullable=False, default=0)
+    protein = Column(Integer, nullable=False, default=0)
+    carbs = Column(Integer, nullable=False, default=0)
+    fat = Column(Integer, nullable=False, default=0)
+    image_url = Column(String, default="## CAMBIAMEEEEEEE ##")
     recipe_url = Column(String)
 
     meal_types = relationship(
