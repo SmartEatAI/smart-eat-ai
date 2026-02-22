@@ -1,7 +1,6 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from app.models.diet_type import DietType
-from app.schemas.diet_type import DietTypeBase
 
 def get_diet_types(db: Session):
   """Obtiene todos los tipos de dieta de la base de datos."""

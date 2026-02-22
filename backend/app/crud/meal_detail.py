@@ -1,7 +1,8 @@
+from app.crud.recipe import get_recipe_by_id
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from app.models.meal_detail import MealDetail
-from app.schemas.meal_detail import MealDetailBase
+from app.schemas.meal_detail import MealDetailBase, MealDetailResponse
 
 def get_meal_details_by_id(db: Session, meal_detail_id: int):
   """Obtiene un detalle de comida por su ID."""
@@ -15,26 +16,24 @@ def get_meal_details_by_id(db: Session, meal_detail_id: int):
       detail="Error interno al consultar los detalles de comida en la base de datos"
     )
 
-def get_meal_details_by_daily_menu_id(db: Session, daily_menu_id: int):
-  """Obtiene los detalles de comida por su ID de menú diario."""
-  try:
-    return db.query(MealDetail).filter(MealDetail.daily_menu_id == daily_menu_id).all()
-  except Exception as e:
-    print(f"Error al obtener detalles de comida por ID de menú diario: {str(e)}")
-
-    raise HTTPException(
-      status_code=500, 
-      detail="Error interno al consultar los detalles de comida en la base de datos"
-    )
-
-def create_meal_detail(db: Session, obj_in: MealDetailBase):
+def create_meal_detail(db: Session, obj_in: MealDetailBase) -> MealDetailResponse:
   """Crea un nuevo detalle de comida."""
+
+  receta = get_recipe_by_id(db, recipe_id=obj_in.recipe_id)  # Verificar que la receta existe antes de crear el detalle de comida
+  if not receta:
+    raise HTTPException(status_code=404, detail="Receta no encontrada")
+
   db_meal_detail = MealDetail(**obj_in.model_dump())
   try:
     db.add(db_meal_detail)
     db.commit()
     db.refresh(db_meal_detail)
-    return db_meal_detail
+
+    # Devolver respuesta con datos normalizados
+    response = MealDetailResponse.from_orm(db_meal_detail)
+    response.recipe = receta  # asignar la receta con valores seguros
+    return response
+  
   except Exception as e:
     print(f"Error al crear detalle de comida: {str(e)}")
 
