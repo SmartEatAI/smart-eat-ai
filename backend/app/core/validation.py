@@ -5,6 +5,7 @@ from typing import Any, Optional
 class ValidationService:
     """Servicio para operaciones de validación comunes."""
     
+    # Validaciones relacionadas con usuarios
     @staticmethod
     def validate_user_exists(user: Any) -> None:
         """Valida que un usuario exista."""
@@ -32,6 +33,7 @@ class ValidationService:
                 detail="Invalid email or password"
             )
     
+    # Validaciones relacionadas con perfiles
     @staticmethod
     def validate_profile_exists(profile: Any) -> None:
         """Valida que un perfil exista."""
