@@ -5,7 +5,7 @@ from app.database import get_db
 from app.schemas.recipe import RecipeResponse
 from app.crud import recipe as crud
 
-router = APIRouter(prefix="/recipe", tags=["Recipe"])
+router = APIRouter(prefix="/recipe")
 @router.get("/{recipe_id}", response_model=RecipeResponse)
 def get_recipe_by_id(
     recipe_id: int, 

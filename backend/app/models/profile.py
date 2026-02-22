@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, ForeignKey, Enum, DECIMAL, Date, String, SmallInteger
+from sqlalchemy import Column, Integer, ForeignKey, Enum, Date, String, SmallInteger, Float
 from sqlalchemy.orm import relationship
 from app.database import Base
 
@@ -13,14 +13,15 @@ class Profile(Base):
         index=True
     )
     goal = Column(Enum("lose_weight", "maintain_weight", "gain_weight", name="goal_enum"))
-    height = Column(DECIMAL)
-    weight = Column(DECIMAL)
-    body_fat_percentage = Column(Integer)
-    calories_target = Column(Integer)
-    protein_target = Column(Integer)
-    carbs_target = Column(Integer)
-    fat_target = Column(Integer)
-    gender = Column(String)
+    height = Column(Float)
+    weight = Column(Float)
+    body_type = Column(Enum("lean", "normal", "stocky", "obese", name="body_type_enum"))
+    body_fat_percentage = Column(Float)
+    calories_target = Column(Float)
+    protein_target = Column(Float)
+    carbs_target = Column(Float)
+    fat_target = Column(Float)
+    gender = Column(Enum("male", "female", name="gender_enum"))
     meals_per_day = Column(SmallInteger)
     activity_level = Column(Enum("low", "medium", "high", name="activity_level_enum"))
     birth_date = Column(Date)

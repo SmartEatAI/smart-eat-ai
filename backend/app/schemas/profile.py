@@ -1,9 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
 from datetime import date
-from decimal import Decimal
 from enum import Enum
-
 from .category import CategoryResponse, CategoryUpdate
 
 # Definicion de Enums para que Pydantic valide los strings permitidos
@@ -26,20 +24,31 @@ class EatingStyleEnum(str, Enum):
     high_fiber = "high_fiber"
     high_carb = "high_carb"
 
+class BodyTypeEnum(str, Enum):
+    lean = "lean"
+    normal = "normal"
+    stocky = "stocky"
+    obese = "obese"
+
+class GenderEnum(str, Enum):
+    male = "male"
+    female = "female"
+
 # Esquemas para Perfil
 class ProfileBase(BaseModel):
-    goal: Optional[GoalEnum] = None
-    height: Optional[Decimal] = None
-    weight: Optional[Decimal] = None
-    body_fat_percentage: Optional[int] = Field(None, ge=0, le=100)
-    calories_target: Optional[int] = None
-    protein_target: Optional[int] = None
-    carbs_target: Optional[int] = None
-    fat_target: Optional[int] = None
-    gender: Optional[str] = None
-    meals_per_day: Optional[int] = Field(None, ge=1, le=20)
-    activity_level: Optional[ActivityLevelEnum] = None
-    birth_date: Optional[date] = None
+    goal: GoalEnum
+    height: float
+    weight: float
+    body_type: BodyTypeEnum
+    gender: GenderEnum
+    meals_per_day: int = Field(ge=1, le=20)
+    activity_level: ActivityLevelEnum
+    birth_date: date
+    body_fat_percentage: Optional[float] = 0.0
+    calories_target: Optional[float] = 0.0
+    protein_target: Optional[float] = 0.0
+    carbs_target: Optional[float] = 0.0
+    fat_target: Optional[float] = 0.0
 
 class ProfileCreate(ProfileBase):
     tastes: Optional[List[CategoryResponse]] = []
@@ -47,16 +56,16 @@ class ProfileCreate(ProfileBase):
     eating_styles: Optional[List[EatingStyleEnum]] = []
 
 class ProfileUpdate(ProfileBase):
-    tastes: Optional[List[CategoryUpdate]] = None
-    restrictions: Optional[List[CategoryUpdate]] = None
-    eating_styles: Optional[List[EatingStyleEnum]] = None
+    tastes: Optional[List[CategoryUpdate]] = []
+    restrictions: Optional[List[CategoryUpdate]] = []
+    eating_styles: Optional[List[EatingStyleEnum]] = []
 
 class ProfileResponse(ProfileBase):
     id: int
     user_id: int
     tastes: List[CategoryResponse] = []
     restrictions: List[CategoryResponse] = []
-    eating_styles: List[EatingStyleEnum] = []
+    eating_styles: List[CategoryResponse] = []
 
     class Config:
         from_attributes = True

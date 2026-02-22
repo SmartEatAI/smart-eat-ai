@@ -7,6 +7,7 @@ from .meal_detail import MealDetailResponse
 
 # Esquemas para Menú Diario
 class DailyMenuBase(BaseModel):
+    plan_id: int
     day_of_week: int # 1-7 (Lunes-Domingo)
 
 class DailyMenuResponse(DailyMenuBase):

@@ -1,17 +1,17 @@
+from app.schemas.category import CategoryResponse
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.schemas.diet_type import DietTypeBase, DietTypeResponse
 from app.crud import diet_type as crud
 
-router = APIRouter(prefix="/diet-type", tags=["Diet Type"])
+router = APIRouter(prefix="/diet-type")
 
-@router.get("/", response_model=list[DietTypeResponse])
+@router.get("/", response_model=list[CategoryResponse])
 def get_diet_types(db: Session = Depends(get_db)):
   """Obtiene todos los tipos de comida."""
   return crud.get_diet_types(db)
 
-@router.get("/{diet_type_id}", response_model=DietTypeResponse)
+@router.get("/{diet_type_id}", response_model=CategoryResponse)
 def get_diet_type_by_id(diet_type_id: int, db: Session = Depends(get_db)):
   """Obtiene un tipo de comida por su ID."""
   diet_type = crud.get_diet_type_by_id(db, diet_type_id=diet_type_id)

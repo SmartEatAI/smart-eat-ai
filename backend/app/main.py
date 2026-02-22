@@ -24,16 +24,22 @@ app.add_middleware(
 
 # Include routers - definidos en routes/*.py
 app.include_router(auth.router, prefix="/api")
-app.include_router(profile.router, prefix="/api")
-app.include_router(restriction.router, prefix="/api")
-app.include_router(eating_style.router, prefix="/api")
-app.include_router(taste.router, prefix="/api")
-app.include_router(meal_type.router, prefix="/api")
-app.include_router(plan.router, prefix="/api")
-app.include_router(recipe.router, prefix="/api")
-app.include_router(daily_menu.router, prefix="/api")
-app.include_router(diet_type.router, prefix="/api")
-app.include_router(meal_detail.router, prefix="/api")
+
+# Profile
+app.include_router(profile.router, prefix="/api", tags=["Profile"])
+app.include_router(restriction.router, prefix="/api", tags=["Profile"])
+app.include_router(eating_style.router, prefix="/api", tags=["Profile"])
+app.include_router(taste.router, prefix="/api", tags=["Profile"])
+
+# Planning
+app.include_router(plan.router, prefix="/api", tags=["Plan"])
+app.include_router(daily_menu.router, prefix="/api", tags=["Plan"])
+app.include_router(meal_detail.router, prefix="/api", tags=["Plan"])
+
+# Recipes
+app.include_router(recipe.router, prefix="/api", tags=["Recipe"])
+app.include_router(diet_type.router, prefix="/api", tags=["Recipe"])
+app.include_router(meal_type.router, prefix="/api", tags=["Recipe"])
 
 
 @app.get("/")
