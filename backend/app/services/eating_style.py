@@ -36,7 +36,6 @@ class EatingStyleService:
     def get_profile_eating_styles(db: Session, profile_id: int):
         try:
             styles = get_eating_styles_by_profile(db, profile_id)
-            ValidationService.validate_profile_exists(styles)
             return styles
         except SQLAlchemyError as e:
             print(f"Error getting profile eating styles: {e}")

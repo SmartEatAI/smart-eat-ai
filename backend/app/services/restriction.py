@@ -11,6 +11,7 @@ from app.crud.restriction import (
 )
 from app.core.validation import ValidationService
 from app.schemas.category import CategoryBase
+from app.crud.profile import get_profile
 
 class RestrictionService:
     """Servicio para manejar operaciones relacionadas con restricciones."""
@@ -23,7 +24,7 @@ class RestrictionService:
             print(f"Error listing restrictions: {e}")
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Error retrieving restrictions"
+                detail="Error listing restrictions"
             )
 
     @staticmethod
@@ -34,10 +35,13 @@ class RestrictionService:
 
     @staticmethod
     def get_profile_restrictions(db: Session, profile_id: int):
+        """Obtiene todas las restricciones de un perfil específico."""
         try:
+            # Obtener restricciones del perfil
             restrictions = get_restrictions_by_profile(db, profile_id)
-            ValidationService.validate_profile_exists(restrictions)
             return restrictions
+        except HTTPException:
+            raise
         except SQLAlchemyError as e:
             print(f"Error getting profile restrictions: {e}")
             raise HTTPException(
@@ -48,15 +52,22 @@ class RestrictionService:
     @staticmethod
     def create_restriction(db: Session, obj_in: CategoryBase, profile_id: int):
         try:
-            restriction = existing_restriction(db, obj_in.name)
-            ValidationService.validate_restriction_not_exists(restriction)
-            db_restriction = create_restriction_for_profile(db, obj_in, profile_id)
-            ValidationService.validate_profile_exists(db_restriction)
-            return db_restriction
+            # Validar que el perfil existe
+            profile = get_profile(db, profile_id)
+            ValidationService.validate_profile_exists(profile)
+            
+            # Validar que no existe restricción con ese nombre
+            existing = existing_restriction(db, obj_in.name)
+            if existing:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Restriction already exists"
+                )
+            
+            return create_restriction_for_profile(db, obj_in, profile_id)
         except HTTPException:
             raise
         except SQLAlchemyError as e:
-            db.rollback()
             print(f"Error creating restriction: {e}")
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -66,22 +77,18 @@ class RestrictionService:
     @staticmethod
     def add_existing_restriction(db: Session, restriction_id: int, profile_id: int):
         try:
+            # Validar que el perfil existe
+            profile = get_profile(db, profile_id)
+            ValidationService.validate_profile_exists(profile)
+            
+            # Validar que la restricción existe
             restriction = get_restriction_by_id(db, restriction_id)
             ValidationService.validate_restriction_exists(restriction)
-            restrictions = get_restrictions_by_profile(db, profile_id)
-            ValidationService.validate_profile_exists(restrictions)
-            if restriction in restrictions:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Restriction already associated with profile"
-                )
-            result = add_restriction_to_profile(db, restriction_id, profile_id)
-            ValidationService.validate_restriction_exists(result)
-            return result
+            
+            return add_restriction_to_profile(db, restriction_id, profile_id)
         except HTTPException:
             raise
         except SQLAlchemyError as e:
-            db.rollback()
             print(f"Error adding restriction to profile: {e}")
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
