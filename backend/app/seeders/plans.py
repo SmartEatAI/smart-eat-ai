@@ -26,7 +26,7 @@ def seed_plans(db: Session):
                         "recipe_id": 1,
                         "schedule": 1,
                         "status": 0,
-                        "meal_type": "breakfast"
+                        "meal_type": {"name": "breakfast"}
                       }
                   ]
                 },
@@ -37,7 +37,7 @@ def seed_plans(db: Session):
                         "recipe_id": 2,
                         "schedule": 1,
                         "status": 0,
-                        "meal_type": "breakfast"
+                        "meal_type": {"name": "breakfast"}
                       }
                   ]
                 },
@@ -48,7 +48,7 @@ def seed_plans(db: Session):
                         "recipe_id": 3,
                         "schedule": 1,
                         "status": 0,
-                        "meal_type": "breakfast"
+                        "meal_type": {"name": "breakfast"}
                       }
                   ]
                 },
