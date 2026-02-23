@@ -48,7 +48,7 @@ class ProfileService:
     def upsert_user_profile(db: Session, obj_in: ProfileCreate, user_id: int):
         profile_data = calculate_macros(obj_in)
         fat_percentage = calculate_fat_percentage(obj_in)
-        profile_dict = profile_data.model_dump(exclude={'tastes', 'restrictions', 'eating_styles'})
+        profile_dict = profile_data.model_dump(exclude={'tastes', 'restrictions', 'diet_types'})
         profile_dict["body_fat_percentage"] = fat_percentage
 
         db_profile = get_profile(db, user_id)
@@ -63,21 +63,21 @@ class ProfileService:
                 db_profile.tastes = process_profile_categories(db, Taste, obj_in.tastes)
             if hasattr(obj_in, "restrictions"):
                 db_profile.restrictions = process_profile_categories(db, Restriction, obj_in.restrictions)
-            if hasattr(obj_in, "eating_styles"):
-                styles_input = obj_in.eating_styles
+            if hasattr(obj_in, "diet_types"):
+                styles_input = obj_in.diet_types
                 styles_instances = []
                 for style in styles_input:
                     style_name = style.value if hasattr(style, "value") else style
                     style_name = style_name.lower()
-                    from app.crud.eating_style import existing_eating_style
-                    db_style = existing_eating_style(db, style_name)
+                    from app.crud.diet_type import existing_diet_type
+                    db_style = existing_diet_type(db, style_name)
                     if not db_style:
                         raise HTTPException(
                             status_code=400,
-                            detail=f"Eating style '{style_name}' does not exist"
+                            detail=f"Diet type '{style_name}' does not exist"
                         )
                     styles_instances.append(db_style)
-                db_profile.eating_styles = styles_instances
+                db_profile.diet_types = styles_instances
 
             db.commit()
             db.refresh(db_profile)
