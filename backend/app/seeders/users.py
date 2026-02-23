@@ -10,17 +10,17 @@ def seed_users(db: Session):
         {
             "name": "Ruyi",
             "email": "ruyi@example.com",
-            "password": "Ruyi123",
+            "password": "Ruyi1234",
         },
         {
             "name": "Elias",
             "email": "elias@example.com",
-            "password": "Elias123",
+            "password": "Elias1234",
         },
         {
             "name": "Cristina",
             "email": "cristina@example.com",
-            "password": "Cristina123",
+            "password": "Cris1234",
         },
     ]
 

@@ -60,11 +60,9 @@ def seed_profiles(db: Session):
         if not profile_payload:
             continue
 
-        profile_schema = ProfileCreate(**profile_payload)
-
         ProfileService.upsert_user_profile(
             db=db,
-            obj_in=profile_schema,
+            obj_in=profile_payload,
             user_id=user.id,
         )
 
