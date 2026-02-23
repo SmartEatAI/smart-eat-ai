@@ -1,7 +1,6 @@
 from .meal_detail import MealDetail
 from .taste import Taste
 from .daily_menu import DailyMenu
-from .profile_eating_style import ProfileEatingStyle
 from .profile_taste import ProfileTaste
 from .profile_restriction import ProfileRestriction
 from .profile import Profile
@@ -13,4 +12,4 @@ from .restriction import Restriction
 from .user import User
 from .diet_type import DietType
 from .meal_type import MealType
-from .eating_style import EatingStyle
+from .profile_diet_type import ProfileDietType

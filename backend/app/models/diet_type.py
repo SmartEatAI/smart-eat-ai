@@ -14,3 +14,9 @@ class DietType(Base):
         cascade="all",
         passive_deletes=True
     ) 
+    
+    profiles = relationship(
+        "Profile",
+        secondary="profiles_diet_types",
+        back_populates="diet_types"
+    )

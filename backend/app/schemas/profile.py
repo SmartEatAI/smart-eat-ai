@@ -15,7 +15,7 @@ class ActivityLevelEnum(str, Enum):
     medium = "medium"
     high = "high"
 
-class EatingStyleEnum(str, Enum):
+class DietTypeEnum(str, Enum):
     high_protein = "high_protein"
     low_carb = "low_carb"
     vegan = "vegan"
@@ -53,19 +53,19 @@ class ProfileBase(BaseModel):
 class ProfileCreate(ProfileBase):
     tastes: Optional[List[CategoryUpdate]] = []
     restrictions: Optional[List[CategoryUpdate]] = []
-    eating_styles: Optional[List[EatingStyleEnum]] = []
+    diet_types: Optional[List[DietTypeEnum]] = []
 
 class ProfileUpdate(ProfileBase):
     tastes: Optional[List[CategoryUpdate]] = []
     restrictions: Optional[List[CategoryUpdate]] = []
-    eating_styles: Optional[List[EatingStyleEnum]] = []
+    diet_types: Optional[List[DietTypeEnum]] = []
 
 class ProfileResponse(ProfileBase):
     id: int = Field(..., description="Profile ID")
     user_id: int = Field(..., description="Associated User ID")
     tastes: List[CategoryResponse] = []
     restrictions: List[CategoryResponse] = []
-    eating_styles: List[CategoryResponse] = []
+    diet_types: List[CategoryResponse] = []
 
     class Config:
         from_attributes = True
