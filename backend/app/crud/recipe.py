@@ -1,5 +1,6 @@
 from app.models.meal_type import MealType
 from app.models.diet_type import DietType
+from app.schemas.recipe import RecipeCreate
 from sqlalchemy.orm import Session
 from app.models.recipe import Recipe
 
@@ -14,3 +15,11 @@ def get_recipes_by_meal_type(db: Session, meal_type_id: int):
 def get_recipes_by_diet_type(db: Session, diet_type_id: int):
   """Obtiene recetas asociadas a un tipo de dieta específico."""
   return db.query(Recipe).filter(Recipe.diet_types.any(DietType.id == diet_type_id)).all()
+
+def create_recipe(db: Session, recipe_data: RecipeCreate):
+  """Crea una nueva receta en la base de datos."""
+  new_recipe = Recipe(**recipe_data)
+  db.add(new_recipe)
+  db.commit()
+  db.refresh(new_recipe)
+  return new_recipe

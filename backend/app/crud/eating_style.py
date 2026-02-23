@@ -47,3 +47,12 @@ def add_eating_style_to_profile(db: Session, eating_style_id: int, profile_id: i
     profile.eating_styles.append(eating_style)
     db.commit()
     return eating_style
+
+def create_eating_style(db: Session, obj_in: CategoryBase):
+    """Crea un nuevo estilo de alimentación."""
+    data = obj_in.model_dump()
+    db_eating_style = EatingStyle(**data)
+    db.add(db_eating_style)
+    db.commit()
+    db.refresh(db_eating_style)
+    return db_eating_style
