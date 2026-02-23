@@ -51,8 +51,8 @@ class ProfileBase(BaseModel):
     fat_target: Optional[float] = Field(default=0.0, description="User's target fat in grams")
 
 class ProfileCreate(ProfileBase):
-    tastes: Optional[List[CategoryResponse]] = []
-    restrictions: Optional[List[CategoryResponse]] = []
+    tastes: Optional[List[CategoryUpdate]] = []
+    restrictions: Optional[List[CategoryUpdate]] = []
     eating_styles: Optional[List[EatingStyleEnum]] = []
 
 class ProfileUpdate(ProfileBase):
