@@ -18,7 +18,7 @@ def get_or_create_category(db: Session, model: Taste | Restriction, name: str):
         print(f"Database error when getting_or_create_category: {e}")
         raise HTTPException(status_code=500, detail="Database error when getting_or_create_category")
 
-def process_profile_categories(db: Session, model: Taste | Restriction, items: List[Taste | Restriction]) -> List:
+def process_categories(db: Session, model: Taste | Restriction, items: List[Taste | Restriction]) -> List:
     """
     Procesa objetos CategoryUpdate. 
     Si traen ID, los busca; si no, busca por nombre o crea.

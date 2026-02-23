@@ -1,4 +1,3 @@
-import datetime
 from sqlalchemy.orm import Session
 from app.services.profile import ProfileService
 from app.schemas.profile import ProfileCreate
@@ -21,7 +20,7 @@ def seed_profiles(db: Session):
             "gender": "male",
             "meals_per_day": 3,
             "activity_level": "medium",
-            "birth_date": datetime.date(1990, 5, 10),
+            "birth_date": "1990-05-10",
             "eating_styles": ["high_protein", "low_carb"],
             "restrictions": [{"name": "dairy_free"}],
             "tastes": [{"name": "sweet"}, {"name": "savory"}]
@@ -34,7 +33,7 @@ def seed_profiles(db: Session):
             "gender": "female",
             "meals_per_day": 4,
             "activity_level": "high",
-            "birth_date": datetime.date(1995, 8, 22),
+            "birth_date": "1995-02-12",
             "eating_styles": ["vegetarian", "high_fiber"],
             "restrictions": [{"name": "nut_free"}],
             "tastes": [{"name": "spicy"}, {"name": "bitter"}]
@@ -47,7 +46,7 @@ def seed_profiles(db: Session):
             "gender": "male",
             "meals_per_day": 5,
             "activity_level": "high",
-            "birth_date": datetime.date(1998, 3, 15),
+            "birth_date": "1995-02-12",
             "eating_styles": ["high_carb", "high_protein"],
             "restrictions": [{"name": "gluten_free"}],
             "tastes": [{"name": "spicy"}, {"name": "savory"}]
@@ -55,8 +54,7 @@ def seed_profiles(db: Session):
     }
 
     for user in users:
-        profile_payload = profiles_data.get(user.id)
-
+        profile_payload = ProfileCreate(**profiles_data.get(user.id))
         if not profile_payload:
             continue
 
