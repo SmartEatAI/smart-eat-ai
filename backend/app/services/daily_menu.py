@@ -6,7 +6,7 @@ from app.crud.daily_menu import (
     create_daily_menu
 )
 from app.core.validation import ValidationService
-from app.schemas.daily_menu import DailyMenuBase
+from app.schemas.daily_menu import DailyMenuCreate
 
 class DailyMenuService:
     """Servicio para manejar operaciones relacionadas con menús diarios."""
@@ -28,7 +28,7 @@ class DailyMenuService:
             )
 
     @staticmethod
-    def create_daily_menu(db: Session, obj_in: DailyMenuBase):
+    def create_daily_menu(db: Session, obj_in: DailyMenuCreate):
         """Crea un nuevo menú diario."""
         try:
             db_daily_menu = create_daily_menu(db, obj_in)

@@ -1,7 +1,7 @@
 from app.crud.recipe import get_recipe_by_id
 from sqlalchemy.orm import Session
 from app.models.meal_detail import MealDetail
-from app.schemas.meal_detail import MealDetailBase
+from app.schemas.meal_detail import MealDetailCreate
 from fastapi import HTTPException
 
 def get_meal_details_by_id(db: Session, meal_detail_id: int):
@@ -13,7 +13,7 @@ def get_meal_details_by_id(db: Session, meal_detail_id: int):
         raise HTTPException(status_code=500, detail="Database error when get_meal_details_by_id")
 
 
-def create_meal_detail(db: Session, obj_in: MealDetailBase):
+def create_meal_detail(db: Session, obj_in: MealDetailCreate):
     """Crea un nuevo detalle de comida."""
     try:
         receta = get_recipe_by_id(db, recipe_id=obj_in.recipe_id)

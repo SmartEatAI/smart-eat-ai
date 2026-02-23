@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.schemas.daily_menu import DailyMenuBase, DailyMenuResponse
+from app.schemas.daily_menu import DailyMenuCreate, DailyMenuResponse
 from app.services.daily_menu import DailyMenuService
 
 router = APIRouter(prefix="/daily-menu")
@@ -15,7 +15,7 @@ def get_daily_menu_by_id(
 
 @router.post("/", response_model=DailyMenuResponse)
 def create_daily_menu(
-    daily_menu_in: DailyMenuBase, 
+    daily_menu_in: DailyMenuCreate, 
     db: Session = Depends(get_db)
 ):
     return DailyMenuService.create_daily_menu(db, obj_in=daily_menu_in)

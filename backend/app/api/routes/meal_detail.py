@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.schemas.meal_detail import MealDetailBase, MealDetailResponse
+from app.schemas.meal_detail import MealDetailCreate, MealDetailResponse
 from app.services.meal_detail import MealDetailService
 
 router = APIRouter(prefix="/meal-detail")
@@ -15,7 +15,7 @@ def get_meal_detail_by_id(
 
 @router.post("/", response_model=MealDetailResponse)
 def create_meal_detail(
-    meal_detail_in: MealDetailBase, 
+    meal_detail_in: MealDetailCreate, 
     db: Session = Depends(get_db)
 ):
     return MealDetailService.create_meal_detail(db, obj_in=meal_detail_in)
