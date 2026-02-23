@@ -1,9 +1,9 @@
 from app.database import SessionLocal
-from seeders.users import seed_users
-from seeders.categories import seed_categories
-from seeders.profiles import seed_profiles
-from seeders.recipes import seed_recipes
-from seeders.plans import seed_plans
+from app.seeders.users import seed_users
+from app.seeders.categories import seed_categories
+from app.seeders.profiles import seed_profiles
+from app.seeders.recipes import seed_recipes
+from app.seeders.plans import seed_plans
 
 
 def run_seeders():
