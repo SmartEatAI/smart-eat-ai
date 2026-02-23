@@ -1,16 +1,6 @@
-from enum import Enum
-from datetime import time
-from typing import Optional
+from app.schemas.enums import MealTypeEnum
 from pydantic import BaseModel, Field
 from .recipe import RecipeResponse
-
-# Definicion de Enums para que Pydantic valide los strings permitidos
-class MealTypeEnum(str, Enum):
-    breakfast = "breakfast"
-    lunch = "lunch"
-    dinner = "dinner"
-    snack = "snack"
-
 
 # Esquemas para Detalles de Comida dentro del Menú Diario
 class MealDetailBase(BaseModel):
