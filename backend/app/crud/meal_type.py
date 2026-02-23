@@ -1,27 +1,31 @@
 from sqlalchemy.orm import Session
-from fastapi import HTTPException
 from app.models.meal_type import MealType
+from fastapi import HTTPException
 
 def get_meal_types(db: Session):
-  """Obtiene todos los tipos de comida de la base de datos."""
+  """Obtiene todas los tipos de comida de la base de datos."""
   try:
     return db.query(MealType).all()
   except Exception as e:
-    print(f"Error al obtener tipos de comida: {str(e)}")
-
-    raise HTTPException(
-      status_code=500, 
-      detail="Error interno al consultar los tipos de comida en la base de datos"
-    )
+        print(f"Database error when get_meal_types: {e}")
+        raise HTTPException(status_code=500, detail="Database error when get_meal_types")
 
 def get_meal_type_by_id(db: Session, meal_type_id: int):
-  """"Obtiene un tipo de comida por su ID."""
-  try:
-    return db.query(MealType).filter(MealType.id == meal_type_id).first()
-  except Exception as e:
-    print(f"Error al obtener tipo de comida por ID: {str(e)}")
+  """Obtiene un tipo de comida por su ID."""
+  return db.query(MealType).filter(MealType.id == meal_type_id).first()
 
-    raise HTTPException(
-      status_code=500, 
-      detail="Error interno al consultar los tipos de comida en la base de datos"
-    )
+def get_meal_types_by_name(db: Session, name: str):
+    """Obtiene tipos de comida por una lista de nombres."""
+    return db.query(MealType).filter(MealType.name == name).first()
+
+def existing_meal_type(db: Session, name: str):
+  """Verifica si un tipo de comida con el mismo nombre ya existe."""
+  return db.query(MealType).filter(MealType.name == name).first()
+
+def create_meal_type(db: Session, meal_type_schema):
+  """Crea un nuevo tipo de comida en la base de datos."""
+  meal_type = MealType(name=meal_type_schema.name)
+  db.add(meal_type)
+  db.commit()
+  db.refresh(meal_type)
+  return meal_type
