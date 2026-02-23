@@ -16,7 +16,7 @@ class MealTypeEnum(str, Enum):
 class MealDetailBase(BaseModel):
     recipe_id: int = Field(..., description="Recipe ID associated with the meal detail")
     daily_menu_id: int = Field(..., description="Daily Menu ID associated with the meal detail")
-    schedule: int = Field(..., description="Schedule of the meal detail in minutes since midnight")
+    schedule: int = Field(..., gte=1, lte=6, description="Schedule of the meal detail in minutes since midnight")
     status: int = Field(..., description="Status of the meal detail (0: pending, 1: completed)")
     meal_type: MealTypeEnum = Field(..., description="Type of meal (breakfast, lunch, dinner, snack)")
 
