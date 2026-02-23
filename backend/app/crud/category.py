@@ -1,10 +1,12 @@
 from typing import List
 from app.models.taste import Taste
 from app.models.restriction import Restriction
+from app.models.meal_type import MealType
+from app.models.diet_type import DietType
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 
-def get_or_create_category(db: Session, model: Taste | Restriction, name: str):
+def get_or_create_category(db: Session, model: Taste | Restriction | MealType | DietType, name: str):
     """Busca una categoría por nombre (case-insensitive) o la crea si no existe."""
     try:
         name_low = name.strip().lower()
@@ -18,7 +20,7 @@ def get_or_create_category(db: Session, model: Taste | Restriction, name: str):
         print(f"Database error when getting_or_create_category: {e}")
         raise HTTPException(status_code=500, detail="Database error when getting_or_create_category")
 
-def process_categories(db: Session, model: Taste | Restriction, items: List[Taste | Restriction]) -> List:
+def process_categories(db: Session, model: Taste | Restriction | MealType | DietType, items: List[Taste | Restriction]) -> List:
     """
     Procesa objetos CategoryUpdate. 
     Si traen ID, los busca; si no, busca por nombre o crea.

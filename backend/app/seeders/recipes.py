@@ -12,8 +12,8 @@ def seed_recipes(db: Session):
             "protein": 30,
             "carbs": 5,
             "fat": 22,
-            "meal_types": [{"name": "breakfast"}],
-            "diet_types": [{"name": "high_protein"}, {"name": "low_carb"}],
+            "meal_types": ["breakfast"],
+            "diet_types": ["high_protein", "low_carb"],
         },
         {
             "name": "Vegan Buddha Bowl",
@@ -21,8 +21,8 @@ def seed_recipes(db: Session):
             "protein": 18,
             "carbs": 65,
             "fat": 18,
-            "meal_types": [{"name": "lunch"}, {"name": "dinner"}],
-            "diet_types": [{"name": "vegan"}, {"name": "high_fiber"}],
+            "meal_types": ["lunch", "dinner"],
+            "diet_types": ["vegan", "high_fiber"],
         },
         {
             "name": "Chicken & Rice Muscle Bowl",
@@ -30,8 +30,8 @@ def seed_recipes(db: Session):
             "protein": 55,
             "carbs": 80,
             "fat": 15,
-            "meal_types": [{"name": "lunch"}, {"name": "dinner"}],
-            "diet_types": [{"name": "high_protein"}, {"name": "high_carb"}],
+            "meal_types": ["lunch","dinner"],
+            "diet_types": ["high_protein","high_carb"],
         },
         {
             "name": "Low Carb Salmon Salad",
@@ -39,8 +39,8 @@ def seed_recipes(db: Session):
             "protein": 40,
             "carbs": 10,
             "fat": 28,
-            "meal_types": [{"name": "dinner"}],
-            "diet_types": [{"name": "low_carb"}],
+            "meal_types": ["dinner"],
+            "diet_types": ["low_carb"],
         },
         {
             "name": "Vegetarian Quinoa Salad",
@@ -48,8 +48,8 @@ def seed_recipes(db: Session):
             "protein": 15,
             "carbs": 50,
             "fat": 12,
-            "meal_types": [{"name": "lunch"}],
-            "diet_types": [{"name": "vegetarian"}, {"name": "high_fiber"}],
+            "meal_types": ["lunch"],
+            "diet_types": ["vegetarian", "high_fiber"],
         },
     ]
 

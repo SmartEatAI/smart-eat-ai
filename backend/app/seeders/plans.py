@@ -1,7 +1,7 @@
 import datetime
 from sqlalchemy.orm import Session
 from app.services.plan import PlanService
-from app.schemas.plan import PlanBase
+from app.schemas.plan import PlanCreate
 from app.models import User
 
 
@@ -13,12 +13,9 @@ def seed_plans(db: Session):
         return
 
     for user in users:
-        now = datetime.datetime.now()
 
-        plan_schema = PlanBase(
-            created_at=now,
-            updated_at=now,
-            daily_menus=[
+        plan_schema = {
+            "daily_menus": [
                 {
                   "day_of_week": 1,
                   "meal_details": [
@@ -26,7 +23,18 @@ def seed_plans(db: Session):
                         "recipe_id": 1,
                         "schedule": 1,
                         "status": 0,
-                        "meal_type": {"name": "breakfast"}
+                        "meal_type": "breakfast"
+                      },
+                      {
+                        "recipe_id": 1,
+                        "schedule": 1,
+                        "status": 0,
+                        "meal_type": "breakfast"
+                      },{
+                        "recipe_id": 1,
+                        "schedule": 1,
+                        "status": 0,
+                        "meal_type": "breakfast"
                       }
                   ]
                 },
@@ -37,7 +45,7 @@ def seed_plans(db: Session):
                         "recipe_id": 2,
                         "schedule": 1,
                         "status": 0,
-                        "meal_type": {"name": "breakfast"}
+                        "meal_type": "breakfast"
                       }
                   ]
                 },
@@ -48,13 +56,13 @@ def seed_plans(db: Session):
                         "recipe_id": 3,
                         "schedule": 1,
                         "status": 0,
-                        "meal_type": {"name": "breakfast"}
+                        "meal_type": "breakfast"
                       }
                   ]
                 },
             ],
-            active=True,
-        )
+            "active": True,
+        }
 
         try:
             PlanService.create_plan(

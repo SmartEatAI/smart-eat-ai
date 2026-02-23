@@ -12,8 +12,8 @@ class Plan(Base):
         nullable=False,
         index=True
     )
-    created_at = Column(TIMESTAMP, nullable=False, default=datetime.datetime.now)
-    updated_at = Column(TIMESTAMP, nullable=False, onupdate=datetime.datetime.now)
+    created_at = Column(TIMESTAMP, default=datetime.datetime.now)
+    updated_at = Column(TIMESTAMP, default=datetime.datetime.now, onupdate=datetime.datetime.now)
     active = Column(Boolean, default=True, nullable=False)
 
     user = relationship("User", back_populates="plans")

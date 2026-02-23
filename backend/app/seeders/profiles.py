@@ -21,7 +21,7 @@ def seed_profiles(db: Session):
             "meals_per_day": 3,
             "activity_level": "medium",
             "birth_date": "1990-05-10",
-            "eating_styles": ["high_protein", "low_carb"],
+            "diet_types": ["high_protein", "low_carb"],
             "restrictions": [{"name": "dairy_free"}],
             "tastes": [{"name": "sweet"}, {"name": "savory"}]
         },
@@ -34,7 +34,7 @@ def seed_profiles(db: Session):
             "meals_per_day": 4,
             "activity_level": "high",
             "birth_date": "1995-02-12",
-            "eating_styles": ["vegetarian", "high_fiber"],
+            "diet_types": ["vegetarian", "high_fiber"],
             "restrictions": [{"name": "nut_free"}],
             "tastes": [{"name": "spicy"}, {"name": "bitter"}]
         },
@@ -47,7 +47,7 @@ def seed_profiles(db: Session):
             "meals_per_day": 5,
             "activity_level": "high",
             "birth_date": "1995-02-12",
-            "eating_styles": ["high_carb", "high_protein"],
+            "diet_types": ["high_carb", "high_protein"],
             "restrictions": [{"name": "gluten_free"}],
             "tastes": [{"name": "spicy"}, {"name": "savory"}]
         },

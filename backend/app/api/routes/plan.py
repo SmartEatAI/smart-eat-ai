@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.schemas.plan import PlanBase, PlanResponse
+from app.schemas.plan import PlanCreate, PlanResponse
 from app.services.plan import PlanService
 from app.models import User
 from app.api.deps import get_current_user
@@ -17,7 +17,7 @@ def get_current_plan(
 
 @router.post("/", response_model=PlanResponse)
 def create_plan(
-    plan_in: PlanBase, 
+    plan_in: PlanCreate, 
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user) 
 ):
