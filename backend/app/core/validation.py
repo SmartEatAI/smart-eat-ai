@@ -107,16 +107,16 @@ class ValidationService:
             
     # Validaciones relacionadas con estilos de alimentación
     @staticmethod
-    def validate_eating_style_exists(eating_style: any) -> None:
-        if not eating_style:
+    def validate_diet_type_exists(diet_type: any) -> None:
+        if not diet_type:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Eating style not found"
             )
 
     @staticmethod
-    def validate_eating_style_not_exists(eating_style: any) -> None:
-        if eating_style:
+    def validate_diet_type_not_exists(diet_type: any) -> None:
+        if diet_type:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Eating style already exists"

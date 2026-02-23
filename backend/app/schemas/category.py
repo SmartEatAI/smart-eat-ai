@@ -12,7 +12,7 @@ class CategoryBase(BaseModel):
         return v.strip().lower()
     
 class CategoryUpdate(BaseModel):
-    id: int = Field(..., description="ID of the category to update")
+    id: Optional[int] = Field(None, description="ID of the category to update")
     name: str = Field(..., description="Name of the category")
 
     @field_validator('name')
