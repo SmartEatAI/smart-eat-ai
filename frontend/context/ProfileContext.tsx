@@ -81,7 +81,12 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
         tastes: normalizeNames(data.tastes),
         restrictions: normalizeNames(data.restrictions),
       };
+      
+      /*#######################################
+        DEBUG: Ver el payload antes de enviarlo
+        #######################################*/
       console.log("Updating profile with data:", payload);
+      
       const token = localStorage.getItem("token");
       const res = await fetch("http://localhost:8000/api/profile/", {
         method: "PUT",
