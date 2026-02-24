@@ -23,9 +23,9 @@ export default function ProposalCard({
     onCancel,
 }: ProposalCardProps) {
     return (
-        <Card className="w-full md:max-w-md lg:max-w-lg">
+        <Card className="w-full min-w-[220px] max-w-[350px] min-h-[345px] border rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 bg-card flex flex-col">
             {/* Imagen con Badge */}
-            <div className="relative h-40 md:h-52 w-full">
+            <div className="relative h-40 md:h-52 w-full flex-shrink-0 flex-grow">
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                 <div
                     className="w-full h-full bg-cover bg-center"

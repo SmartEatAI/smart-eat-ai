@@ -10,7 +10,7 @@ export default function DaySelector({ days }: { days: Day[] }) {
 
 
   return (
-    <div className="flex overflow-x-auto scrollbar-hide gap-2 py-8 justify-center">
+    <div className="flex overflow-x-auto scrollbar-hide gap-2 py-10 justify-center">
       {days.map((day, i) => (
         <a
           key={i}
@@ -19,10 +19,10 @@ export default function DaySelector({ days }: { days: Day[] }) {
           onClick={() => setSelectedDay(day.name.toLowerCase())}
         >
           <Button
-            variant="day"
+            variant="secondary"
             className={`${
               selectedDay === day.name.toLowerCase()
-                ? "bg-primary text-black"
+                ? "bg-green-500 text-black"
                 : "bg-surface-dark text-[#9db9ab]"
             }`}
           >

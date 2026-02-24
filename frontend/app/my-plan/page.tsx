@@ -8,11 +8,42 @@ import DaySection from "@/components/my-plan/DaySection";
 import { Droplet, Dumbbell, Flame, Zap  } from "lucide-react";
 
 function MyPlanPage() {
+  const macros = {
+    calories: { current: 1950, goal: 2050 },
+    protein: { current: 135, goal: 130 },
+    carbs: { current: 210, goal: 250 },
+    fats: { current: 60, goal: 70 },
+  };
+
   const stats = [
-    { title: "Average Calories", value: "1950/2050", unit: "kcal", icon: <Flame /> },
-    { title: "Proteins", value: "135/130", unit: "g", icon: <Dumbbell /> },
-    { title: "Carbohydrates", value: "210/250", unit: "g", icon: <Zap /> },
-    { title: "Fats", value: "60/70", unit: "g", icon: <Droplet/> },
+    {
+      title: "Calories",
+      current: macros.calories.current,
+      goal: macros.calories.goal,
+      unit: "kcal",
+      icon: <Flame />,
+    },
+    {
+      title: "Proteins",
+      current: macros.protein.current,
+      goal: macros.protein.goal,
+      unit: "g",
+      icon: <Dumbbell />,
+    },
+    {
+      title: "Carbohydrates",
+      current: macros.carbs.current,
+      goal: macros.carbs.goal,
+      unit: "g",
+      icon: <Zap />,
+    },
+    {
+      title: "Fats",
+      current: macros.fats.current,
+      goal: macros.fats.goal,
+      unit: "g",
+      icon: <Droplet />,
+    },
   ];
 
   const weekData = [
@@ -181,7 +212,7 @@ function MyPlanPage() {
 
   return (
     <AppLayout
-      title="My Nutrition Plan"
+      title="📆 My Nutrition Plan"
       subtitle="Your personalized plan"
     >
       {/* Stats */}

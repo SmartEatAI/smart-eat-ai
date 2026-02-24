@@ -143,3 +143,12 @@
     @apply mt-1 text-xs text-red-400;
   }
 }
+
+/* Oculta la barra de scroll horizontal en todos los navegadores modernos */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE y Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;             /* Chrome, Safari y Opera */
+}
