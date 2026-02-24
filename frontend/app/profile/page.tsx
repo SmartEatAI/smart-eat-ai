@@ -113,7 +113,7 @@ function ProfilePage() {
               </div>
             </div>
 
-            <div className="lg:col-span-4 flex flex-col gap-8 h-full">
+            <div className="lg:col-span-4 flex flex-col gap-5 h-full">
               <div className="bg-card rounded-xl shadow p-6 h-full flex-1 flex flex-col">
                 <h2 className="text-xl font-bold mb-2">Preferences</h2>
                 <p className="text-muted-foreground mb-4">Customize your dietary preferences.</p>
