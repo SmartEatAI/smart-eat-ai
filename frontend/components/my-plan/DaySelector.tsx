@@ -1,21 +1,30 @@
 import { useState } from "react";
 import Button from "../ui/Button";
 
+import { useRef, useEffect } from "react";
+
 type Day = {
   name: string;
 };
 
 export default function DaySelector({ days }: { days: Day[] }) {
   const [selectedDay, setSelectedDay] = useState(days[0].name.toLowerCase());
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollLeft = 0;
+    }
+  }, []);
 
 
   return (
-    <div className="flex overflow-x-auto scrollbar-hide gap-2 py-10 justify-center">
+    <div ref={scrollRef} className="flex min-w-0 overflow-x-auto scrollbar-hide gap-2 py-10 pl-4 pr-4 snap-x md:justify-center">
       {days.map((day, i) => (
         <a
           key={i}
           href={`#${day.name.toLowerCase()}`}
-          className="shrink-0"
+          className="shrink-0 snap-start"
           onClick={() => setSelectedDay(day.name.toLowerCase())}
         >
           <Button

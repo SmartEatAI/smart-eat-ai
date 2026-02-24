@@ -90,30 +90,40 @@ function ProfilePage() {
         <div className="flex-1 flex flex-col gap-4 p-4">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div className="lg:col-span-8 flex flex-col gap-8">
-              <BiometricsSection
-                data={form}
-                onChange={updateField}
-              />
-              {birthDateError && (
-                <div className="text-red-500 text-sm mt-2">{birthDateError}</div>
-              )}
-
-              <GoalSection
-                goal={form.goal}
-                setGoal={(g) => updateField("goal", g)}
-                activityLevel={form.activity_level}
-                setActivityLevel={(v) => updateField("activity_level", v)}
-              />
+              <div className="bg-card rounded-xl shadow p-6">
+                <h2 className="text-xl font-bold mb-2">Biometrics</h2>
+                <p className="text-muted-foreground mb-4">Your basic physical information.</p>
+                <BiometricsSection
+                  data={form}
+                  onChange={updateField}
+                />
+                {birthDateError && (
+                  <div className="text-red-500 text-sm mt-2">{birthDateError}</div>
+                )}
+              </div>
+              <div className="bg-card rounded-xl shadow p-6">
+                <h2 className="text-xl font-bold mb-2">Goal</h2>
+                <p className="text-muted-foreground mb-4">Set your nutrition and activity goals.</p>
+                <GoalSection
+                  goal={form.goal}
+                  setGoal={(g) => updateField("goal", g)}
+                  activityLevel={form.activity_level}
+                  setActivityLevel={(v) => updateField("activity_level", v)}
+                />
+              </div>
             </div>
 
-            <div className="lg:col-span-4 flex flex-col gap-8">
-              <PreferencesSection
-                meals={form.meals_per_day}
-                setMeals={(n) => updateField("meals_per_day", n)}
-                dietTypes={form.diet_types || []}
-                setDietTypes={(diets) => updateField("diet_types", diets)}
-              />
-
+            <div className="lg:col-span-4 flex flex-col gap-8 h-full">
+              <div className="bg-card rounded-xl shadow p-6 h-full flex-1 flex flex-col">
+                <h2 className="text-xl font-bold mb-2">Preferences</h2>
+                <p className="text-muted-foreground mb-4">Customize your dietary preferences.</p>
+                <PreferencesSection
+                  meals={form.meals_per_day}
+                  setMeals={(n) => updateField("meals_per_day", n)}
+                  dietTypes={form.diet_types || []}
+                  setDietTypes={(diets) => updateField("diet_types", diets)}
+                />
+              </div>
               <Button onClick={saveProfile}>
                 Save Profile
               </Button>

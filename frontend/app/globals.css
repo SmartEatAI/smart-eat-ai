@@ -1,3 +1,20 @@
+/* Hide number input spinners for all number inputs */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+/* Make native date input calendar icon white for dark backgrounds */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(2);
+}
+input[type="date"]::-webkit-input-placeholder { color: #fff; }
+input[type="date"]::-moz-placeholder { color: #fff; }
+input[type="date"]:-ms-input-placeholder { color: #fff; }
+input[type="date"]::placeholder { color: #fff; }
 @import "tailwindcss";
 
 @plugin "tailwindcss-animate";

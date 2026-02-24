@@ -5,11 +5,11 @@ type Props = {
 
 export default function BiometricsSection({ data, onChange }: Props) {
   return (
-    <section className="bg-[#15201b] border border-surface-border rounded-xl p-6">
+    <section className="bg-gradient-to-br from-green-950/70 to-green-900/50 rounded-xl p-6">
       <h2 className="text-xl font-bold mb-6">Body Data</h2>
       <div className="grid md:grid-cols-3 gap-6">
         <label className="flex flex-col gap-2">
-          <span className="text-text-secondary text-sm">Birth Date</span>
+          <span className="text-text-secondary text-sm font-medium">Birth Date</span>
           <input
             type="date"
             value={data.birth_date || ""}
@@ -19,7 +19,7 @@ export default function BiometricsSection({ data, onChange }: Props) {
           />
         </label>
         <label className="flex flex-col gap-2">
-          <span className="text-text-secondary text-sm">Weight</span>
+          <span className="text-text-secondary text-sm font-medium">Weight</span>
           <div className="relative">
             <input
               type="number"
@@ -31,7 +31,7 @@ export default function BiometricsSection({ data, onChange }: Props) {
           </div>
         </label>
         <label className="flex flex-col gap-2">
-          <span className="text-text-secondary text-sm">Height</span>
+          <span className="text-text-secondary text-sm font-medium">Height</span>
           <div className="relative">
             <input
               type="number"
