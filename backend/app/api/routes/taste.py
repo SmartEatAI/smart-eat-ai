@@ -2,7 +2,7 @@ from app.schemas.category import CategoryBase
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.crud import taste as crud
+from app.services.taste import TasteService
 
 router = APIRouter(prefix="/taste")
 
@@ -10,4 +10,4 @@ router = APIRouter(prefix="/taste")
 def read_tastes(
     db: Session = Depends(get_db), 
 ):
-    return crud.get_tastes(db)
+    return TasteService.list_tastes(db)
