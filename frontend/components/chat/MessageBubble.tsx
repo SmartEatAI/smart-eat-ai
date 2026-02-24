@@ -28,11 +28,13 @@ export default function MessageBubble({
                     }`}
             >
                 <span className="text-gray-500 dark:text-[#9db9a6] text-[11px] font-medium">
-                    {isUser ? "You" : "Intelligent Chef"} • {time}
+                    {isUser ? "You" : "SmartEatAI Chef"} • {time}
                 </span>
 
                 <div
-                    className={`p-3 md:p-4 rounded-2xl shadow-sm break-words ${isUser ? "rounded-tr-none bg-primary text-[#111813]" : "rounded-tl-none bg-surface-light dark:bg-surface-dark border border-gray-100 dark:border-gray-800"}`}
+                    className={`p-3 md:p-4 rounded-2xl shadow-sm break-words ${isUser
+                        ? "rounded-tr-none bg-primary text-[#111813]"
+                        : "rounded-tl-none bg-green-950/70 text-primary border border-green-900"}`}
                 >
                     <p className="text-sm md:text-base leading-relaxed">{text}</p>
                 </div>
