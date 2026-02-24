@@ -8,7 +8,7 @@ from app.crud.plan import (
 )
 from app.crud.profile import exist_profile
 from app.core.validation import ValidationService
-from app.schemas.plan import PlanBase
+from app.schemas.plan import PlanCreate
 
 class PlanService:
     """Servicio para manejar operaciones relacionadas con planes."""
@@ -34,7 +34,7 @@ class PlanService:
             )
 
     @staticmethod
-    def create_plan(db: Session, obj_in: PlanBase, user_id: int):
+    def create_plan(db: Session, obj_in: PlanCreate, user_id: int):
         try:
             ValidationService.validate_profile_exists(exist_profile(db, user_id))
             deactivate_current_plan(db, user_id)

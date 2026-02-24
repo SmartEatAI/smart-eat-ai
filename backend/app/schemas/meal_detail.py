@@ -5,10 +5,14 @@ from .recipe import RecipeResponse
 # Esquemas para Detalles de Comida dentro del Menú Diario
 class MealDetailBase(BaseModel):
     recipe_id: int = Field(..., description="Recipe ID associated with the meal detail")
-    daily_menu_id: int = Field(..., description="Daily Menu ID associated with the meal detail")
+    # Este campo no es necesario
+    #daily_menu_id: int = Field(..., description="Daily Menu ID associated with the meal detail")
     schedule: int = Field(..., gte=1, lte=6, description="Schedule of the meal detail in minutes since midnight")
     status: int = Field(..., description="Status of the meal detail (0: pending, 1: completed)")
     meal_type: MealTypeEnum = Field(..., description="Type of meal (breakfast, lunch, dinner, snack)")
+
+class MealDetailCreate(MealDetailBase):
+    daily_menu_id: int = Field(..., description="Daily Menu ID associated with the meal detail")
 
 # Esquema para la respuesta de MealDetail
 class MealDetailResponse(MealDetailBase):

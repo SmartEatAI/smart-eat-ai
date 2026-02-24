@@ -9,7 +9,7 @@ from app.crud.meal_detail import (
 )
 from app.crud.recipe import get_recipe_by_id
 from app.core.validation import ValidationService
-from app.schemas.meal_detail import MealDetailBase, MealDetailResponse
+from app.schemas.meal_detail import MealDetailCreate, MealDetailResponse
 
 class MealDetailService:
     """Servicio para manejar operaciones relacionadas con detalles de comida."""
@@ -30,7 +30,7 @@ class MealDetailService:
             )
 
     @staticmethod
-    def create_meal_detail(db: Session, obj_in: MealDetailBase):
+    def create_meal_detail(db: Session, obj_in: MealDetailCreate):
         try:
             receta = get_recipe_by_id(db, recipe_id=obj_in.recipe_id)
             ValidationService.validate_recipe_exists(receta)

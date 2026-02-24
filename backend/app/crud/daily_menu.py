@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from app.models.daily_menu import DailyMenu
-from app.schemas.daily_menu import DailyMenuBase
+from app.schemas.daily_menu import DailyMenuCreate
 from fastapi import HTTPException
 
 def get_daily_menu_by_id(db: Session, daily_menu_id: int):
@@ -11,7 +11,7 @@ def get_daily_menu_by_id(db: Session, daily_menu_id: int):
         print(f"Database error when get_daily_menu_by_id: {e}")
         raise HTTPException(status_code=500, detail="Database error when get_daily_menu_by_id")
 
-def create_daily_menu(db: Session, obj_in: DailyMenuBase):
+def create_daily_menu(db: Session, obj_in: DailyMenuCreate):
     """Crea un nuevo menú diario."""
     try:
         db_daily_menu = DailyMenu(**obj_in.model_dump())

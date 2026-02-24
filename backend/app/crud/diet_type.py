@@ -72,3 +72,12 @@ def add_diet_type_to_profile(db: Session, diet_type_id: int, profile_id: int):
     except Exception as e:
         print(f"Database error when add_diet_type_to_profile: {e}")
         raise HTTPException(status_code=500, detail="Database error when add_diet_type_to_profile")
+    
+def create_diet_type(db: Session, obj_in: CategoryBase):
+    """Crea un nuevo tipo de dieta."""
+    data = obj_in.model_dump()
+    db_diet_type = DietType(**data)
+    db.add(db_diet_type)
+    db.commit()
+    db.refresh(db_diet_type)
+    return db_diet_type

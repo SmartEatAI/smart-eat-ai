@@ -9,7 +9,7 @@ from app.crud.profile import (
 )
 from app.models.taste import Taste
 from app.models.restriction import Restriction
-from app.crud.category import process_profile_categories
+from app.crud.category import process_categories
 from app.schemas.profile import ProfileCreate
 from app.utils.calculations import calculate_macros, calculate_fat_percentage
 from app.core.database import DatabaseService
@@ -60,9 +60,9 @@ class ProfileService:
 
             # Asignar relaciones en ambos casos
             if hasattr(obj_in, "tastes"):
-                db_profile.tastes = process_profile_categories(db, Taste, obj_in.tastes)
+                db_profile.tastes = process_categories(db, Taste, obj_in.tastes)
             if hasattr(obj_in, "restrictions"):
-                db_profile.restrictions = process_profile_categories(db, Restriction, obj_in.restrictions)
+                db_profile.restrictions = process_categories(db, Restriction, obj_in.restrictions)
             if hasattr(obj_in, "diet_types"):
                 styles_input = obj_in.diet_types
                 styles_instances = []
