@@ -1,39 +1,47 @@
 import { useState, KeyboardEvent } from "react";
 
+
 type Props = {
   meals: number;
   setMeals: (n: number) => void;
+  dietTypes: string[];
+  setDietTypes: (diets: string[]) => void;
 };
 
-export default function PreferencesSection({ meals, setMeals }: Props) {
-  const options = [3, 4, 5, 6];
 
-  // Estado para dietas seleccionadas
-  const [diets, setDiets] = useState<string[]>(["Keto"]);
-
-  // Estado para alergias/intolerancias
-  const [allergies, setAllergies] = useState<string[]>(["Gluten"]);
+export default function PreferencesSection({ meals, setMeals, dietTypes, setDietTypes }: Props) {
+  const [allergies, setAllergies] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
-
-  const dietOptions = ["Omnivore", "Vegan", "Keto", "Paleo", "Vegetarian"];
-
-  const toggleDiet = (diet: string) => {
-    setDiets((prev) =>
-      prev.includes(diet) ? prev.filter((d) => d !== diet) : [...prev, diet]
-    );
-  };
-
   const addAllergy = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && inputValue.trim() !== "") {
-      if (!allergies.includes(inputValue.trim())) {
-        setAllergies([...allergies, inputValue.trim()]);
-      }
+    if (e.key === "Enter" && inputValue.trim()) {
+      e.preventDefault();
+      setAllergies([...allergies, inputValue.trim()]);
       setInputValue("");
     }
   };
 
   const removeAllergy = (allergy: string) => {
     setAllergies(allergies.filter((a) => a !== allergy));
+  };
+
+  const options = [3, 4, 5, 6];
+  // Enums backend: high_protein, low_carb, vegan, vegetarian, low_calorie, high_fiber, high_carb
+  const dietOptions = [
+    { value: "high_protein", label: "High Protein" },
+    { value: "low_carb", label: "Low Carb" },
+    { value: "vegan", label: "Vegan" },
+    { value: "vegetarian", label: "Vegetarian" },
+    { value: "low_calorie", label: "Low Calorie" },
+    { value: "high_fiber", label: "High Fiber" },
+    { value: "high_carb", label: "High Carb" },
+  ];
+
+  const toggleDiet = (diet: string) => {
+    setDietTypes(
+      dietTypes.includes(diet)
+        ? dietTypes.filter((d) => d !== diet)
+        : [...dietTypes, diet]
+    );
   };
 
   return (
@@ -67,15 +75,15 @@ export default function PreferencesSection({ meals, setMeals }: Props) {
         </span>
         <div className="flex flex-wrap gap-2">
           {dietOptions.map((diet) => (
-            <label key={diet} className="cursor-pointer flex-shrink-0">
+            <label key={diet.value} className="cursor-pointer flex-shrink-0">
               <input
                 type="checkbox"
                 className="sr-only peer"
-                checked={diets.includes(diet)}
-                onChange={() => toggleDiet(diet)}
+                checked={dietTypes.includes(diet.value)}
+                onChange={() => toggleDiet(diet.value)}
               />
               <span className="px-3 py-1.5 rounded-full border border-surface-border bg-surface-dark text-text-secondary text-sm peer-checked:border-primary peer-checked:text-primary peer-checked:bg-primary/10 transition-colors whitespace-nowrap">
-                {diet}
+                {diet.label}
               </span>
             </label>
           ))}

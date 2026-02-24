@@ -1,36 +1,23 @@
-import { useState } from "react";
-
 type Props = {
   goal: string;
   setGoal: (goal: string) => void;
+  activityLevel: string;
+  setActivityLevel: (level: string) => void;
 };
 
-export default function GoalSection({ goal, setGoal }: Props) {
-  const goals = [
-    { id: "lose", label: "Lose Fat" },
-    { id: "maintain", label: "Maintain" },
-    { id: "gain", label: "Gain Muscle" },
-  ];
+const activityLevels = [
+  { value: "low", label: "Sedentary" },
+  { value: "medium", label: "Moderate" },
+  { value: "high", label: "Active" },
+];
 
-  const [activityLevel, setActivityLevel] = useState(3);
+const goals = [
+  { id: "lose_weight", label: "Lose Fat" },
+  { id: "maintain_weight", label: "Maintain" },
+  { id: "gain_weight", label: "Gain Muscle" },
+];
 
-  const getLevelLabel = (value: number) => {
-    switch (value) {
-      case 1:
-        return "Sedentary";
-      case 2:
-        return "Light";
-      case 3:
-        return "Moderate";
-      case 4:
-        return "Active";
-      case 5:
-        return "Athlete";
-      default:
-        return "";
-    }
-  };
-
+export default function GoalSection({ goal, setGoal, activityLevel, setActivityLevel }: Props) {
   return (
     <section className="bg-[#15201b] border border-surface-border rounded-xl p-6">
       <h2 className="text-xl font-bold mb-6">Main Goal</h2>
@@ -55,25 +42,24 @@ export default function GoalSection({ goal, setGoal }: Props) {
         <div className="flex justify-between items-end mb-4">
           <label className="text-white font-medium">Activity Level</label>
           <span className="text-primary text-sm font-bold bg-primary/10 px-3 py-1 rounded-full">
-            {getLevelLabel(activityLevel)}
+            {activityLevels.find((a) => a.value === activityLevel)?.label || ""}
           </span>
         </div>
 
-        <input
-          className="w-full bg-surface-dark"
-          type="range"
-          min={1}
-          max={5}
-          value={activityLevel}
-          onChange={(e) => setActivityLevel(Number(e.target.value))}
-        />
-
-        <div className="flex justify-between text-xs text-text-secondary mt-2 font-medium">
-          <span>Sedentario</span>
-          <span>Ligero</span>
-          <span>Moderado</span>
-          <span>Activo</span>
-          <span>Atleta</span>
+        <div className="flex gap-2">
+          {activityLevels.map((a) => (
+            <button
+              key={a.value}
+              onClick={() => setActivityLevel(a.value)}
+              className={`flex-1 py-2 rounded-md text-sm transition ${
+                activityLevel === a.value
+                  ? "bg-primary text-black font-bold"
+                  : "bg-surface-dark text-text-secondary"
+              }`}
+            >
+              {a.label}
+            </button>
+          ))}
         </div>
       </div>
     </section>
