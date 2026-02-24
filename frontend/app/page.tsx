@@ -20,6 +20,7 @@ import { useRef } from "react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { useAuth } from "@/hooks/useAuth";
 
 {
   /* Define the Review interface and sample reviews data */
@@ -68,6 +69,7 @@ const reviews: Review[] = [
 
 export default function Home() {
   const autoplay = useRef(Autoplay({ delay: 8000, stopOnInteraction: true }));
+  console.log("User from Home page:", useAuth().user);
 
   return (
     <main className="w-full min-h-screen">

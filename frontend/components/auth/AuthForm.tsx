@@ -8,6 +8,7 @@ import { Eye } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 
 import Button from "@/components/ui/Button";
 import Toast from "@/components/ui/Toast";
@@ -48,6 +49,7 @@ const AuthForm: React.FC = () => {
     });
 
     const router = useRouter();
+    const { login } = useAuth();
 
     // LLAMADA REAL A LA API
     const onSubmit = async (data: FormData) => {
@@ -83,12 +85,9 @@ const AuthForm: React.FC = () => {
                 type: "success"
             });
 
-            // Save token and user data (both endpoints now return the same structure)
+            // Guardar usuario en contexto (el token puede manejarse aquí o en el contexto si se requiere)
             if (result.access_token && result.user) {
-                localStorage.setItem("token", result.access_token);
-                localStorage.setItem("user", JSON.stringify(result.user));
-                
-                // Redirect to dashboard after a short delay
+                login(result.user, result.access_token); // Si el contexto se ha extendido para manejar el token
                 setTimeout(() => {
                     router.push("/dashboard");
                 }, 1500);
