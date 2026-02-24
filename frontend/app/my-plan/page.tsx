@@ -7,12 +7,16 @@ import DaySelector from "@/components/my-plan/DaySelector";
 import DaySection from "@/components/my-plan/DaySection";
 import { Droplet, Dumbbell, Flame, Zap  } from "lucide-react";
 
+
+import { useProfile } from "@/hooks/useProfile";
+
 function MyPlanPage() {
+  const { profile } = useProfile();
   const macros = {
-    calories: { current: 1950, goal: 2050 },
-    protein: { current: 135, goal: 130 },
-    carbs: { current: 210, goal: 250 },
-    fats: { current: 60, goal: 70 },
+    calories: { current: 0, goal: profile?.calories_target || 0 },
+    protein: { current: 0, goal: profile?.protein_target || 0 },
+    carbs: { current: 0, goal: profile?.carbs_target || 0 },
+    fats: { current: 0, goal: profile?.fat_target || 0 },
   };
 
   const stats = [

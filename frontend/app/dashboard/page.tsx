@@ -13,17 +13,12 @@ import RecipeCard from "@/components/ui/cards/recipe-card";
 import MacronutrientCard from "@/components/ui/cards/macronutrient-card";
 import ProgressCard from "@/components/ui/cards/progress-card";
 import { useState, useEffect } from "react";
+import { useProfile } from "@/hooks/useProfile";
 import Image from "next/image";
 import Button from "@/components/ui/Button";
 import { Check } from "lucide-react";
 import type { User } from "@/types/user";
 
-const mockMacronutrients = {
-    calories: { current: 800, goal: 2100 },
-    protein: { current: 120, goal: 150 },
-    carbs: { current: 100, goal: 200 },
-    fats: { current: 45, goal: 60 },
-};
 
 const mockRecipes = [
     {
@@ -123,8 +118,15 @@ const meals: Meal[] = [
     },
 ];
 
+
 export default function Dashboard() {
-    const [macronutrients, setMacronutrients] = useState(mockMacronutrients);
+    const { profile } = useProfile();
+    const [macronutrients, setMacronutrients] = useState({
+        calories: { current: 0, goal: 0 },
+        protein: { current: 0, goal: 0 },
+        carbs: { current: 0, goal: 0 },
+        fats: { current: 0, goal: 0 },
+    });
     const [recipes] = useState(mockRecipes);
     const [user, setUser] = useState<User | null>(null);
     const [mealList, setMealList] = useState(meals);
@@ -143,55 +145,18 @@ export default function Dashboard() {
         }
     }, []);
 
-    // ========== DESARROLLO: Sincronizar con mockMacronutrients ==========
-    // Comentar o eliminar este useEffect cuando se conecte con el backend real
+    // Actualizar macros goal cuando cambia el profile
     useEffect(() => {
-        setMacronutrients(mockMacronutrients);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [mockMacronutrients]);
+        if (profile) {
+            setMacronutrients({
+                calories: { current: 0, goal: profile.calories_target || 0 },
+                protein: { current: 0, goal: profile.protein_target || 0 },
+                carbs: { current: 0, goal: profile.carbs_target || 0 },
+                fats: { current: 0, goal: profile.fat_target || 0 },
+            });
+        }
+    }, [profile]);
 
-    // ========== PRODUCCIÓN: Fetch de datos reales del backend ==========
-    // Descomentar este useEffect cuando conecte con la API
-    // useEffect(() => {
-    //     const fetchMacronutrients = async () => {
-    //         try {
-    //             const response = await fetch('/api/user/macronutrients', {
-    //                 headers: {
-    //                     'Authorization': `Bearer ${/* tu token de autenticación */}`,
-    //                 },
-    //             });
-    //             if (!response.ok) throw new Error('Error al obtener macronutrientes');
-    //             const data = await response.json();
-    //             setMacronutrients(data);
-    //         } catch (error) {
-    //             console.error('Error fetching macronutrients:', error);
-    //             // Opcionalmente: mostrar mensaje de error al usuario
-    //         }
-    //     };
-    //     fetchMacronutrients();
-    // }, []); // Solo se ejecuta al montar el componente
-
-    // ========== PRODUCCIÓN: Fetch de datos del usuario ==========
-    // Descomentar este useEffect cuando conectes con tu API
-    // useEffect(() => {
-    //     const fetchUserData = async () => {
-    //         try {
-    //             const response = await fetch('/api/user/profile', {
-    //                 headers: {
-    //                     'Authorization': `Bearer ${/* tu token de autenticación */}`,
-    //                 },
-    //             });
-    //             if (!response.ok) throw new Error('Error al obtener datos del usuario');
-    //             const data = await response.json();
-    //             setUser(data);
-    //         } catch (error) {
-    //             console.error('Error fetching user data:', error);
-    //         }
-    //     };
-    //     fetchUserData();
-    // }, []);
-
-    // Función para actualizar cualquier macronutriente dinámicamente
     const updateMacro = (
         macroType: 'calories' | 'protein' | 'carbs' | 'fats',
         newValue: { current?: number; goal?: number }
