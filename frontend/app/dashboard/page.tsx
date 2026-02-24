@@ -1,6 +1,6 @@
 "use client";
 
-import Sidebar from "@/components/layout/Sidebar";
+import { AppLayout } from "@/components/layout/AppLayout";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import { 
     Carousel, 
@@ -212,16 +212,15 @@ export default function Dashboard() {
 
     return (
         <ProtectedRoute>
-            <div className="flex min-h-screen h-screen">
-                <Sidebar className="h-full" />
-                <main className="flex-1 p-6 pt-20 md:pt-6 bg-background text-secondary h-full overflow-y-auto">
-                <div className="flex items-center justify-between mb-6">
-                    <h1 className="text-2xl font-bold text-primary">📊 Dashboard</h1>
-                    <p className="text-lg text-muted-foreground">
+            <AppLayout
+                title="📊 Dashboard"
+                subtitle={
+                    <span className="text-base md:text-lg text-muted-foreground">
                         Hello, <span className="font-semibold text-primary">{user?.name || "Guest"}</span> 👋
-                    </p>
-                </div>
-
+                    </span>
+                }
+                subtitleAlign="right"
+            >
                 {/* Cards Grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
                     {/* Macronutrients Card */}
@@ -241,7 +240,7 @@ export default function Dashboard() {
                 </div>
 
                 {/* Meal Schedule Section */}
-                <h2 className="text-xl font-semibold mb-4 text-primary">Meal Schedule</h2>
+                <h2 className="text-2xl font-bold tracking-tight text-primary mb-4 border-b border-muted pb-2">Meal Schedule</h2>
                 <div className="space-y-4">
                     {mealList.map((meal) => (
                         <div
@@ -284,7 +283,7 @@ export default function Dashboard() {
                 </div>
 
                 {/* Recommended Recipes Carousel */}
-                <h2 className="text-xl font-semibold my-4 text-primary">Recommended Recipes</h2>
+                <h2 className="text-2xl font-bold tracking-tight text-primary my-4 border-b border-muted pb-2">Recommended Recipes</h2>
                 <div className="relative">
                     <Carousel opts={{ loop: true, align: "start" }} className="w-full">
                         <CarouselContent className="-ml-2 md:-ml-4">
@@ -298,8 +297,7 @@ export default function Dashboard() {
                         <CarouselNext className="hidden lg:flex right-2" />
                     </Carousel>
                 </div>
-            </main>
-        </div>
+            </AppLayout>
         </ProtectedRoute>
     );
 }
