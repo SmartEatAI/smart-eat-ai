@@ -37,7 +37,8 @@ class Profile(Base):
         secondary="profiles_restrictions",
         back_populates="profiles"
     )
-    eating_styles = relationship(
-        "EatingStyle",
-        secondary="profiles_eating_styles",
+    diet_types = relationship(
+        "DietType",
+        secondary="profiles_diet_types",
+        back_populates="profiles"
     )

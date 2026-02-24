@@ -1,7 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List, Optional
-from datetime import time
-from enum import Enum
+from typing import List
 
 from .meal_detail import MealDetailResponse
 

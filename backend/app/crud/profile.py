@@ -1,21 +1,16 @@
-from fastapi import HTTPException
-from app.utils.calculations import calculate_macros, calculate_fat_percentage
 from sqlalchemy.orm import Session
 from app.models.profile import Profile
-from app.models.taste import Taste
-from app.models.restriction import Restriction
-from app.schemas.profile import ProfileCreate
-from app.crud.category import process_profile_categories
+from fastapi import HTTPException
 
 def exist_profile(db: Session, user_id: int) -> bool:
     """Verifica si un perfil existe para un usuario específico."""
     try:
         return db.query(Profile).filter(Profile.user_id == user_id).first() is not None
     except Exception as e:
-        print(f"Error al verificar si existe el perfil: {e}")
-        raise e
+        print(f"Database error when exist_profile: {e}")
+        raise HTTPException(status_code=500, detail="Database error when exist_profile")
 
-def get_profile(db: Session, user_id: int):
+def get_profile(db: Session, user_id: int) -> Profile:
     """Obtiene el perfil asociado a un usuario específico."""
     return db.query(Profile).filter(Profile.user_id == user_id).first()
 

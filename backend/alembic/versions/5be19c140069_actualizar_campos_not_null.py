@@ -27,6 +27,9 @@ def upgrade() -> None:
     op.alter_column('meal_types', 'name',
                existing_type=sa.VARCHAR(length=50),
                nullable=False)
+    op.alter_column('users', 'updated_at',
+               existing_type=sa.TIMESTAMP(),
+               nullable=True)
     # ### end Alembic commands ###
 
 
