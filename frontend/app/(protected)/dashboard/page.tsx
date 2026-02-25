@@ -1,15 +1,6 @@
 "use client";
 
 import { AppLayout } from "@/components/layout/AppLayout";
-import ProtectedRoute from "@/components/auth/ProtectedRoute";
-import { 
-    Carousel, 
-    CarouselContent, 
-    CarouselItem, 
-    CarouselNext, 
-    CarouselPrevious 
-} from "@/components/ui/carousel";
-import RecipeCard from "@/components/ui/cards/recipe-card";
 import MacronutrientCard from "@/components/ui/cards/macronutrient-card";
 import ProgressCard from "@/components/ui/cards/progress-card";
 import { useState, useEffect } from "react";
@@ -18,35 +9,6 @@ import Image from "next/image";
 import Button from "@/components/ui/Button";
 import { Check } from "lucide-react";
 import type { User } from "@/types/user";
-
-
-const mockRecipes = [
-    {
-        title: "Omelette with Ham",
-        calories: 350,
-        image: "/images/receta_1.jpg",
-    },
-    {
-        title: "Gnocci with Tuna",
-        calories: 550,
-        image: "/images/receta_2.jpg",
-    },
-    {
-        title: "Salmon with Salad",
-        calories: 480,
-        image: "/images/receta_3.jpg",
-    },
-    {
-        title: "Seafood Creamy Soup",
-        calories: 420,
-        image: "/images/receta_4.jpg",
-    },
-    {
-        title: "Sweet Potato Fries",
-        calories: 390,
-        image: "/images/receta_5.jpg",
-    },
-];
 
 interface Meal {
     id: number;
@@ -127,11 +89,10 @@ export default function Dashboard() {
         carbs: { current: 0, goal: 0 },
         fats: { current: 0, goal: 0 },
     });
-    const [recipes] = useState(mockRecipes);
     const [user, setUser] = useState<User | null>(null);
     const [mealList, setMealList] = useState(meals);
 
-    // Load user data from localStorage
+// Load user data from localStorage
     useEffect(() => {
         const userData = localStorage.getItem("user");
         if (userData) {
@@ -244,22 +205,6 @@ export default function Dashboard() {
                             </Button>
                         </div>
                     ))}
-                </div>
-
-                {/* Recommended Recipes Carousel */}
-                <h2 className="text-2xl font-bold tracking-tight text-primary my-4 border-b border-muted pb-2">Recommended Recipes</h2>
-                <div className="relative">
-                    <Carousel opts={{ loop: true, align: "start" }} className="w-full">
-                        <CarouselContent className="-ml-2 md:-ml-4">
-                            {recipes.map((recipe, index) => (
-                                <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
-                                    <RecipeCard {...recipe} />
-                                </CarouselItem>
-                            ))}
-                        </CarouselContent>
-                        <CarouselPrevious className="hidden lg:flex left-2" />
-                        <CarouselNext className="hidden lg:flex right-2" />
-                    </Carousel>
                 </div>
             </AppLayout>
     );
