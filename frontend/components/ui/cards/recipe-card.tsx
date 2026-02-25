@@ -10,12 +10,32 @@ interface RecipeCardProps {
   protein?: number;
   carbs?: number;
   fats?: number;
+  mealType?: string | string[];
   images: string[];
   recipeUrl?: string;
   children?: ReactNode;
 }
 
-export default function RecipeCard({ title, calories, protein, carbs, fats, images, recipeUrl, children }: RecipeCardProps) {
+export default function RecipeCard({ title, calories, protein, carbs, fats, mealType, images, recipeUrl, children }: RecipeCardProps) {
+  // Debug: log mealType prop and its type
+  if (typeof window !== "undefined") {
+    // eslint-disable-next-line no-console
+    console.log("[RecipeCard] mealType:", mealType, "type:", typeof mealType, Array.isArray(mealType) ? "array" : "not array");
+  }
+
+  // Función para formatear el mealType (ej: "breakfast" → "Breakfast")
+  const formatMealType = (type: string) => {
+    if (!type) return "";
+    return type.charAt(0).toUpperCase() + type.slice(1);
+  };
+
+  let mealTypeBadges: string[] = [];
+  if (Array.isArray(mealType)) {
+    mealTypeBadges = mealType.map(mt => typeof mt === "string" ? formatMealType(mt) : String(mt));
+  } else if (typeof mealType === "string" && mealType) {
+    mealTypeBadges = [formatMealType(mealType)];
+  }
+
   return (
     <div className="border rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 bg-card">
       <ImageCarousel images={images} alt={title} />
@@ -34,6 +54,20 @@ export default function RecipeCard({ title, calories, protein, carbs, fats, imag
             </a>
           )}
         </div>
+        {/* Meal Type - badge style */}
+        {mealTypeBadges.length > 0 && (
+          <div className="flex flex-wrap gap-1 mb-2">
+            {mealTypeBadges.map((badge, idx) => (
+              <span
+                key={idx}
+                className="inline-block bg-primary/10 text-primary text-xs font-semibold px-2 py-0.5 rounded-full border border-primary/20 tracking-wide"
+              >
+                {badge}
+              </span>
+            ))}
+          </div>
+        )}
+        {/* Macros info */}
         <p className="text-sm text-muted-foreground font-medium">
           {calories} kcal
           {typeof protein === "number" && typeof carbs === "number" && typeof fats === "number" && (

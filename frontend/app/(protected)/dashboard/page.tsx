@@ -234,6 +234,31 @@ export default function Dashboard() {
         }
     }, [profile]);
 
+    // Helper to render mealType as badge(s)
+    const renderMealTypeBadge = (mealType: any) => {
+        if (!mealType) return null;
+        let types: string[] = [];
+        if (Array.isArray(mealType)) {
+            types = mealType.map((mt) => typeof mt === 'string' ? mt : (mt?.name ?? String(mt)));
+        } else if (typeof mealType === 'string' && mealType) {
+            types = [mealType];
+        } else if (mealType?.name) {
+            types = [mealType.name];
+        }
+        return (
+            <div className="flex flex-wrap gap-1 mb-2 mt-1">
+                {types.map((badge, idx) => (
+                    <span
+                        key={idx}
+                        className="inline-block bg-primary/10 text-primary text-xs font-semibold px-2 py-0.5 rounded-full border border-primary/20 tracking-wide"
+                    >
+                        {badge.charAt(0).toUpperCase() + badge.slice(1)}
+                    </span>
+                ))}
+            </div>
+        );
+    };
+
     const toggleConsumed = (id: number) => {
         setMealList((prevMeals) => {
             const updatedMeals = prevMeals.map((meal) =>
@@ -380,9 +405,7 @@ export default function Dashboard() {
                                     <h3 className="text-lg font-semibold text-primary">
                                         {meal.name}
                                     </h3>
-                                    <p className="text-sm text-muted-foreground">
-                                        {meal.mealType}
-                                    </p>
+                                    {renderMealTypeBadge(meal.mealType)}
                                     <p className="text-xs text-muted-foreground mt-1">
                                         {meal.calories} kcal • {meal.protein}g Prot • {meal.carbs}g Carb • {meal.fat}g Fat
                                     </p>
