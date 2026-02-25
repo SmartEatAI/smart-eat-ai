@@ -37,6 +37,7 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
       if (res.status === 404) {
         setHasProfile(false);
         setProfile(null);
+        setLoading(false)
         return;
       }
 

@@ -5,12 +5,14 @@ import ProfileGuard from "@/components/auth/ProfileGuard";
 
 export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
   return (
-    <ProfileProvider>
+    
       <ProtectedRoute>
-        <ProfileGuard>
-          {children}
-        </ProfileGuard>
+        <ProfileProvider>
+          <ProfileGuard>
+            {children}
+          </ProfileGuard>
+        </ProfileProvider>
       </ProtectedRoute>
-    </ProfileProvider>
+    
   );
 }

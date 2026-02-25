@@ -1,7 +1,6 @@
 "use client";
 
 import { AppLayout } from "@/components/layout/AppLayout";
-import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import { useEffect, useState } from "react";
 import { useProfile } from "@/hooks/useProfile";
 import BiometricsSection from "@/components/profile/BiometricsSection";
@@ -90,7 +89,7 @@ export default function ProfilePage() {
   };
 
 
-  if (loading || !form) return <div className="p-8">Loading...</div>;
+  if (loading || !form) return <div className="p-8">Loading page profile...</div>;
   if (error) return <div className="p-8 text-red-500">{error}</div>;
 
   return (
