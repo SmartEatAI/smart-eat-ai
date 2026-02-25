@@ -20,3 +20,9 @@ joblib
 # numpy
 # matplotlib
 # seaborn
+
+# LangChain dependencies
+langchain
+langchain-community
+langchain-openai        # A veces necesaria para ciertos parsers de LangChain
+langchainhub            # Para descargar prompts de la comunidad

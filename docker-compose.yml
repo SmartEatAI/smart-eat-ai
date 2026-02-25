@@ -50,5 +50,22 @@ services:
     environment:
       ADMINER_DEFAULT_SERVER: db
 
+  ollama:
+    image: ollama/ollama:latest
+    container_name: smarteatai_ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+
+    # Este deploy solo en caso de tener/querer usar GPU NVIDIA
+    deploy:
+     resources:
+       reservations:
+         devices:
+           - driver: nvidia
+             count: 1
+             capabilities: [gpu]
 volumes:
   postgres_data:
+  ollama_data:
