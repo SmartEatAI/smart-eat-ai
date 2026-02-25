@@ -15,7 +15,7 @@ PyJWT
 
 # ML/NLP dependencies (descomentar si se usan)
 # scikit-learn
-# joblib
+joblib
 # pandas
 # numpy
 # matplotlib

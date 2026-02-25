@@ -8,10 +8,12 @@ import {
 } from "@/components/ui/carousel";
 
 type Meal = {
+  id?: number;
+  recipeId?: number;
   title: string;
   calories: number;
   description: string;
-  image?: string;
+  images?: string[];
 };
 
 type Day = {
@@ -31,7 +33,7 @@ export default function DaySection({ day }: { day: Day }) {
           {day.meals.map((meal, i) => (
             <CarouselItem
               key={i}
-              className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3 min-w-[220px] max-w-[350px] w-full"
+              className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3 min-w-55 max-w-87.5 w-full"
             >
               <MealItem meal={meal} />
             </CarouselItem>

@@ -13,9 +13,12 @@ const DAY_NAMES: Record<number, string> = {
   5: "Friday", 6: "Saturday", 7: "Sunday",
 };
 
-function getFirstImage(image_url: string | null | undefined): string | undefined {
-  if (!image_url) return undefined;
-  return image_url.split(/,\s*https?:\/\//)[0].trim() || undefined;
+function getAllImages(image_url: string | null | undefined): string[] {
+  if (!image_url) return [];
+  return image_url
+    .split(/,\s*(?=https?:\/\/)/)
+    .map((u) => u.trim())
+    .filter(Boolean);
 }
 
 function transformPlan(plan: any) {
@@ -25,10 +28,12 @@ function transformPlan(plan: any) {
     .map((menu: any) => ({
       name: DAY_NAMES[menu.day_of_week] ?? `Day ${menu.day_of_week}`,
       meals: (menu.meal_details ?? []).map((detail: any) => ({
+        id: detail.id,
+        recipeId: detail.recipe_id,
         title: detail.recipe?.name ?? "Unknown recipe",
         calories: detail.recipe?.calories ?? 0,
         description: detail.meal_type ?? "",
-        image: getFirstImage(detail.recipe?.image_url),
+        images: getAllImages(detail.recipe?.image_url),
       })),
     }));
 }
