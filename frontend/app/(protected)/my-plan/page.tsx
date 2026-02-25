@@ -10,7 +10,7 @@ import { Droplet, Dumbbell, Flame, Zap  } from "lucide-react";
 
 import { useProfile } from "@/hooks/useProfile";
 
-function MyPlanPage() {
+export default function MyPlanPage() {
   const { profile } = useProfile();
   const macros = {
     calories: { current: 0, goal: profile?.calories_target || 0 },
@@ -235,13 +235,5 @@ function MyPlanPage() {
         ))}
       </div>
     </AppLayout>
-  );
-}
-
-export default function MyPlanPageWrapper() {
-  return (
-    <ProtectedRoute>
-      <MyPlanPage />
-    </ProtectedRoute>
   );
 }

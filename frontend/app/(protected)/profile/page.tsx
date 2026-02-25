@@ -11,7 +11,7 @@ import Button from "@/components/ui/Button";
 import Toast from "@/components/ui/Toast";
 
 
-function ProfilePage() {
+export default function ProfilePage() {
   const { profile, loading, error, updateProfile } = useProfile();
   const [form, setForm] = useState<any>(null);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
@@ -157,13 +157,5 @@ function ProfilePage() {
         )}
       </div>
     </AppLayout>
-  );
-}
-
-export default function ProfilePageWrapper() {
-  return (
-    <ProtectedRoute>
-      <ProfilePage />
-    </ProtectedRoute>
   );
 }

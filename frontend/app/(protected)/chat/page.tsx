@@ -24,7 +24,7 @@ type Message = {
     };
 };
 
-function ChatPage() {
+export default function ChatPage() {
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -191,13 +191,5 @@ function ChatPage() {
                 />
             </div>
         </AppLayout>
-    );
-}
-
-export default function ChatPageWrapper() {
-    return (
-        <ProtectedRoute>
-            <ChatPage />
-        </ProtectedRoute>
     );
 }

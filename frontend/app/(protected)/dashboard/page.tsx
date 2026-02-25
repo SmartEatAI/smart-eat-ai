@@ -176,7 +176,6 @@ export default function Dashboard() {
     };
 
     return (
-        <ProtectedRoute>
             <AppLayout
                 title="📊 Dashboard"
                 subtitle={
@@ -263,6 +262,5 @@ export default function Dashboard() {
                     </Carousel>
                 </div>
             </AppLayout>
-        </ProtectedRoute>
     );
 }
