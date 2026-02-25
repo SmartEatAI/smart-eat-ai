@@ -10,7 +10,7 @@ class Recipe(Base):
     protein = Column(Integer, nullable=False, default=0)
     carbs = Column(Integer, nullable=False, default=0)
     fat = Column(Integer, nullable=False, default=0)
-    image_url = Column(String, default="## CAMBIAMEEEEEEE ##")
+    image_url = Column(String, default="/images/Image_not_available.png")
     recipe_url = Column(String)
 
     meal_types = relationship(
