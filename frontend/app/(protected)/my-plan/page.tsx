@@ -7,6 +7,7 @@ import DaySection from "@/components/my-plan/DaySection";
 import { Droplet, Dumbbell, Flame, Zap } from "lucide-react";
 import { useProfile } from "@/hooks/useProfile";
 import { useState, useEffect } from "react";
+import NoPlanCard from "@/components/my-plan/NoPlanCard";
 
 const DAY_NAMES: Record<number, string> = {
   1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday",
@@ -134,7 +135,7 @@ export default function MyPlanPage() {
       {loading ? (
         <div className="py-12 text-center text-muted-foreground">Loading plan...</div>
       ) : weekData.length === 0 ? (
-        <div className="py-12 text-center text-muted-foreground">No plan found. Generate one from the chat!</div>
+        <NoPlanCard />
       ) : (
         <>
           <DaySelector days={weekData} />
@@ -144,8 +145,8 @@ export default function MyPlanPage() {
             ))}
           </div>
         </>
-      )}
 
+      )}
     </AppLayout>
   );
 }
