@@ -99,6 +99,7 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
       }
       const updated = await res.json();
       setProfile(updated);
+      setHasProfile(true)
     } catch (err: any) {
       setError(err.message);
       setTimeout(() => {

@@ -35,13 +35,32 @@ export default function ProfileGuard({ children }: { children: React.ReactNode }
     }
   }, [isPublicPath]);
 
+  // Mostrar spinner global mientras se verifica el perfil (solo en rutas protegidas)
+  if ((loading || redirecting) && !isPublicPath) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-primary text-lg">Loading...</p>
+        </div>
+        {showToast && (
+          <Toast
+            message="Rellene su perfil para continuar"
+            type="error"
+            onClose={() => setShowToast(false)}
+          />
+        )}
+      </div>
+    );
+  }
+
   return (
     <>
       {showToast && (
-        <Toast 
-          message="Rellene su perfil para continuar" 
-          type="error" 
-          onClose={() => setShowToast(false)} 
+        <Toast
+          message="Rellene su perfil para continuar"
+          type="error"
+          onClose={() => setShowToast(false)}
         />
       )}
       {children}
