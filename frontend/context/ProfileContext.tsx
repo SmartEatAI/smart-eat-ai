@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import {Profile} from "@/types/profile"
 
@@ -16,6 +17,7 @@ interface ProfileContextType {
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
 
 export const ProfileProvider = ({ children }: { children: ReactNode }) => {
+  const router = useRouter();
   const { user } = useAuth();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(false);
@@ -88,11 +90,20 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
         },
         body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error("No se pudo actualizar el perfil");
+      if (!res.ok) {
+        setError("No se pudo actualizar el perfil");
+        setTimeout(() => {
+          router.push("/profile");
+        }, 3000);
+        return;
+      }
       const updated = await res.json();
       setProfile(updated);
     } catch (err: any) {
       setError(err.message);
+      setTimeout(() => {
+        router.push("/profile");
+      }, 3000);
     } finally {
       setLoading(false);
     }
