@@ -10,12 +10,15 @@ type Props = {
   setRestrictions: (r: string[]) => void;
   tastes: (string | Category)[];
   setTastes: (t: string[]) => void;
+  availableRestrictions?: string[];
+  availableTastes?: string[];
 };
 
 
 export default function PreferencesSection({ 
   meals, setMeals, dietTypes, setDietTypes,
-  restrictions, setRestrictions, tastes, setTastes
+  restrictions, setRestrictions, tastes, setTastes,
+  availableRestrictions = [], availableTastes = []
 }: Props) {
 
   
@@ -122,8 +125,10 @@ return (
         items={getNames(restrictions)}
         inputValue={restrictionInput}
         setInputValue={setRestrictionInput}
+        suggestions={availableRestrictions}
         onKeyDown={(e) => handleAddTag(e, restrictions, setRestrictions, setRestrictionInput, restrictionInput)}
         onRemove={(name) => handleRemoveTag(name, restrictions, setRestrictions)}
+        id="restrictions-list"
       />
 
       <TagInputGroup 
@@ -132,8 +137,10 @@ return (
         items={getNames(tastes)}
         inputValue={tasteInput}
         setInputValue={setTasteInput}
+        suggestions={availableTastes}
         onKeyDown={(e) => handleAddTag(e, tastes, setTastes, setTasteInput, tasteInput)}
         onRemove={(name) => handleRemoveTag(name, tastes, setTastes)}
+        id="tastes-list"
       />
     </section>
   );
@@ -148,9 +155,11 @@ interface TagInputGroupProps {
   setInputValue: (v: string) => void;
   onKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void;
   onRemove: (name: string) => void;
+  suggestions?: string[];
+  id: string;
 }
 
-function TagInputGroup({ label, placeholder, items, inputValue, setInputValue, onKeyDown, onRemove }: TagInputGroupProps) {
+function TagInputGroup({ label, placeholder, items, inputValue, setInputValue, onKeyDown, onRemove, suggestions = [], id }: TagInputGroupProps) {
   return (
     <div className="flex flex-col gap-2">
       <p className="text-text-secundary text-sm mb-3 font-medium">{label}</p>
@@ -161,7 +170,9 @@ function TagInputGroup({ label, placeholder, items, inputValue, setInputValue, o
             <button type="button" onClick={() => onRemove(name)} className="hover:text-destructive ml-1">×</button>
           </span>
         ))}
+
         <input
+          list={id}
           type="text"
           className="bg-transparent border-none outline-none text-sm flex-grow min-w-[120px] p-1"
           placeholder={items.length === 0 ? placeholder : ""}
@@ -169,6 +180,15 @@ function TagInputGroup({ label, placeholder, items, inputValue, setInputValue, o
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={onKeyDown}
         />
+
+        <datalist id={id}>
+          {suggestions
+            .filter(s => !items.includes(s)) // No mostrar los que ya están seleccionados
+            .map((suggestion) => (
+              <option key={suggestion} value={suggestion} />
+            ))}
+        </datalist>
+
       </div>
     </div>
   );

@@ -2,7 +2,6 @@
 
 import { AppLayout } from "@/components/layout/AppLayout";
 import { useEffect, useState } from "react";
-import { useRef } from "react";
 import { useProfile } from "@/hooks/useProfile";
 import BiometricsSection from "@/components/profile/BiometricsSection";
 import GoalSection from "@/components/profile/GoalSection";
@@ -15,6 +14,31 @@ export default function ProfilePage() {
   const { profile, loading, error, updateProfile } = useProfile();
   const [form, setForm] = useState<any | null>(null);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+
+  // Estados para las opciones de la API
+  const [availableRestrictions, setAvailableRestrictions] = useState<string[]>([]);
+  const [availableTastes, setAvailableTastes] = useState<string[]>([]);
+
+  const fetchOptions = async () => {
+  try {
+      const [restrRes, tastesRes] = await Promise.all([
+        fetch("http://localhost:8000/api/restriction"),
+        fetch("http://localhost:8000/api/taste")
+      ]);
+      const restrData = await restrRes.json();
+      const tastesData = await tastesRes.json();
+
+      setAvailableRestrictions(restrData.map((i: any) => typeof i === 'string' ? i : i.name));
+      setAvailableTastes(tastesData.map((i: any) => typeof i === 'string' ? i : i.name));
+    } catch (err) {
+      console.error("Error fetching options:", err);
+    }
+  };
+  
+  useEffect(() => {
+    fetchOptions();
+  }, []);
+
   useEffect(() => {
     if (profile) {
       setForm({ ...profile });
@@ -175,6 +199,7 @@ export default function ProfilePage() {
     setBirthDateError(null);
     try {
       await updateProfile({ ...form, birth_date });
+      await fetchOptions();
       setToast({
         message: "Profile saved!",
         type: "success"
@@ -255,6 +280,8 @@ export default function ProfilePage() {
                   setRestrictions={(r) => updateField("restrictions", r)}
                   tastes={form.tastes || []}
                   setTastes={(t) => updateField("tastes", t)}
+                  availableRestrictions={availableRestrictions}
+                  availableTastes={availableTastes}
                 />
                 {/* Errores de preferencias */}
                 {fieldErrors.meals_per_day && (
