@@ -10,6 +10,7 @@ interface ProfileContextType {
   error: string | null;
   fetchProfile: () => Promise<void>;
   updateProfile: (data: Partial<Profile>) => Promise<void>;
+  hasProfile: boolean | null;
 }
 
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
@@ -19,6 +20,7 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [hasProfile, setHasProfile] = useState<boolean | null>(null);
 
   const fetchProfile = async () => {
     if (!user) return;
@@ -31,9 +33,19 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
           Authorization: `Bearer ${token}`,
         },
       });
+
+      if (res.status === 404) {
+        setHasProfile(false);
+        setProfile(null);
+        return;
+      }
+
       if (!res.ok) throw new Error("No se pudo cargar el perfil");
+
       const data = await res.json();
       setProfile(data);
+      setHasProfile(true);
+
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -86,13 +98,20 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    if (user) fetchProfile();
-    else setProfile(null);
-    // eslint-disable-next-line
+  const checkProfile = async () => {
+    if (user) {
+      await fetchProfile();
+    } else {
+      setProfile(null);
+      setHasProfile(null);
+      setLoading(false); // <--- Crucial: Asegurar que loading sea false si no hay user
+    }
+  };
+  checkProfile();
   }, [user]);
 
   return (
-    <ProfileContext.Provider value={{ profile, loading, error, fetchProfile, updateProfile }}>
+    <ProfileContext.Provider value={{ profile, loading, error, fetchProfile, updateProfile, hasProfile }}>
       {children}
     </ProfileContext.Provider>
   );
