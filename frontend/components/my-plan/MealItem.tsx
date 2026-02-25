@@ -9,6 +9,9 @@ type Meal = {
   recipeId?: number;
   title: string;
   calories: number;
+  protein?: number;
+  carbs?: number;
+  fats?: number;
   description: string;
   images?: string[];
   recipeUrl?: string;
@@ -90,6 +93,11 @@ export default function MealItem({ meal }: { meal: Meal }) {
         badge="New Suggestion"
         title={proposal.title}
         description={proposal.description}
+        extraInfo={
+          <span className="text-xs text-muted-foreground mt-2">
+            {proposal.calories ?? 0} kcal • {proposal.protein ?? 0}g Prot • {proposal.carbs ?? 0}g Carb • {proposal.fats ?? 0}g Fat
+          </span>
+        }
         onConfirm={handleConfirm}
         onCancel={() => setProposal(null)}
       />
@@ -98,7 +106,14 @@ export default function MealItem({ meal }: { meal: Meal }) {
 
   // Si no hay propuesta, mostrar la receta actual con opción a cambiar
   return (
-    <RecipeCard {...currentMeal} images={currentMeal.images ?? []} recipeUrl={currentMeal.recipeUrl}>
+    <RecipeCard
+      {...currentMeal}
+      images={currentMeal.images ?? []}
+      recipeUrl={currentMeal.recipeUrl}
+      protein={currentMeal.protein}
+      carbs={currentMeal.carbs}
+      fats={currentMeal.fats}
+    >
       <Button 
         variant="primary" 
         onClick={handleRequestChange}

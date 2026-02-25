@@ -7,12 +7,15 @@ import ImageCarousel from "@/components/ui/ImageCarousel";
 interface RecipeCardProps {
   title: string;
   calories: number;
+  protein?: number;
+  carbs?: number;
+  fats?: number;
   images: string[];
   recipeUrl?: string;
   children?: ReactNode;
 }
 
-export default function RecipeCard({ title, calories, images, recipeUrl, children }: RecipeCardProps) {
+export default function RecipeCard({ title, calories, protein, carbs, fats, images, recipeUrl, children }: RecipeCardProps) {
   return (
     <div className="border rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 bg-card">
       <ImageCarousel images={images} alt={title} />
@@ -31,7 +34,15 @@ export default function RecipeCard({ title, calories, images, recipeUrl, childre
             </a>
           )}
         </div>
-        <p className="text-sm text-muted-foreground font-medium">{calories} kcal</p>
+        <p className="text-sm text-muted-foreground font-medium">
+          {calories} kcal
+          {typeof protein === "number" && typeof carbs === "number" && typeof fats === "number" && (
+            <>
+              {" "}
+              • {protein}g Prot • {carbs}g Carb • {fats}g Fat
+            </>
+          )}
+        </p>
         {children && <div className="mt-4">{children}</div>}
       </div>
     </div>
