@@ -14,6 +14,7 @@ type Meal = {
   calories: number;
   description: string;
   images?: string[];
+  recipeUrl?: string;
 };
 
 type Day = {

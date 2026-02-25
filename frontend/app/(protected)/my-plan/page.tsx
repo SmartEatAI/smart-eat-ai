@@ -34,6 +34,7 @@ function transformPlan(plan: any) {
         calories: detail.recipe?.calories ?? 0,
         description: detail.meal_type ?? "",
         images: getAllImages(detail.recipe?.image_url),
+        recipeUrl: detail.recipe?.recipe_url ?? undefined,
       })),
     }));
 }

@@ -11,6 +11,7 @@ type Meal = {
   calories: number;
   description: string;
   images?: string[];
+  recipeUrl?: string;
 };
 
 export default function MealItem({ meal }: { meal: Meal }) {
@@ -97,7 +98,7 @@ export default function MealItem({ meal }: { meal: Meal }) {
 
   // Si no hay propuesta, mostrar la receta actual con opción a cambiar
   return (
-    <RecipeCard {...currentMeal} images={currentMeal.images ?? []}>
+    <RecipeCard {...currentMeal} images={currentMeal.images ?? []} recipeUrl={currentMeal.recipeUrl}>
       <Button 
         variant="primary" 
         onClick={handleRequestChange}
