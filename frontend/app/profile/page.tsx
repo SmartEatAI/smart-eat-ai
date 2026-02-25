@@ -135,6 +135,10 @@ function ProfilePage() {
                   setMeals={(n) => updateField("meals_per_day", n)}
                   dietTypes={form.diet_types || []}
                   setDietTypes={(diets) => updateField("diet_types", diets)}
+                  restrictions={form.restrictions || []}
+                  setRestrictions={(r) => updateField("restrictions", r)}
+                  tastes={form.tastes || []}
+                  setTastes={(t) => updateField("tastes", t)}
                 />
               </div>
               <Button onClick={saveProfile}>
