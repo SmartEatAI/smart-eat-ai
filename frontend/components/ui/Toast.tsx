@@ -25,7 +25,7 @@ const Toast: React.FC<ToastProps> = ({ message, type = "success", onClose, durat
                 type === "success"
                     ? "bg-green-500/90 text-white"
                     : "bg-red-500/90 text-white"
-            }`}
+            }`} style={{ marginRight: 8 }}
         >
             {type === "success" ? (
                 <CheckCircle className="h-5 w-5 shrink-0" />

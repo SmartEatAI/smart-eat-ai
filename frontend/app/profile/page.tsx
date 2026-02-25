@@ -8,11 +8,13 @@ import BiometricsSection from "@/components/profile/BiometricsSection";
 import GoalSection from "@/components/profile/GoalSection";
 import PreferencesSection from "@/components/profile/PreferencesSection";
 import Button from "@/components/ui/Button";
+import Toast from "@/components/ui/Toast";
 
 
 function ProfilePage() {
   const { profile, loading, error, updateProfile } = useProfile();
   const [form, setForm] = useState<any>(null);
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   useEffect(() => {
     if (profile) {
       setForm({ ...profile });
@@ -69,11 +71,22 @@ function ProfilePage() {
       birth_date = birth_date.toISOString().split("T")[0];
     }
     if (!isValidBirthDate(birth_date)) {
-      setBirthDateError("La fecha de nacimiento debe indicar una edad entre 16 y 100 años.");
+      setBirthDateError("The birth date must indicate an age between 16 and 100 years.");
       return;
     }
     setBirthDateError(null);
-    await updateProfile({ ...form, birth_date });
+    try {
+      await updateProfile({ ...form, birth_date });
+      setToast({
+        message: "Profile saved!",
+        type: "success"
+      });
+    } catch (error: any) {
+      setToast({
+        message: error?.message || "Error saving profile.",
+        type: "error"
+      });
+    }
   };
 
 
@@ -130,6 +143,14 @@ function ProfilePage() {
             </div>
           </div>
         </div>
+        {/* Toast Notification */}
+        {toast && (
+          <Toast
+            message={toast.message}
+            type={toast.type}
+            onClose={() => setToast(null)}
+          />
+        )}
       </div>
     </AppLayout>
   );
