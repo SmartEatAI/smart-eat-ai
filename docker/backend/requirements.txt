@@ -14,9 +14,9 @@ bcrypt>=4.0.0
 PyJWT
 
 # ML/NLP dependencies (descomentar si se usan)
-# scikit-learn
-# joblib
-# pandas
-# numpy
+scikit-learn
+joblib
+pandas
+numpy
 # matplotlib
 # seaborn
