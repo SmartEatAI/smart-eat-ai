@@ -2,28 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { User } from "@/types/user";
-
-export interface Profile {
-  id: number;
-  user_id: number;
-  goal: string;
-  height: number;
-  weight: number;
-  body_type: string;
-  gender: string;
-  meals_per_day: number;
-  activity_level: string;
-  birth_date: string;
-  body_fat_percentage?: number;
-  calories_target?: number;
-  protein_target?: number;
-  carbs_target?: number;
-  fat_target?: number;
-  tastes?: any[];
-  restrictions?: any[];
-  diet_types?: any[];
-}
+import {Profile} from "@/types/profile"
 
 interface ProfileContextType {
   profile: Profile | null;
