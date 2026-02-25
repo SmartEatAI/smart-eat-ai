@@ -3,7 +3,7 @@ import pandas as pd
 import json
 from typing import List, Optional, Set
 
-from core.ml_model import ml_model
+from app.core.ml_model import ml_model
 
 
 # =========================
@@ -62,16 +62,21 @@ def get_meal_order(n_meals: int):
 # RECOMMENDATION CORE
 # =========================
 
+
 def recommend_recipes(
     macros_obj: dict,
     diets: List[str],
     n_meals: int,
     used_ids: Optional[Set[int]] = None
 ) -> pd.DataFrame:
-
+    """
+    Recommend recipes based on macros and diet preferences.
+    TODO: Adapt this logic to query recipes from SQLAlchemy models instead of pandas DataFrame.
+    """
     if used_ids is None:
         used_ids = set()
 
+    # TODO: Replace ml_model.df with SQLAlchemy query for recipes
     df_recipes = ml_model.df
     scaler = ml_model.scaler
     X_scaled_all = ml_model.X_scaled_all
@@ -93,9 +98,8 @@ def recommend_recipes(
     user_scaled = scaler.transform(user_vec) * MACRO_WEIGHTS
 
     for meal_label in meal_order:
-
         # ---------- FILTROS ----------
-
+        # TODO: Replace DataFrame apply with SQLAlchemy filtering
         def check_diet(recipe_diets):
             r_diets = set(normalize_label(d) for d in safe_to_list(recipe_diets))
             return user_diet_set.issubset(r_diets)
@@ -120,7 +124,7 @@ def recommend_recipes(
             continue
 
         # ---------- DISTANCIA ----------
-
+        # TODO: Adapt to use recipe features from DB
         X_search = X_scaled_all[df_search.index] * MACRO_WEIGHTS
         distances = np.linalg.norm(X_search - user_scaled, axis=1)
 

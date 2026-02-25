@@ -8,9 +8,9 @@ class MLModel:
         self.X_scaled_all = None
 
     def load(self):
-        self.df = joblib.load("../files/df_recetas.joblib")
-        self.scaler = joblib.load("../files/scaler.joblib")
-        self.knn = joblib.load("../files/knn.joblib")
+        self.df = joblib.load("app/files/df_recetas.joblib")
+        self.scaler = joblib.load("app/files/scaler.joblib")
+        self.knn = joblib.load("app/files/knn.joblib")
 
         FEATURES = ['calories', 'fat_content', 'carbohydrate_content', 'protein_content']
         self.X_scaled_all = self.scaler.transform(self.df[FEATURES])
