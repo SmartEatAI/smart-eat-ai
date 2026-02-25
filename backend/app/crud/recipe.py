@@ -41,6 +41,8 @@ def create_recipe(db: Session, recipe_data):
     meal_types = recipe_dict.pop("meal_types", [])
     diet_types = recipe_dict.pop("diet_types", [])
 
+    recipe_dict.pop("recipe_id", None)  # Elimina recipe_id si está presente
+    
     db_recipe = Recipe(**recipe_dict)
     db.add(db_recipe)
 

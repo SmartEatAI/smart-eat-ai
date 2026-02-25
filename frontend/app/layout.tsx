@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Figtree } from 'next/font/google';
+import { AuthProvider } from "@/context/AuthContext";
 
 import "./globals.css";
-import { AuthProvider } from "../context/AuthContext";
-import { ProfileProvider } from "../context/ProfileContext";
 
 const figtree = Figtree({
   variable: '--font-figtree',
@@ -31,9 +30,7 @@ export default function RootLayout({
     <html lang="es" className="dark">
       <body className={`${figtree.variable} antialiased`}>
         <AuthProvider>
-          <ProfileProvider>
-            {children}
-          </ProfileProvider>
+          {children}
         </AuthProvider>
       </body>
     </html>

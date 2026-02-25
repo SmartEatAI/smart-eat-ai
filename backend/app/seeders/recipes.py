@@ -6,7 +6,7 @@ from app.schemas.recipe import RecipeCreate
 
 def seed_recipes(db: Session):
 
-    with open("app/seeders/data/recipes.json", encoding="utf-8") as f:
+    with open("app/data/recipes.json", encoding="utf-8") as f:
         recipes_data = json.load(f)
 
     for recipe_data in recipes_data:
