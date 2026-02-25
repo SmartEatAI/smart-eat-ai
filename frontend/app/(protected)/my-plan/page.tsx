@@ -140,14 +140,6 @@ export default function MyPlanPage() {
         </>
       )}
 
-      <DaySelector days={weekData} />
-
-      {/* Days */}
-      <div className="flex flex-col gap-10">
-        {weekData.map((day) => (
-          <DaySection key={day.name} day={day} />
-        ))}
-      </div>
     </AppLayout>
   );
 }

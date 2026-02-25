@@ -8,7 +8,9 @@ type Day = {
 };
 
 export default function DaySelector({ days }: { days: Day[] }) {
-  const [selectedDay, setSelectedDay] = useState(days[0].name.toLowerCase());
+  const [selectedDay, setSelectedDay] = useState(
+    days && days.length > 0 && days[0]?.name ? days[0].name.toLowerCase() : ""
+  );
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
