@@ -32,7 +32,6 @@ interface DailyMenu {
     meals: Meal[];
 }
 
-// Definir el tipo para los datos semanales
 interface WeeklyDayData {
     day: string;
     percentage: number;
@@ -77,7 +76,7 @@ function transformPlan(plan: any): DailyMenu[] {
                     fat: detail.recipe?.fat ?? 0,
                     description: detail.meal_type ?? "",
                     images: images,
-                    image: images[0] || "/images/placeholder-recipe.jpg",
+                    image: images[0] || "/images/Image_not_available.png",
                     mealType: detail.meal_type,
                     schedule: detail.schedule,
                     consumed: false,
@@ -397,7 +396,7 @@ export default function Dashboard() {
                                         onError={(e) => {
                                             // Fallback image if the recipe image fails to load
                                             const target = e.target as HTMLImageElement;
-                                            target.src = "/images/placeholder-recipe.jpg";
+                                            target.src = "/images/Image_not_available.png";
                                         }}
                                     />
                                 </div>
