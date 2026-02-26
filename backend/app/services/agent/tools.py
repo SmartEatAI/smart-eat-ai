@@ -1,10 +1,7 @@
 from langchain.tools import tool
 from app.services.recipe import RecipeService
-from app.services.profile import ProfileService
-from app.services.taste import TasteService
-from fastapi import Depends
-from app.database import get_db
-from sqlalchemy.orm import Session
+from app.services.plan import PlanService
+from app.schemas.plan import PlanResponse
 from app.database import SessionLocal
 
 @tool
@@ -19,14 +16,16 @@ def search_recipes(query: str, meal_type_id: int = None):
         recetas = RecipeService.get_recipes_by_meal_type(db, meal_type_id) if meal_type_id else []
         recetas = [r for r in recetas if query.lower() in r.name.lower() or query.lower() in (r.description or '')]
         if not recetas:
-            return f"No se encontraron recetas para '{query}'."
+            return {"result": f"No se encontraron recetas para '{query}'.", "recipes": []}
         resultado = f"Recetas encontradas para '{query}':\n"
+        recipe_list = []
         for i, receta in enumerate(recetas, 1):
             resultado += f"{i}. {receta.name}\n"
+            recipe_list.append({"id": receta.id, "name": receta.name})
         resultado += "¿Te gustaría ver los detalles de alguna receta en específico?"
-        return resultado
+        return {"result": resultado, "recipes": recipe_list}
     except Exception as e:
-        return f"Error buscando recetas: {str(e)}"
+        return {"result": f"Error buscando recetas: {str(e)}", "recipes": []}
     finally:
         db.close()
 
@@ -40,12 +39,12 @@ def update_user_preferences(user_id: int, preference_type: str, item_name: str):
     db = SessionLocal()
     try:
         if preference_type not in ['taste', 'restriction']:
-            return "Error: preference_type debe ser 'taste' o 'restriction'."
-        # Aquí deberías llamar a la lógica real para actualizar preferencias
+            return {"result": "Error: preference_type debe ser 'taste' o 'restriction'."}
+        # Aquí se llamará a la lógica real para actualizar preferencias
         # Por simplicidad, solo devolvemos un string de éxito
-        return f"Preferencia '{preference_type}' para '{item_name}' añadida al usuario {user_id}."
+        return {"result": f"Preferencia '{preference_type}' para '{item_name}' añadida al usuario {user_id}."}
     except Exception as e:
-        return f"Error actualizando preferencias: {str(e)}"
+        return {"result": f"Error actualizando preferencias: {str(e)}"}
     finally:
         db.close()
 
@@ -57,12 +56,13 @@ def get_current_user_plan(user_id: int):
     """
     db = SessionLocal()
     try:
-        perfil = ProfileService.get_user_profile(db, user_id=user_id)
-        if not perfil:
-            return f"No se encontró el perfil del usuario {user_id}."
-        return perfil
+        plan = PlanService.get_current_plan(db, user_id)
+        if not plan:
+            return {"result": f"No se encontró el plan del usuario {user_id}.", "plan": None}
+        plan_response = PlanResponse.model_validate(plan).dict()
+        return {"result": "Plan encontrado", "plan": plan_response}
     except Exception as e:
-        return f"Error recuperando el plan: {str(e)}"
+        return {"result": f"Error recuperando el plan: {str(e)}", "plan": None}
     finally:
         db.close()
 
