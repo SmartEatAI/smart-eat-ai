@@ -44,18 +44,36 @@ function getFirstImage(image_url: string | null | undefined): string | undefined
   return image_url.split(/,\s*https?:\/\//)[0].trim() || undefined;
 }
 
-function transformPlan(plan: any) {
+function transformPlan(plan: any): DayPlan[] {
   if (!plan?.daily_menus) return [];
+
   return plan.daily_menus
     .sort((a: any, b: any) => a.day_of_week - b.day_of_week)
-    .map((menu: any) => ({
+    .map((menu: any): DayPlan => ({
       name: DAY_NAMES[menu.day_of_week] ?? `Day ${menu.day_of_week}`,
-      meals: (menu.meal_details ?? []).map((detail: any) => ({
-        title: detail.recipe?.name ?? "Unknown recipe",
-        calories: detail.recipe?.calories ?? 0,
-        description: detail.meal_type ?? "",
-        image: getFirstImage(detail.recipe?.image_url),
-      })),
+      meals: (menu.meal_details ?? []).map((detail: any): MealItem => {
+        const recipeData = detail.recipe ?? {};
+        console.log("Recipe data:", recipeData);
+        const recipe: Recipe = {
+          recipe_id: recipeData.recipe_id ?? 0,
+          name: recipeData.name ?? "Unknown recipe",
+          image_url: recipeData.image_url ?? "",
+          calories: recipeData.calories ?? 0,
+          protein: recipeData.protein ?? 0,
+          carbs: recipeData.carbs ?? 0,
+          fat: recipeData.fat ?? 0,
+          meal_types: recipeData.meal_types ?? [],
+          diet_types: recipeData.diet_types ?? [],
+          recipe_url: recipeData.recipe_url ?? "",
+        };
+
+        return {
+          recipe,
+          meal_type: detail.meal_type ?? "",
+          swapSuggestion: undefined,
+          accepted: false,
+        };
+      }),
     }));
 }
 
@@ -114,7 +132,6 @@ export default function MyPlanPage() {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
     fetch("http://localhost:8000/api/plan/current", {
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -123,6 +140,7 @@ export default function MyPlanPage() {
       .catch(() => setWeekData([]))
       .finally(() => setLoading(false));
   }, []);
+
   const macros = {
     calories: { current: 0, goal: profile?.calories_target || 0 },
     protein: { current: 0, goal: profile?.protein_target || 0 },

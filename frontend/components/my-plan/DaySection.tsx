@@ -64,7 +64,7 @@ export default function DaySection({
           {day.meals.map((meal, mealIndex) =>
             meal.recipe ? (
               <CarouselItem
-                key={meal.recipe.recipe_id}
+                key={`meal-${dayIndex}-${mealIndex}-${meal.recipe.recipe_id}`}
                 className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3 min-w-[220px] max-w-[350px] w-full"
               >
                 <MealItem
