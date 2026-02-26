@@ -67,7 +67,7 @@ services:
              count: 1
              capabilities: [gpu]
     entrypoint: /bin/bash
-    command: -c "ollama serve"
+    command: -c "ollama serve" 
 volumes:
   postgres_data:
   ollama_data:

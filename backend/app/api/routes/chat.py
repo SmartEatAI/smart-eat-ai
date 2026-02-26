@@ -10,22 +10,14 @@ from app.services.agent.schemas import AgentResponse, ChatPayload
 
 
 router = APIRouter()
-
 @router.post("/chat", response_model=AgentResponse)
-async def chat_with_agent(
-    payload: ChatPayload,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
-):
-    user_id = current_user.id
-    user_message = payload.message
-    chat_history = payload.history
+async def chat_with_agent(payload: ChatPayload, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
 
     # Recuperamos el perfil actualizado
     profile_data = ProfileService.get_user_profile(db, user_id)
     
-    # Ejecutamos el agente (ReAct)
-    # Combinamos el historial con el nuevo mensaje
+    # Preparamos los inputs para LangChain / Agent
+    # Convertimos el historial a un formato que el agente entienda si es necesario
     input_data = {
         "input": user_message,
         "chat_history": chat_history,
@@ -55,4 +47,4 @@ async def chat_with_agent(
             "suggestion": suggestion
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=f"Error en el agente: {str(e)}")
