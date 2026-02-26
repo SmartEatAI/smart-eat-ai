@@ -106,6 +106,7 @@ export default function MyPlanPage() {
   const handleSwapMeal = async (dayIndex: number, mealIndex: number) => {
     const meal = weekData[dayIndex].meals[mealIndex];
     // Llamada a tu API para obtener nueva sugerencia
+    console.log("Solicitando swap para receta %d del tipo %s", meal.recipe.recipe_id, meal.meal_type);
     const newSwap = await fetchNewRecipe(meal.recipe.meal_types[0], meal.recipe.recipe_id );
     if (!newSwap) return;
 
@@ -140,6 +141,8 @@ export default function MyPlanPage() {
       .catch(() => setWeekData([]))
       .finally(() => setLoading(false));
   }, []);
+
+  console.log("Plan data:", weekData);
 
   const macros = {
     calories: { current: 0, goal: profile?.calories_target || 0 },
