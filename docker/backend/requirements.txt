@@ -22,8 +22,14 @@ joblib
 # seaborn
 
 # LangChain dependencies
-langchain
-langchain-ollama        # o langchain-community     
-langchain-openai        # A veces necesaria para ciertos parsers de LangChain
-langchainhub            # Para descargar prompts de la comunidad
-langgraph               # Recomendado para manejar el flujo ReAct de forma más moderna
+     
+langchain>=0.2.0
+langchain-core>=0.2.0
+langchain-community>=0.2.0
+
+langgraph>=0.1.0
+
+langchain-openai>=0.1.0
+langchain-ollama>=0.1.0
+
+langchainhub>=0.1.15

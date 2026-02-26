@@ -1,33 +1,41 @@
 from langchain_ollama import ChatOllama
-from langchain.agents import create_react_agent, AgentExecutor
-from langchain import hub
-from app.services.agent.tools import search_recipes, update_user_preferences, get_current_user_plan
+from langchain.agents import create_agent
+
+from app.services.agent.tools import nutrition_tools
+from app.services.agent.prompts import get_nutritionist_prompt
+
 
 class AgentManager:
     def __init__(self):
-        # Conectamos con el contenedor de Ollama definido en docker-compose
+        # Modelo LLM (Ollama local)
         self.llm = ChatOllama(
-            model="llama3",
+            model="llama3-7b",
             base_url="http://ollama:11434",
-            temperature=0  # Mantener bajo para evitar inventos nutricionales
+            temperature=0
         )
-        
-        # Lista de herramientas disponibles
-        self.tools = [search_recipes, update_user_preferences, get_current_user_plan]
-        
-        # Descargamos un prompt estándar de ReAct (puedes personalizarlo en prompts.py)
-        self.prompt = hub.pull("hwchase17/react")
 
-    def get_executor(self):
-        # Creamos el agente ReAct
-        agent = create_react_agent(self.llm, self.tools, self.prompt)
-        
-        # El executor es el que maneja el ciclo de pensamiento
-        return AgentExecutor(
-            agent=agent, 
-            tools=self.tools, 
-            verbose=True, 
-            handle_parsing_errors=True
+        self.tools = nutrition_tools
+
+        # El agente se construye dinámicamente porque el prompt depende del perfil
+        self.agent = None
+        self.agent_executor = None
+
+    def build_agent(self, user_profile):
+        """
+        Construye el agente dinámicamente con el prompt personalizado
+        basado en el perfil del usuario.
+        """
+
+        system_prompt = get_nutritionist_prompt(user_profile)
+
+        self.agent = create_agent(
+            model=self.llm,
+            tools=self.tools,
+            system_prompt=system_prompt
         )
+
+
+        return self.agent
+
 
 agent_manager = AgentManager()

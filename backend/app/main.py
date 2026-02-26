@@ -37,7 +37,7 @@ app.include_router(daily_menu.router, prefix="/api", tags=["Plan"])
 app.include_router(meal_detail.router, prefix="/api", tags=["Plan"])
 
 # Chat
-#app.include_route(chat.router, prefix="/api", tags=["Chat"])
+app.include_router(chat.router, prefix="/api", tags=["Chat"])
 
 @app.get("/")
 def root():
