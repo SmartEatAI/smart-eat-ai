@@ -67,7 +67,7 @@ services:
              count: 1
              capabilities: [gpu]
     entrypoint: /bin/bash
-    command: -c "ollama pull llama3.1 || echo 'Pull failed, continue'; ollama serve --port 11434"
+    command: -c "ollama serve" 
 volumes:
   postgres_data:
   ollama_data:

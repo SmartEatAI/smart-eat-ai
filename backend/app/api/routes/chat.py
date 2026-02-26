@@ -11,43 +11,37 @@ from app.services.agent.schemas import AgentResponse, ChatPayload
 
 
 router = APIRouter()
-
 @router.post("/chat", response_model=AgentResponse)
-async def chat_with_agent(
-    payload: ChatPayload,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
-):
-    user_id = current_user.id
-    user_message = payload.message
-    chat_history = payload.history
+async def chat_with_agent(payload: ChatPayload, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
 
-    # Recuperamos el perfil actualizado
-    profile_data = ProfileService.get_user_profile(db, user_id)
-    
-    # Preparamos el agente con el prompt personalizado
+    # Obtener el perfil del usuario
+    profile_data = ProfileService.get_user_profile(db, current_user.id)
+
+    # Prompt personalizado
     system_prompt = get_nutritionist_prompt(profile_data)
     
-    # Ejecutamos el agente (ReAct)
-    # Combinamos el historial con el nuevo mensaje
+    # Preparamos los inputs para LangChain / Agent
+    # Convertimos el historial a un formato que el agente entienda si es necesario
     input_data = {
-        "chat_history": chat_history,
+        "chat_history": payload.history,
         "system_instructions": system_prompt
     }
     
     try:
+        # Agente - LangChain
         executor = agent_manager.build_agent(input_data)
 
+        # Invocación del agente
         response = await executor.ainvoke({
-            "messages": [
-                {"role": "user", "content": user_message}
-            ]
+            "input": payload.message
         })
 
-        return {
-            "status": "success",
-            "answer": response["output"],
-            #"suggestion": response.get("suggestion") # Si el agente generó una
-        }
+        # Mapeo al esquema AgentResponse
+        return AgentResponse(
+            text=response.get("output", "No pude generar una respuesta."),
+            # Intentamos extraer 'suggestion' si el agente la incluyó en el output
+            suggestion=response.get("suggestion") 
+        )
+
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=f"Error en el agente: {str(e)}")

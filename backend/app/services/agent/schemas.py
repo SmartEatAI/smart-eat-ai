@@ -1,10 +1,22 @@
 from pydantic import BaseModel
-from typing import Optional, Dict, Any, List
+from typing import Optional, List, Union
 
-class AgentResponse(BaseModel):
-    text: str  # El mensaje que leerá el usuario
-    suggestion: Optional[Dict[str, Any]] = None  # Objeto con IDs de recetas/detalles si hay cambio
+
+class Message(BaseModel):
+    role: str
+    message: str
+    
+class Suggestion(BaseModel):
+    meal_detail_id: int
+    recipe_id: int
+    status: bool
+
 
 class ChatPayload(BaseModel):
     message: str
-    history: List[dict] = []
+    history: List[Union[Message, Suggestion]] = []
+
+class AgentResponse(BaseModel):
+    text: str
+    suggestion: Optional[Suggestion] = None
+    
