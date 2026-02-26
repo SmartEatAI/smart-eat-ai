@@ -18,6 +18,7 @@ class MessageSuggestion(MessageBase):
 
 
 class Chat(BaseModel):
+    message: MessageBase | MessageSuggestion = Field(..., description="The latest message in the chat")
     history: Optional[List[Union[MessageBase, MessageSuggestion]]] = Field(
         None, description="Chat history between user and chef"
     )
