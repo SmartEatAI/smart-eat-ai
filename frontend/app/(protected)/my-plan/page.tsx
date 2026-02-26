@@ -7,10 +7,36 @@ import DaySection from "@/components/my-plan/DaySection";
 import { Droplet, Dumbbell, Flame, Zap } from "lucide-react";
 import { useProfile } from "@/hooks/useProfile";
 import { useState, useEffect } from "react";
+import { useAuth } from "@/hooks/useAuth";
 
 const DAY_NAMES: Record<number, string> = {
   1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday",
   5: "Friday", 6: "Saturday", 7: "Sunday",
+};
+
+type Recipe = {
+  recipe_id: number;
+  name: string;
+  image_url: string;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+  meal_types: string[];
+  diet_types: string[];
+  recipe_url: string;
+};
+
+type MealItem = {
+  recipe: Recipe;
+  meal_type: string;
+  swapSuggestion?: Recipe; // alternativa sugerida por swap
+  accepted?: boolean; // si el usuario aceptó la sugerencia
+};
+
+type DayPlan = {
+  name: string;
+  meals: MealItem[];
 };
 
 function getFirstImage(image_url: string | null | undefined): string | undefined {
@@ -34,9 +60,58 @@ function transformPlan(plan: any) {
 }
 
 export default function MyPlanPage() {
+  const { user, token } = useAuth();
+
   const { profile } = useProfile();
-  const [weekData, setWeekData] = useState<any[]>([]);
+  const [weekData, setWeekData] = useState<DayPlan[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  async function fetchNewRecipe(mealType: string, recipeId: number) {
+    try {
+      const response = await fetch(`http://localhost:8000/api/ml/swap-recipe?recipe_id=${recipeId}&meal_label=${mealType}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = await response.json();
+      return data; // Debería contener la nueva receta sugerida
+    } catch (error) {
+      console.error("Error fetching new recipe:", error);
+    }
+  }
+
+  const handleSwapMeal = async (dayIndex: number, mealIndex: number) => {
+    const meal = weekData[dayIndex].meals[mealIndex];
+    // Llamada a tu API para obtener nueva sugerencia
+    const newSwap = await fetchNewRecipe(meal.recipe.meal_types[0], meal.recipe.recipe_id );
+    if (!newSwap) return;
+
+    // Actualiza estado local
+    setWeekData(prev => {
+      const updated = [...prev];
+      updated[dayIndex].meals[mealIndex].swapSuggestion = newSwap;
+      updated[dayIndex].meals[mealIndex].accepted = false;
+      return updated;
+    });
+  };
+
+  const handleAcceptSwap = (dayIndex: number, mealIndex: number) => {
+    setWeekData(prev => {
+      const updated = [...prev];
+      const meal = updated[dayIndex].meals[mealIndex];
+      if (meal.swapSuggestion) {
+        meal.recipe = meal.swapSuggestion; // reemplaza la receta
+        meal.swapSuggestion = undefined;   // borra sugerencia
+        meal.accepted = true;
+      }
+      return updated;
+    });
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -133,8 +208,14 @@ export default function MyPlanPage() {
         <>
           <DaySelector days={weekData} />
           <div className="flex flex-col gap-10">
-            {weekData.map((day) => (
-              <DaySection key={day.name} day={day} />
+            {weekData.map((day, dayIndex) => (
+              <DaySection
+                key={day.name}
+                day={day}
+                dayIndex={dayIndex}
+                onSwapMeal={handleSwapMeal}
+                onAcceptSwap={handleAcceptSwap}
+              />
             ))}
           </div>
         </>

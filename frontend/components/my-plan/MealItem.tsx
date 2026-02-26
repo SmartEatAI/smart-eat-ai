@@ -1,76 +1,71 @@
 import { useState } from "react";
-import RecipeCard from "../ui/cards/recipe-card";
+import RecipeCard from "@/components/ui/cards/recipe-card";
 import ProposalCard from "../chat/ProposalCard";
 import Button from "../ui/Button";
 import { RotateCw, Loader2 } from "lucide-react";
 
-type Meal = {
-  title: string;
+type Recipe = {
+  recipe_id: number;
+  name: string;
+  image_url: string;
   calories: number;
-  description: string;
-  image?: string;
+  protein: number;
+  carbs: number;
+  fat: number;
+  meal_types: string[];
+  diet_types: string[];
+  recipe_url: string;
 };
 
-export default function MealItem({ meal }: { meal: Meal }) {
-  const [proposal, setProposal] = useState<Meal | null>(null);
+type Meal = {
+  recipe: Recipe;
+  swapSuggestion?: Recipe;
+  accepted?: boolean;
+};
+
+type Props = {
+  meal: Meal;
+  onConfirm?: () => void;       // aceptar swap
+  onRequestSwap?: () => void;   // solicitar nueva sugerencia
+};
+
+export default function MealItem({ meal, onConfirm, onRequestSwap }: Props) {
   const [loading, setLoading] = useState(false);
 
-  const handleRequestChange = async () => {
+  const handleSwapClick = async () => {
+    if (!onRequestSwap) return;
     setLoading(true);
     try {
-      // Simulación de llamada a la API
-      // const res = await fetch('/api/change-meal', { method: 'POST', body: JSON.stringify(meal) });
-      // const newData = await res.json();
-      
-      // Simulación de delay y datos de vuelta
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      const mockNewMeal = {
-        title: "New Suggested Recipe",
-        calories: 450,
-        description: "A healthy alternative based on your preferences.",
-        image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c"
-      };
-
-      setProposal(mockNewMeal);
-    } catch (error) {
-      console.error("Error changing recipe", error);
+      await onRequestSwap(); // llama a la función del padre que hace fetch al backend
     } finally {
       setLoading(false);
     }
   };
 
-  // If there is a proposal, show the ProposalCard
-  if (proposal) {
+  // Si hay sugerencia, mostrar ProposalCard
+  if (meal.swapSuggestion) {
     return (
       <ProposalCard
-        image={proposal.image || ""}
-        badge="New Suggestion"
-        title={proposal.title}
-        description={proposal.description}
-        onConfirm={() => {
-          // Logic to save in DB
-          console.log("Confirmed");
-          // You could update global state or simply clear the proposal if already saved
-        }}
-        onCancel={() => setProposal(null)} // Return to original
+        image={meal.swapSuggestion.image_url}
+        badge="Suggestion"
+        title={meal.recipe.name}
+        description={`${meal.recipe.name} (${meal.recipe.calories} kcal) → ${meal.swapSuggestion.name} (${meal.swapSuggestion.calories} kcal)`}
+        onConfirm={onConfirm}           // aceptar swap
+        onCancel={handleSwapClick}      // pedir otra sugerencia
       />
     );
   }
 
-  // If there is no proposal, show the original RecipeCard
+  // Si no hay sugerencia, mostrar receta original con botón de swap
   return (
-    <RecipeCard {...meal} image={meal.image || ""}>
-      <Button 
-        variant="primary" 
-        onClick={handleRequestChange}
+    <RecipeCard {...meal.recipe} title={meal.recipe.name} image={meal.recipe.image_url}>
+      <Button
+        variant="primary"
+        onClick={handleSwapClick}
         disabled={loading}
         className="w-full flex items-center justify-center gap-2"
       >
-        {loading ? (
-          <Loader2 className="size-4 animate-spin" />
-        ) : (
-          <RotateCw className="size-4" />
-        )}
+        {loading ? <Loader2 className="size-4 animate-spin" /> : <RotateCw className="size-4" />}
         <span>{loading ? "Searching..." : "Change"}</span>
       </Button>
     </RecipeCard>
