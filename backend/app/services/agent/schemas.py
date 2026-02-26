@@ -4,7 +4,7 @@ from typing import Optional, List, Union
 
 class Message(BaseModel):
     role: str
-    message: str
+    content: str
     
 class Suggestion(BaseModel):
     meal_detail_id: int

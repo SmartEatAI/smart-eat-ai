@@ -1,4 +1,4 @@
-from app.schemas.profile import ProfileResponse
+""""Prompt para el agente nutricionista"""
 
 def get_nutritionist_prompt(user_profile: dict) -> str:
    name = user_profile.get("name", "Usuario")
