@@ -14,21 +14,16 @@ class AgentManager:
             temperature=0
         )
 
-    def build_agent(self, user_profile):
+    def build_agent(self, user_profile: dict):
         """
-        Construye el agente dinámicamente con el prompt personalizado
-        basado en el perfil del usuario.
+        Construye el agente dinámicamente con el prompt personalizado basado en el perfil del usuario.
         """
-
         system_prompt = get_nutritionist_prompt(user_profile)
-
         self.agent = create_agent(
             model=self.llm,
             tools=nutrition_tools,
             system_prompt=system_prompt
         )
-
-
         return self.agent
 
 
