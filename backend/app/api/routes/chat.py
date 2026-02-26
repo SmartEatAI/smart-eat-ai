@@ -31,13 +31,12 @@ async def chat_with_agent(
     # Ejecutamos el agente (ReAct)
     # Combinamos el historial con el nuevo mensaje
     input_data = {
-        "input": user_message,
         "chat_history": chat_history,
         "system_instructions": system_prompt
     }
     
     try:
-        executor = agent_manager.build_agent(profile_data)
+        executor = agent_manager.build_agent(input_data)
 
         response = await executor.ainvoke({
             "messages": [
@@ -48,7 +47,7 @@ async def chat_with_agent(
         return {
             "status": "success",
             "answer": response["output"],
-            "suggestion": response.get("suggestion") # Si el agente generó una
+            #"suggestion": response.get("suggestion") # Si el agente generó una
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

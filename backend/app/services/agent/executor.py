@@ -14,12 +14,6 @@ class AgentManager:
             temperature=0
         )
 
-        self.tools = nutrition_tools
-
-        # El agente se construye dinámicamente porque el prompt depende del perfil
-        self.agent = None
-        self.agent_executor = None
-
     def build_agent(self, user_profile):
         """
         Construye el agente dinámicamente con el prompt personalizado
@@ -30,7 +24,7 @@ class AgentManager:
 
         self.agent = create_agent(
             model=self.llm,
-            tools=self.tools,
+            tools=nutrition_tools,
             system_prompt=system_prompt
         )
 
