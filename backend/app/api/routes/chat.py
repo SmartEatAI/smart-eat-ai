@@ -14,13 +14,13 @@ router = APIRouter()
 async def chat_with_agent(payload: ChatPayload, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
 
     # Recuperamos el perfil actualizado
-    profile_data = ProfileService.get_user_profile(db, user_id)
+    profile_data = ProfileService.get_user_profile(db, current_user.id)
     
     # Preparamos los inputs para LangChain / Agent
     # Convertimos el historial a un formato que el agente entienda si es necesario
     input_data = {
-        "input": user_message,
-        "chat_history": chat_history,
+        "input": payload.message,
+        "chat_history": payload.history,
     }
     
     try:
