@@ -9,7 +9,7 @@ class AgentManager:
     def __init__(self):
         # Modelo LLM (Ollama local)
         self.llm = ChatOllama(
-            model="llama3-7b",
+            model="llama3.1",
             base_url="http://ollama:11434",
             temperature=0
         )
