@@ -18,7 +18,7 @@ const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
 
 export const ProfileProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -29,7 +29,6 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true);
     setError(null);
     try {
-      const token = localStorage.getItem("token");
       const res = await fetch("http://localhost:8000/api/profile/", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -81,7 +80,6 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
         #######################################*/
       console.log("Updating profile with data:", payload);
       
-      const token = localStorage.getItem("token");
       const res = await fetch("http://localhost:8000/api/profile/", {
         method: "PUT",
         headers: {
