@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.routes import auth, profile, restriction, taste, meal_detail, daily_menu, plan, diet_type
+from app.api.routes import auth, profile, restriction, taste, meal_detail, daily_menu, plan, diet_type, chat
 from app.config import settings
 
 # Create database tables - solo si se gestiona la db con sqlalchemy, si se usa alembic no es necesario
@@ -36,6 +36,8 @@ app.include_router(plan.router, prefix="/api", tags=["Plan"])
 app.include_router(daily_menu.router, prefix="/api", tags=["Plan"])
 app.include_router(meal_detail.router, prefix="/api", tags=["Plan"])
 
+# Chat
+#app.include_route(chat.router, prefix="/api", tags=["Chat"])
 
 @app.get("/")
 def root():

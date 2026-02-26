@@ -23,6 +23,7 @@ joblib
 
 # LangChain dependencies
 langchain
-langchain-community
+langchain-ollama        # o langchain-community     
 langchain-openai        # A veces necesaria para ciertos parsers de LangChain
 langchainhub            # Para descargar prompts de la comunidad
+langgraph               # Recomendado para manejar el flujo ReAct de forma más moderna
