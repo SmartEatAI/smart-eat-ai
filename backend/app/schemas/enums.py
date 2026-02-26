@@ -35,3 +35,7 @@ class MealTypeEnum(str, Enum):
     lunch = "lunch"
     dinner = "dinner"
     snack = "snack"
+
+class MessageRoleEnum(str, Enum):
+    chef = "chef"
+    user = "user"
