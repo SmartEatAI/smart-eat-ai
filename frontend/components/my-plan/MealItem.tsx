@@ -9,6 +9,9 @@ type Meal = {
   recipeId?: number;
   title: string;
   calories: number;
+  protein?: number; 
+  carbs?: number;   
+  fats?: number;
   mealType?: string | string[];
   description: string;
   images?: string[];
@@ -128,6 +131,9 @@ export default function MealItem({ meal }: { meal: Meal }) {
       mealType={currentMeal.mealType}
       images={currentMeal.images ?? []} 
       recipeUrl={currentMeal.recipeUrl}
+      protein={currentMeal.protein} 
+      carbs={currentMeal.carbs}     
+      fats={currentMeal.fats} 
     >
       <Button 
         variant="primary" 
