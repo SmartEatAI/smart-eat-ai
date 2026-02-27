@@ -20,7 +20,6 @@ export default function RecipeCard({ title, calories, protein, carbs, fats, meal
   // Debug: log mealType prop and its type
   if (typeof window !== "undefined") {
     // eslint-disable-next-line no-console
-    console.log("[RecipeCard] mealType:", mealType, "type:", typeof mealType, Array.isArray(mealType) ? "array" : "not array");
   }
 
   // Función para formatear el mealType (ej: "breakfast" → "Breakfast")

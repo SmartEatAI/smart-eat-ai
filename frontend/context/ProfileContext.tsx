@@ -78,7 +78,6 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
       /*#######################################
         DEBUG: Ver el payload antes de enviarlo
         #######################################*/
-      console.log("Updating profile with data:", payload);
       
       const res = await fetch("http://localhost:8000/api/profile/", {
         method: "PUT",

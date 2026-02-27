@@ -47,14 +47,12 @@ function getFirstImage(image_url: string | null | undefined): string | undefined
 
 function transformPlan(plan: any): DayPlan[] {
   if (!plan?.daily_menus) return [];
-  console.log("Transforming plan:", plan);
   return plan.daily_menus
     .sort((a: any, b: any) => a.day_of_week - b.day_of_week)
     .map((menu: any): DayPlan => ({
       name: DAY_NAMES[menu.day_of_week] ?? `Day ${menu.day_of_week}`,
       meals: (menu.meal_details ?? []).map((detail: any): MealItem => {
         const recipeData = detail.recipe ?? {};
-        console.log("Recipe data:", recipeData);
         const recipe: Recipe = {
           recipe_id: recipeData.recipe_id ?? 0,
           name: recipeData.name ?? "Unknown recipe",
@@ -107,7 +105,6 @@ export default function MyPlanPage() {
   const handleSwapMeal = async (dayIndex: number, mealIndex: number) => {
     const meal = weekData[dayIndex].meals[mealIndex];
     // Llamada a tu API para obtener nueva sugerencia
-    console.log("Solicitando swap para receta %d del tipo %s", meal.recipe.recipe_id, meal.meal_type);
     const mealType = Array.isArray(meal.meal_type)
       ? meal.meal_type[0]
       : meal.meal_type;
@@ -145,8 +142,6 @@ export default function MyPlanPage() {
       .catch(() => setWeekData([]))
       .finally(() => setLoading(false));
   }, []);
-
-  console.log("Plan data:", weekData);
 
   const macros = {
     calories: { current: 0, goal: profile?.calories_target || 0 },

@@ -237,7 +237,6 @@ export default function ChatPage() {
                                         )
                                     }
                                     onCancel={() => {
-                                        console.log("Suggestion declined");
                                         // Al rechazar, podemos hacer swap automático y mostrar nueva receta
                                         handleSwapRecipe(msg.sustitution.original);
                                     }}
