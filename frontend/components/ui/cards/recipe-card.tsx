@@ -36,9 +36,13 @@ export default function RecipeCard({ title, calories, protein, carbs, fats, meal
     mealTypeBadges = [formatMealType(mealType)];
   }
 
+  const imageArray: string[] = images
+  ? images.split(', ').map(img => img.trim())
+  : [];
+
   return (
     <div className="border rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 bg-card">
-      <ImageCarousel images={images.split(',').map(img => img.trim())} alt={title} />
+      <ImageCarousel images={imageArray} alt={title} />
       <div className="p-5">
         <div className="flex items-start justify-between gap-2 mb-2">
           <h3 className="text-lg font-semibold line-clamp-1 text-foreground">{title}</h3>

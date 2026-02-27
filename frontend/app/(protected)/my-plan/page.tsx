@@ -56,7 +56,7 @@ function transformPlan(plan: any): DayPlan[] {
         const recipeData = detail.recipe ?? {};
         console.log("Recipe data:", recipeData);
         const recipe: Recipe = {
-          recipe_id: recipeData.recipe_id ?? 0,
+          recipe_id: recipeData.id ?? 0,
           name: recipeData.name ?? "Unknown recipe",
           image_url: recipeData.image_url ?? "",
           calories: recipeData.calories ?? 0,
@@ -108,7 +108,7 @@ export default function MyPlanPage() {
     const meal = weekData[dayIndex].meals[mealIndex];
     // Llamada a tu API para obtener nueva sugerencia
     console.log("Solicitando swap para receta %d del tipo %s", meal.recipe.recipe_id, meal.meal_type);
-    const newSwap = await fetchNewRecipe(meal.recipe.meal_types[0], meal.recipe.recipe_id );
+    const newSwap = await fetchNewRecipe(meal.meal_type[0], meal.recipe.recipe_id );
     if (!newSwap) return;
 
     // Actualiza estado local
