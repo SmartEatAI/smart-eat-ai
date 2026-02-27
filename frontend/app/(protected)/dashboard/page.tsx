@@ -11,38 +11,7 @@ import { Check } from "lucide-react";
 import NoPlanCard from "@/components/my-plan/NoPlanCard";
 import type { User } from "@/types/user";
 import { useRouter } from "next/navigation";
-
-interface Meal {
-    id: number;
-    name: string;
-    time: string;
-    image: string;
-    calories: number;
-    protein: number;
-    carbs: number;
-    fat: number;
-    consumed: boolean;
-    recipeId?: number;
-    mealType?: string;
-    schedule?: string;
-}
-
-interface DailyMenu {
-    name: string;
-    meals: Meal[];
-}
-
-interface WeeklyDayData {
-    day: string;
-    percentage: number;
-    calories: number;
-}
-
-interface WeeklyStats {
-    weeklyData: WeeklyDayData[];
-    weeklyAverage: number;
-    weeklyTotal: number;
-}
+import type { Meal, DailyMenu, WeeklyStats, WeeklyDayData } from "@/types/dashboard";
 
 const DAY_NAMES: Record<number, string> = {
     1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday",

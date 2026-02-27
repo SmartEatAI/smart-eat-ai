@@ -1,9 +1,4 @@
-type Props = {
-  goal: string;
-  setGoal: (goal: string) => void;
-  activityLevel: string;
-  setActivityLevel: (level: string) => void;
-};
+import { GoalSectionProps } from "@/types/my-plan";
 
 const activityLevels = [
   { value: "low", label: "Sedentary" },
@@ -17,7 +12,7 @@ const goals = [
   { id: "gain_weight", label: "Gain Muscle" },
 ];
 
-export default function GoalSection({ goal, setGoal, activityLevel, setActivityLevel }: Props) {
+export default function GoalSection({ goal, setGoal, activityLevel, setActivityLevel }: GoalSectionProps) {
   return (
     <section className="bg-gradient-to-br from-green-950/70 to-green-900/50 rounded-xl p-6">
       <h2 className="text-xl font-bold mb-6">Main Goal</h2>

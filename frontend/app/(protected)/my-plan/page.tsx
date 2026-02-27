@@ -9,35 +9,11 @@ import { useProfile } from "@/hooks/useProfile";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import NoPlanCard from "@/components/my-plan/NoPlanCard";
+import { DayPlan, MealItem, Recipe } from "@/types/my-plan";
 
 const DAY_NAMES: Record<number, string> = {
   1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday",
   5: "Friday", 6: "Saturday", 7: "Sunday",
-};
-
-type Recipe = {
-  recipe_id: number;
-  name: string;
-  image_url: string;
-  calories: number;
-  protein: number;
-  carbs: number;
-  fat: number;
-  meal_types: string[];
-  diet_types: string[];
-  recipe_url: string;
-};
-
-type MealItem = {
-  recipe: Recipe;
-  meal_type: string;
-  swapSuggestion?: Recipe; // alternativa sugerida por swap
-  accepted?: boolean; // si el usuario aceptó la sugerencia
-};
-
-type DayPlan = {
-  name: string;
-  meals: MealItem[];
 };
 
 function getFirstImage(image_url: string | null | undefined): string | undefined {

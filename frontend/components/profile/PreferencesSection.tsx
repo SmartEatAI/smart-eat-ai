@@ -8,26 +8,13 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command"
-
-type Props = {
-  meals: number;
-  setMeals: (n: number) => void;
-  dietTypes: (string | Category)[];
-  setDietTypes: (diets: string[]) => void;
-  restrictions: (string | Category)[];
-  setRestrictions: (r: string[]) => void;
-  tastes: (string | Category)[];
-  setTastes: (t: string[]) => void;
-  availableRestrictions?: string[];
-  availableTastes?: string[];
-};
-
+import { PreferencesSectionProps } from "@/types/my-plan";
 
 export default function PreferencesSection({ 
   meals, setMeals, dietTypes, setDietTypes,
   restrictions, setRestrictions, tastes, setTastes,
   availableRestrictions = [], availableTastes = []
-}: Props) {
+}: PreferencesSectionProps) {
 
   
   {/* Restrictions and tastes */}

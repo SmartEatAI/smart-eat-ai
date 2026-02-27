@@ -7,36 +7,7 @@ import ProposalCard from "@/components/chat/ProposalCard";
 import TypingIndicator from "@/components/chat/TypingIndicator";
 import ChatInput from "@/components/chat/ChatInput";
 import { useAuth } from "@/hooks/useAuth";
-
-// Tipos
-type Recipe = {
-    recipe_id: number;
-    name: string;
-    image_url: string;
-    calories: number;
-    protein: number;
-    carbs: number;
-    fat: number;
-    meal_types: string[];
-    diet_types: string[];
-    recipe_url: string;
-};
-
-type MessageBase = {
-    role: "user" | "chef";
-    text: string;
-    time: Date;
-};
-
-type MessageSuggestion = MessageBase & {
-    sustitution: {
-        original: Recipe;
-        alternative: Recipe;
-        accepted: boolean;
-    };
-};
-
-type Message = MessageBase | MessageSuggestion;
+import { Message, MessageBase, MessageSuggestion, Recipe } from "@/types/chat";
 
 // Dummy inicial
 const defaultMessages: Message[] = [

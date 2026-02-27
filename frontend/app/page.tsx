@@ -20,16 +20,7 @@ import { useRef } from "react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-
-{
-  /* Define the Review interface and sample reviews data */
-}
-interface Review {
-  name: string;
-  image: string;
-  rating: number;
-  review: string;
-}
+import { Review } from "@/types/landing";
 
 const reviews: Review[] = [
   {

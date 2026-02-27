@@ -1,3 +1,4 @@
+import { Day } from "@/types/my-plan";
 import MealItem from "./MealItem";
 import {
   Carousel,
@@ -6,41 +7,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-
-type Recipe = {
-  recipe_id: number;
-  name: string;
-  image_url: string;
-  calories: number;
-  protein: number;
-  carbs: number;
-  fat: number;
-  meal_types: string[];
-  diet_types: string[];
-  recipe_url: string;
-};
-
-type MealItem = {
-  recipe: Recipe;
-  meal_type: string;
-  swapSuggestion?: Recipe; // alternativa sugerida por swap
-  accepted?: boolean; // si el usuario aceptó la sugerencia
-};
-
-type DayPlan = {
-  name: string;
-  meals: MealItem[];
-};
-type Meal = {
-  recipe: Recipe;
-  swapSuggestion?: Recipe;
-  accepted?: boolean;
-};
-
-type Day = {
-  name: string;
-  meals: Meal[];
-};
 
 export default function DaySection({
   day,

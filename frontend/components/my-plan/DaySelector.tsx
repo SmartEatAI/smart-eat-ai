@@ -1,11 +1,7 @@
 import { useState } from "react";
 import Button from "../ui/Button";
-
 import { useRef, useEffect } from "react";
-
-type Day = {
-  name: string;
-};
+import { Day } from "@/types/my-plan";
 
 export default function DaySelector({ days }: { days: Day[] }) {
   const [selectedDay, setSelectedDay] = useState(

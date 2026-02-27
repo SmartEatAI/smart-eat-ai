@@ -1,11 +1,4 @@
-type Props = {
-  title: string;
-  current: number | string;
-  goal: number | string;
-  unit?: string;
-  bgColor?: string;
-  icon?: React.ReactNode;
-};
+import { StatsCardProps } from "@/types/my-plan";
 
 export default function StatsCard({
   title,
@@ -14,7 +7,7 @@ export default function StatsCard({
   unit,
   bgColor = "bg-gradient-to-br from-green-950/80 to-green-900/60 border-green-800/50",
   icon,
-}: Props) {
+}: StatsCardProps) {
   // Determinar si current supera goal (ambos numéricos)
   const isOverGoal =
     typeof current === "number" && typeof goal === "number" && current > goal;

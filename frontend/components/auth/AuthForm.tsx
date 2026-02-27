@@ -14,31 +14,12 @@ import Button from "@/components/ui/Button";
 import Toast from "@/components/ui/Toast";
 import { loginSchema, registerSchema } from "@/schemas/auth.schema";
 import type { AuthResponse } from "@/types/user";
-
-import "@/app/globals.css";
-
-type AuthMode = "login" | "register";
-
-interface ToastState {
-    message: string;
-    type: "success" | "error";
-}
+import { ToastState, FormData, AuthMode } from "@/types/authform";
 
 const AuthForm: React.FC = () => {
     const [mode, setMode] = useState<AuthMode>("register");
     const [showPassword, setShowPassword] = useState(false);
     const [toast, setToast] = useState<ToastState | null>(null);
-
-    interface LoginFormData {
-        email: string;
-        password: string;
-    }
-
-    interface RegisterFormData extends LoginFormData {
-        name: string;
-    }
-
-    type FormData = LoginFormData | RegisterFormData;
 
     const {
         register,

@@ -1,9 +1,4 @@
-type MessageBubbleProps = {
-    role: "user" | "chef";
-    time: string;
-    text: string;
-    avatar: string;
-};
+import { MessageBubbleProps } from "@/types/chat";
 
 export default function MessageBubble({
     role,

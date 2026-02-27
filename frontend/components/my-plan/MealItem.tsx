@@ -3,33 +3,9 @@ import RecipeCard from "@/components/ui/cards/recipe-card";
 import ProposalCard from "../chat/ProposalCard";
 import Button from "../ui/Button";
 import { RotateCw, Loader2 } from "lucide-react";
+import { MealItemProps } from "@/types/my-plan";
 
-type Recipe = {
-  recipe_id: number;
-  name: string;
-  image_url: string;
-  calories: number;
-  protein: number;
-  carbs: number;
-  fat: number;
-  meal_types: string[];
-  diet_types: string[];
-  recipe_url: string;
-};
-
-type Meal = {
-  recipe: Recipe;
-  swapSuggestion?: Recipe;
-  accepted?: boolean;
-};
-
-type Props = {
-  meal: Meal;
-  onConfirm?: () => void;       // aceptar swap
-  onRequestSwap?: () => void;   // solicitar nueva sugerencia
-};
-
-export default function MealItem({ meal, onConfirm, onRequestSwap }: Props) {
+export default function MealItem({ meal, onConfirm, onRequestSwap }: MealItemProps) {
   const [loading, setLoading] = useState(false);
   const [confirming, setConfirming] = useState(false);
 

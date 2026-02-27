@@ -1,7 +1,4 @@
-type Props = {
-  data: any;
-  onChange: (field: string, value: any) => void;
-};
+import { BiometricsSectionProps } from "@/types/my-plan";
 
 const genderOptions = [
   { value: "male", label: "Male" },
@@ -15,7 +12,7 @@ const bodyTypeOptions = [
   { value: "obese", label: "Obese" },
 ];
 
-export default function BiometricsSection({ data, onChange }: Props) {
+export default function BiometricsSection({ data, onChange }: BiometricsSectionProps) {
   return (
     <section className="bg-gradient-to-br from-green-950/70 to-green-900/50 rounded-xl p-6">
       <h2 className="text-xl font-bold mb-6">Body Data</h2>
