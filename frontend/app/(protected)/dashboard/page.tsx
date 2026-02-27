@@ -41,7 +41,7 @@ function transformPlan(plan: any): DailyMenu[] {
                     title: detail.recipe?.name ?? "Unknown recipe",
                     calories: detail.recipe?.calories ?? 0,
                     protein: detail.recipe?.protein ?? 0,
-                    carbs: detail.recipe?.carbohydrates ?? 0,
+                    carbs: detail.recipe?.carbs ?? 0,
                     fat: detail.recipe?.fat ?? 0,
                     description: detail.meal_type ?? "",
                     images: images,
