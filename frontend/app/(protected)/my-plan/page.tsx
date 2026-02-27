@@ -16,11 +16,6 @@ const DAY_NAMES: Record<number, string> = {
   5: "Friday", 6: "Saturday", 7: "Sunday",
 };
 
-function getFirstImage(image_url: string | null | undefined): string | undefined {
-  if (!image_url) return undefined;
-  return image_url.split(/,\s*https?:\/\//)[0].trim() || undefined;
-}
-
 function transformPlan(plan: any): DayPlan[] {
   if (!plan?.daily_menus) return [];
   return plan.daily_menus
@@ -166,10 +161,11 @@ export default function MyPlanPage() {
     weekData.forEach(day => {
       let dayCalories = 0, dayProtein = 0, dayCarbs = 0, dayFats = 0;
       day.meals.forEach((meal: any) => {
-        dayCalories += meal.calories || 0;
-        dayProtein += meal.protein || 0;
-        dayCarbs += meal.carbs || 0;
-        dayFats += meal.fats || 0;
+        // Use recipe fields for macro calculation
+        dayCalories += meal.recipe?.calories || 0;
+        dayProtein += meal.recipe?.protein || 0;
+        dayCarbs += meal.recipe?.carbs || 0;
+        dayFats += meal.recipe?.fat || 0;
       });
       totalCalories += dayCalories;
       totalProtein += dayProtein;
