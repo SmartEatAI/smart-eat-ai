@@ -341,7 +341,7 @@ export default function Dashboard() {
 
             {/* Today's Meal Schedule Section */}
             <h2 className="text-2xl font-bold tracking-tight text-primary mb-4 border-b border-muted pb-2">
-                Today's Meals
+                Today&apos;s Meals
             </h2>
 
             {mealList.length === 0 ? (

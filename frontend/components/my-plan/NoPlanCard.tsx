@@ -13,7 +13,7 @@ export default function NoPlanCard() {
                 No Active Nutrition Plan
             </h3>
             <p className="text-muted-foreground max-w-md mb-8">
-                You don't have an active nutrition plan yet. Create a personalized plan by chatting with our AI nutritionist!
+                You don&apos;t have an active nutrition plan yet. Create a personalized plan by chatting with our AI nutritionist!
             </p>
             <Button
                 variant="primary"

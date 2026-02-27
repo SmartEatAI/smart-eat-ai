@@ -1,7 +1,5 @@
-import datetime
 from sqlalchemy.orm import Session
 from app.services.plan import PlanService
-from app.schemas.plan import PlanCreate
 from app.models import User
 
 

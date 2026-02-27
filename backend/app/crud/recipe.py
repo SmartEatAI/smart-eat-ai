@@ -1,6 +1,5 @@
 from app.models.meal_type import MealType
 from app.models.diet_type import DietType
-from app.schemas.recipe import RecipeCreate
 from sqlalchemy.orm import Session
 from app.models.recipe import Recipe
 from fastapi import HTTPException

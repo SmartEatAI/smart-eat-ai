@@ -2,7 +2,6 @@ import os
 import json
 from sqlalchemy.orm import Session
 from app.crud.recipe import create_recipe
-from app.schemas.recipe import RecipeCreate
 
 
 def seed_recipes(db: Session):

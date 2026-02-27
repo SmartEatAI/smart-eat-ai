@@ -19,19 +19,6 @@ const ProgressCard: React.FC<ProgressCardProps> = ({
     weeklyTotal = 0
 }) => {
     const [chartPath, setChartPath] = useState<string>("");
-
-    // Generar puntos para el gráfico basados en datos semanales
-    useEffect(() => {
-        if (weeklyData.length === 0) {
-            // Datos de ejemplo si no hay datos reales
-            const defaultData = [65, 70, 68, 72, 75, 78, 82];
-            generateChartPath(defaultData);
-        } else {
-            const percentages = weeklyData.map(d => d.percentage);
-            generateChartPath(percentages);
-        }
-    }, [weeklyData]);
-
     const generateChartPath = (data: number[]) => {
         // Normalizar datos para que quepan en el gráfico (0-100)
         const points = data.map((value, index) => {
@@ -59,6 +46,18 @@ const ProgressCard: React.FC<ProgressCardProps> = ({
         
         setChartPath(path);
     };
+    
+    // Generar puntos para el gráfico basados en datos semanales
+    useEffect(() => {
+        if (weeklyData.length === 0) {
+            // Datos de ejemplo si no hay datos reales
+            const defaultData = [65, 70, 68, 72, 75, 78, 82];
+            generateChartPath(defaultData);
+        } else {
+            const percentages = weeklyData.map(d => d.percentage);
+            generateChartPath(percentages);
+        }
+    }, [weeklyData]);
 
     // Generar puntos de la cuadrícula para los días de la semana
     const dayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];

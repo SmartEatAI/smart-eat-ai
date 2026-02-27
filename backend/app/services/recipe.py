@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
-from fastapi import HTTPException, status
+from fastapi import HTTPException
 from app.crud.recipe import (
     get_recipe_by_id,
     get_recipes_by_meal_type,

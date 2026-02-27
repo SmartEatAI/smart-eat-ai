@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
 import { useAuth } from "@/hooks/useAuth";
+import React from "react";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
 	const { user, loading } = useAuth();

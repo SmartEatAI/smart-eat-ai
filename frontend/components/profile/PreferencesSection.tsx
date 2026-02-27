@@ -2,9 +2,7 @@ import { useState, KeyboardEvent } from "react";
 import { Category } from "@/types/category";
 import {
   Command,
-  CommandEmpty,
   CommandGroup,
-  CommandInput,
   CommandItem,
   CommandList,
 } from "@/components/ui/command"

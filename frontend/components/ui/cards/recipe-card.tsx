@@ -19,7 +19,7 @@ interface RecipeCardProps {
 export default function RecipeCard({ title, calories, protein, carbs, fats, mealType, images, recipeUrl, children }: RecipeCardProps) {
   // Debug: log mealType prop and its type
   if (typeof window !== "undefined") {
-    // eslint-disable-next-line no-console
+     
   }
 
   // Función para formatear el mealType (ej: "breakfast" → "Breakfast")

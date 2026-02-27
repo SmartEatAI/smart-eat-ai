@@ -1,5 +1,4 @@
 from app.schemas.category import CategoryBase
-from app.crud.profile import get_profile
 from sqlalchemy.orm import Session
 from app.models.diet_type import DietType
 from app.models.profile import Profile

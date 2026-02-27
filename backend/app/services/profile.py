@@ -12,7 +12,6 @@ from app.models.restriction import Restriction
 from app.crud.category import process_categories
 from app.schemas.profile import ProfileCreate
 from app.utils.calculations import calculate_macros, calculate_fat_percentage
-from app.core.database import DatabaseService
 from app.core.validation import ValidationService
 
 class ProfileService:
