@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from app.services.plan import PlanService
-from app.models import User
+from app.models import User, Recipe
 
 
 def seed_plans(db: Session):
@@ -10,55 +10,34 @@ def seed_plans(db: Session):
         print("No users found for plan seeding")
         return
 
+    # IDs de recetas a usar
+    recipe_ids = [38, 39, 40]
+
     for user in users:
+        daily_menus = []
+        for i, recipe_id in enumerate(recipe_ids, start=1):
+            recipe = db.query(Recipe).filter(Recipe.id == recipe_id).first()
+            # Obtener el primer meal_type válido asociado a la receta
+            meal_type = None
+            if recipe and recipe.meal_types:
+                # recipe.meal_types es una lista de objetos MealType
+                meal_type = recipe.meal_types[0].name
+            else:
+                meal_type = "breakfast"  # fallback seguro
+            daily_menus.append({
+                "day_of_week": i,
+                "meal_details": [
+                    {
+                        "recipe_id": recipe_id,
+                        "schedule": 1,
+                        "status": 0,
+                        "meal_type": meal_type
+                    }
+                ]
+            })
 
         plan_schema = {
-            "daily_menus": [
-                {
-                  "day_of_week": 1,
-                  "meal_details": [
-                      {
-                        "recipe_id": 38,
-                        "schedule": 1,
-                        "status": 0,
-                        "meal_type": "breakfast"
-                      },
-                      {
-                        "recipe_id": 38,
-                        "schedule": 1,
-                        "status": 0,
-                        "meal_type": "breakfast"
-                      },{
-                        "recipe_id": 38,
-                        "schedule": 1,
-                        "status": 0,
-                        "meal_type": "breakfast"
-                      }
-                  ]
-                },
-                {
-                  "day_of_week": 2,
-                  "meal_details": [
-                      {
-                        "recipe_id": 39,
-                        "schedule": 1,
-                        "status": 0,
-                        "meal_type": "breakfast"
-                      }
-                  ]
-                },
-                {
-                  "day_of_week": 3,
-                  "meal_details": [
-                      {
-                        "recipe_id": 40,
-                        "schedule": 1,
-                        "status": 0,
-                        "meal_type": "breakfast"
-                      }
-                  ]
-                },
-            ],
+            "daily_menus": daily_menus,
             "active": True,
         }
 
