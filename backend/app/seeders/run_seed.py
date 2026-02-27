@@ -18,11 +18,12 @@ def run_seeders():
         # Perfiles
         seed_profiles(db)
 
-        # Recetas
-        seed_recipes(db)
-
         # Planes
         seed_plans(db)
+        
+        # Recetas
+        seed_recipes(db)
+        
     finally:
         db.close()
 

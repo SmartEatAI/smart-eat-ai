@@ -108,7 +108,10 @@ export default function MyPlanPage() {
     const meal = weekData[dayIndex].meals[mealIndex];
     // Llamada a tu API para obtener nueva sugerencia
     console.log("Solicitando swap para receta %d del tipo %s", meal.recipe.recipe_id, meal.meal_type);
-    const newSwap = await fetchNewRecipe(meal.meal_type[0], meal.recipe.recipe_id );
+    const mealType = Array.isArray(meal.meal_type)
+      ? meal.meal_type[0]
+      : meal.meal_type;
+    const newSwap = await fetchNewRecipe(mealType, meal.recipe.recipe_id);
     if (!newSwap) return;
 
     // Actualiza estado local
