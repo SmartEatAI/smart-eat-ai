@@ -223,7 +223,7 @@ export default function ChatPage() {
 
                             {"sustitution" in msg && msg.sustitution && (
                                 <ProposalCard
-                                    image={msg.sustitution.alternative.image_url}
+                                    image={msg.sustitution.alternative.image_url?.split(', ').map(img => img.trim())?.[0] ?? ""}
                                     badge="Suggestion"
                                     title={msg.text}
                                     description={`${msg.sustitution.original.name} (${msg.sustitution.original.calories} kcal) → ${msg.sustitution.alternative.name} (${msg.sustitution.alternative.calories} kcal)`}

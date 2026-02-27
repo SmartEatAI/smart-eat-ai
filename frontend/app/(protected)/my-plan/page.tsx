@@ -47,7 +47,7 @@ function getFirstImage(image_url: string | null | undefined): string | undefined
 
 function transformPlan(plan: any): DayPlan[] {
   if (!plan?.daily_menus) return [];
-
+  console.log("Transforming plan:", plan);
   return plan.daily_menus
     .sort((a: any, b: any) => a.day_of_week - b.day_of_week)
     .map((menu: any): DayPlan => ({
@@ -56,7 +56,7 @@ function transformPlan(plan: any): DayPlan[] {
         const recipeData = detail.recipe ?? {};
         console.log("Recipe data:", recipeData);
         const recipe: Recipe = {
-          recipe_id: recipeData.id ?? 0,
+          recipe_id: recipeData.recipe_id ?? 0,
           name: recipeData.name ?? "Unknown recipe",
           image_url: recipeData.image_url ?? "",
           calories: recipeData.calories ?? 0,

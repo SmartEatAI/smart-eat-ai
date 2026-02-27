@@ -47,7 +47,7 @@ export default function MealItem({ meal, onConfirm, onRequestSwap }: Props) {
   if (meal.swapSuggestion) {
     return (
       <ProposalCard
-        image={meal.swapSuggestion.image_url}
+        image={meal.swapSuggestion.image_url?.split(', ').map(img => img.trim())?.[0] ?? ""}
         badge="Suggestion"
         title={meal.recipe.name}
         description={`${meal.recipe.name} (${meal.recipe.calories} kcal) → ${meal.swapSuggestion.name} (${meal.swapSuggestion.calories} kcal)`}
