@@ -11,6 +11,7 @@ class RecipeBase(BaseModel):
     fat: int = Field(..., gte=0.0, example=15)
     image_url: Optional[str] = Field(default=None, example="https://example.com/image.jpg")
     recipe_url: Optional[str] = Field(default=None, example="https://example.com/recipe")
+    recipe_id: int = Field(..., example=12345)
 
 class RecipeCreate(RecipeBase):
     meal_types: List[CategoryBase] = []

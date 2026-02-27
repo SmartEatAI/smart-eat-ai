@@ -12,6 +12,7 @@ class Recipe(Base):
     fat = Column(Integer, nullable=False, default=0)
     image_url = Column(String, default="/images/Image_not_available.png")
     recipe_url = Column(String)
+    recipe_id = Column(String, unique=True, nullable=False)
 
     meal_types = relationship(
         "MealType", 
