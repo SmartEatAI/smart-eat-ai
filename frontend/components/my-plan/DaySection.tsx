@@ -1,4 +1,4 @@
-import { Day } from "@/types/my-plan";
+import { DayPlan } from "@/types/my-plan";
 import MealItem from "./MealItem";
 import {
   Carousel,
@@ -14,7 +14,7 @@ export default function DaySection({
   onSwapMeal,
   onAcceptSwap,
 }: {
-  day: Day;
+  day: DayPlan;
   dayIndex: number;
   onSwapMeal: (dayIndex: number, mealIndex: number) => void;
   onAcceptSwap: (dayIndex: number, mealIndex: number) => void;

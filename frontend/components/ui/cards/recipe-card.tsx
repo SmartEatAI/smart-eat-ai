@@ -10,7 +10,7 @@ interface RecipeCardProps {
   protein?: number;
   carbs?: number;
   fats?: number;
-  mealType?: string | string[];
+  mealType?: string | { name?: string } | Array<string | { name?: string }>;
   images: string;
   recipeUrl?: string;
   children?: ReactNode;
@@ -30,9 +30,17 @@ export default function RecipeCard({ title, calories, protein, carbs, fats, meal
 
   let mealTypeBadges: string[] = [];
   if (Array.isArray(mealType)) {
-    mealTypeBadges = mealType.map(mt => typeof mt === "string" ? formatMealType(mt) : String(mt));
+    mealTypeBadges = mealType
+      .map((mt: any) => {
+        if (typeof mt === "string") return formatMealType(mt);
+        if (mt && typeof mt === "object" && "name" in mt && typeof mt.name === "string") return formatMealType(mt.name);
+        return null;
+      })
+      .filter((mt): mt is string => Boolean(mt && mt.trim() !== ""));
   } else if (typeof mealType === "string" && mealType) {
     mealTypeBadges = [formatMealType(mealType)];
+  } else if (mealType && typeof mealType === "object" && "name" in mealType && typeof (mealType as any).name === "string") {
+    mealTypeBadges = [formatMealType((mealType as any).name)];
   }
 
   const imageArray: string[] = images

@@ -25,17 +25,6 @@ export type DayPlan = {
   meals: MealItem[];
 };
 
-export type Meal = {
-  recipe: Recipe;
-  swapSuggestion?: Recipe;
-  accepted?: boolean;
-};
-
-export type Day = {
-  name: string;
-  meals: Meal[];
-};
-
 export type StatsCardProps = {
   title: string;
   current: number | string;
@@ -71,7 +60,7 @@ export type PreferencesSectionProps = {
 };
 
 export type MealItemProps = {
-  meal: Meal;
+  meal: MealItem;
   onConfirm?: () => void;       // aceptar swap
   onRequestSwap?: () => void;   // solicitar nueva sugerencia
 };

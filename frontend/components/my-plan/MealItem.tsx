@@ -33,9 +33,18 @@ export default function MealItem({ meal, onConfirm, onRequestSwap }: MealItemPro
     );
   }
 
-  // Si no hay sugerencia, mostrar receta original con botón de swap
+  // Mostrar todos los meal_types de la receta
+  const mealTypes = meal.recipe.meal_types;
+  const fats = meal.recipe.fat;
+
   return (
-    <RecipeCard {...meal.recipe} title={meal.recipe.name} images={meal.recipe.image_url}>
+    <RecipeCard
+      {...meal.recipe}
+      title={meal.recipe.name}
+      images={meal.recipe.image_url}
+      mealType={mealTypes}
+      fats={fats}
+    >
       <Button
         variant="primary"
         onClick={handleSwapClick}
