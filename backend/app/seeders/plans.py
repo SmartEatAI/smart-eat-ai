@@ -18,18 +18,18 @@ def seed_plans(db: Session):
                   "day_of_week": 1,
                   "meal_details": [
                       {
-                        "recipe_id": 1,
+                        "recipe_id": 38,
                         "schedule": 1,
                         "status": 0,
                         "meal_type": "breakfast"
                       },
                       {
-                        "recipe_id": 1,
+                        "recipe_id": 38,
                         "schedule": 1,
                         "status": 0,
                         "meal_type": "breakfast"
                       },{
-                        "recipe_id": 1,
+                        "recipe_id": 38,
                         "schedule": 1,
                         "status": 0,
                         "meal_type": "breakfast"
@@ -40,7 +40,7 @@ def seed_plans(db: Session):
                   "day_of_week": 2,
                   "meal_details": [
                       {
-                        "recipe_id": 2,
+                        "recipe_id": 39,
                         "schedule": 1,
                         "status": 0,
                         "meal_type": "breakfast"
@@ -51,7 +51,7 @@ def seed_plans(db: Session):
                   "day_of_week": 3,
                   "meal_details": [
                       {
-                        "recipe_id": 3,
+                        "recipe_id": 40,
                         "schedule": 1,
                         "status": 0,
                         "meal_type": "breakfast"
