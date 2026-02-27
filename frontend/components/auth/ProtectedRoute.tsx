@@ -11,10 +11,11 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     const router = useRouter();
     const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-    const { user, token } = useAuth();
-    
     useEffect(() => {
         const validateToken = async () => {
+            const token = localStorage.getItem("token");
+            const user = localStorage.getItem("user");
+
             if (!token || !user) {
                 // Not authenticated, redirect to auth page
                 router.push("/auth");
