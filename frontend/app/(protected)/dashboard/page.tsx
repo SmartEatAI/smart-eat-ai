@@ -9,9 +9,9 @@ import Image from "next/image";
 import Button from "@/components/ui/Button";
 import { Check } from "lucide-react";
 import NoPlanCard from "@/components/my-plan/NoPlanCard";
-import type { User } from "@/types/user";
 import { useRouter } from "next/navigation";
 import type { Meal, DailyMenu, WeeklyStats, WeeklyDayData } from "@/types/dashboard";
+import { useAuth } from "@/hooks/useAuth";
 
 const DAY_NAMES: Record<number, string> = {
     1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday",
@@ -81,8 +81,8 @@ function calculateWeeklyData(weekData: DailyMenu[], dailyGoal: number): WeeklySt
 
 export default function Dashboard() {
     const { profile } = useProfile();
+    const { user, token } = useAuth();
     const router = useRouter();
-    const [user, setUser] = useState<User | null>(null);
     const [weekData, setWeekData] = useState<DailyMenu[]>([]);
     const [todaysMeals, setTodaysMeals] = useState<Meal[]>([]);
     const [loading, setLoading] = useState(true);
@@ -100,24 +100,9 @@ export default function Dashboard() {
         weeklyTotal: 0
     });
 
-    // Load user data from localStorage
-    useEffect(() => {
-        const userData = localStorage.getItem("user");
-        if (userData) {
-            try {
-                const parsedUser = JSON.parse(userData);
-                setUser(parsedUser);
-            } catch (error) {
-                console.error("Error parsing user data:", error);
-                setUser(null);
-            }
-        }
-    }, []);
 
     // Fetch plan data
     useEffect(() => {
-        const token = localStorage.getItem("token");
-        
         if (!token) {
             router.push("/login");
             return;
