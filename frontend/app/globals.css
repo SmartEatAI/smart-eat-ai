@@ -7,6 +7,14 @@ input[type=number]::-webkit-outer-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+/* styles/globals.css */
+.scrollbar-hide {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome/Safari/Webkit */
+}
 /* Make native date input calendar icon white for dark backgrounds */
 input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(1) brightness(2);

@@ -183,7 +183,7 @@ export default function ChatPage() {
     return (
         <AppLayout title="🤖 Intelligent Nutrition Assistant">
             <div className="flex flex-col h-[80vh]">
-                <div className="flex-1 flex flex-col gap-4 p-4 overflow-y-auto">
+                <div className="flex-1 flex flex-col gap-4 p-4 overflow-y-auto scrollbar-hide">
                     {messages.map((msg, i) => (
                         <Fragment key={i}>
                             <MessageBubble
