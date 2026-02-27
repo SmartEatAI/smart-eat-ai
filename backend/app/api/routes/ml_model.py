@@ -1,67 +1,41 @@
-from fastapi import APIRouter
-from typing import List, Optional
-from pydantic import BaseModel, field_validator, Field
 
-from schemas.user import UserInput
-from core.recommender import recommend_recipes, swap_for_similar
+from app.api.deps import get_current_user
+from app.models.user import User
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from app.core.recommender import swap_for_similar
+from app.database import get_db
 
-router = APIRouter(prefix="/auth", tags=["Authentication"])
+router = APIRouter(prefix="/ml", tags=["ML Recommender"])
 
-class SwapRequest(BaseModel):
-    recipe_id: int
-    meal_label: str
-    recommended_diets: List[str]
-    selected_extra: Optional[List[str]] = []
-    exclude_ids: Optional[List[int]] = []
-
-@router.post("/generate-plan")
-def generate_plan(user: UserInput):
-
-    bodyfat = estimate_bodyfat(user.sex, user.body_type)
-
-    macros = calculate_macros(
-        user.sex,
-        user.age,
-        user.height,
-        user.weight,
-        bodyfat,
-        user.activity,
-        user.goal
-    )
-
-    meals = user.meals_per_day
-
-    recipes = recommend_recipes(
-        {
-            "calories": macros["calories"]/meals,
-            "fat_content": macros["fat"]/meals,
-            "carbohydrate_content": macros["carbs"]/meals,
-            "protein_content": macros["protein"]/meals
-        },
-        user.diets,
-        meals
-    )
-
-    return {
-        "macros": macros,
-        "recipes": recipes.to_dict(orient="records")
-    }
-    
 @router.post("/swap-recipe")
-def swap_recipe(data: SwapRequest):
-
+def swap_recipe(
+    recipe_id: int,
+    meal_label: str,
+    n_search: int = 50,
+    user: User = Depends(get_current_user), 
+    db: Session = Depends(get_db) 
+):
     new_recipe = swap_for_similar(
-        recipe_id=data.recipe_id,
-        meal_label=data.meal_label,
-        recommended_diets=data.recommended_diets,
-        selected_extra=data.selected_extra,
-        exclude_ids=set(data.exclude_ids)
+        db=db,
+        user=user,
+        recipe_id=recipe_id,
+        meal_label=meal_label,
+        n_search=n_search
     )
-
     if new_recipe is None:
         raise HTTPException(
             status_code=404,
             detail="No similar recipe found for this meal type"
         )
-
     return new_recipe
+
+# @router.post("/recommend")
+# def recommend_endpoint(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    
+#     recipes = recommend_recipes(
+#         db,
+#         user     
+#     )
+    
+#     return {"recipes": recipes}
