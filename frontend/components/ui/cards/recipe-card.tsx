@@ -1,36 +1,82 @@
 "use client";
 
-import Image from "next/image";
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
+import { Info } from "lucide-react";
+import ImageCarousel from "@/components/ui/ImageCarousel";
 
 interface RecipeCardProps {
   title: string;
   calories: number;
-  image: string;
+  protein?: number;
+  carbs?: number;
+  fats?: number;
+  mealType?: string | string[];
+  images: string[];
+  recipeUrl?: string;
   children?: ReactNode;
 }
 
+export default function RecipeCard({ title, calories, protein, carbs, fats, mealType, images, recipeUrl, children }: RecipeCardProps) {
+  // Debug: log mealType prop and its type
+  if (typeof window !== "undefined") {
+    // eslint-disable-next-line no-console
+    console.log("[RecipeCard] mealType:", mealType, "type:", typeof mealType, Array.isArray(mealType) ? "array" : "not array");
+  }
 
-export default function RecipeCard({ title, calories, image, children }: RecipeCardProps) {
-  const [imgSrc, setImgSrc] = useState(image);
+  // Función para formatear el mealType (ej: "breakfast" → "Breakfast")
+  const formatMealType = (type: string) => {
+    if (!type) return "";
+    return type.charAt(0).toUpperCase() + type.slice(1);
+  };
+
+  let mealTypeBadges: string[] = [];
+  if (Array.isArray(mealType)) {
+    mealTypeBadges = mealType.map(mt => typeof mt === "string" ? formatMealType(mt) : String(mt));
+  } else if (typeof mealType === "string" && mealType) {
+    mealTypeBadges = [formatMealType(mealType)];
+  }
 
   return (
     <div className="border rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 bg-card">
-      <div className="relative w-full h-48 overflow-hidden bg-muted">
-        <Image
-          src={imgSrc}
-          alt={title}
-          fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="object-cover hover:scale-110 transition-transform duration-500"
-          quality={95}
-          priority={false}
-          onError={() => setImgSrc("/images/Image_not_available.png")}
-        />
-      </div>
+      <ImageCarousel images={images} alt={title} />
       <div className="p-5">
-        <h3 className="text-lg font-semibold mb-2 line-clamp-1 text-foreground">{title}</h3>
-        <p className="text-sm text-muted-foreground font-medium">{calories} kcal</p>
+        <div className="flex items-start justify-between gap-2 mb-2">
+          <h3 className="text-lg font-semibold line-clamp-1 text-foreground">{title}</h3>
+          {recipeUrl && (
+            <a
+              href={recipeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`More info about ${title}`}
+              className="shrink-0 text-muted-foreground hover:text-primary transition-colors"
+            >
+              <Info className="size-5" />
+            </a>
+          )}
+        </div>
+        {/* Meal Type - badge style */}
+        {mealTypeBadges.length > 0 && (
+          <div className="flex flex-wrap gap-1 mb-2">
+            {mealTypeBadges.map((badge, idx) => (
+              <span
+                key={idx}
+                className="inline-block bg-primary/10 text-primary text-xs font-semibold px-2 py-0.5 rounded-full border border-primary/20 tracking-wide"
+              >
+                {badge}
+              </span>
+            ))}
+          </div>
+        )}
+        {/* Macros info */}
+        <p className="text-sm text-muted-foreground font-medium">
+          {calories} kcal
+          {typeof protein === "number" && typeof carbs === "number" && typeof fats === "number" && (
+            <>
+              {" "}
+              • {protein}g Prot • {carbs}g Carb • {fats}g Fat
+            </>
+          )}
+        </p>
         {children && <div className="mt-4">{children}</div>}
       </div>
     </div>

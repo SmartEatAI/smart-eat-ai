@@ -7,15 +7,19 @@ import DaySection from "@/components/my-plan/DaySection";
 import { Droplet, Dumbbell, Flame, Zap } from "lucide-react";
 import { useProfile } from "@/hooks/useProfile";
 import { useState, useEffect } from "react";
+import NoPlanCard from "@/components/my-plan/NoPlanCard";
 
 const DAY_NAMES: Record<number, string> = {
   1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday",
   5: "Friday", 6: "Saturday", 7: "Sunday",
 };
 
-function getFirstImage(image_url: string | null | undefined): string | undefined {
-  if (!image_url) return undefined;
-  return image_url.split(/,\s*https?:\/\//)[0].trim() || undefined;
+function getAllImages(image_url: string | null | undefined): string[] {
+  if (!image_url) return [];
+  return image_url
+    .split(/,\s*(?=https?:\/\/)/)
+    .map((u) => u.trim())
+    .filter(Boolean);
 }
 
 function transformPlan(plan: any) {
@@ -24,12 +28,31 @@ function transformPlan(plan: any) {
     .sort((a: any, b: any) => a.day_of_week - b.day_of_week)
     .map((menu: any) => ({
       name: DAY_NAMES[menu.day_of_week] ?? `Day ${menu.day_of_week}`,
-      meals: (menu.meal_details ?? []).map((detail: any) => ({
-        title: detail.recipe?.name ?? "Unknown recipe",
-        calories: detail.recipe?.calories ?? 0,
-        description: detail.meal_type ?? "",
-        image: getFirstImage(detail.recipe?.image_url),
-      })),
+      meals: (menu.meal_details ?? []).map((detail: any) => {
+        // Ensure mealType is always an array of strings
+        let mealTypesRaw = detail.recipe?.meal_types;
+        let mealType: string[] = [];
+        if (Array.isArray(mealTypesRaw)) {
+          mealType = mealTypesRaw.map((mt: any) => typeof mt === 'string' ? mt : (mt?.name ?? String(mt)));
+        } else if (typeof detail.meal_type === 'string') {
+          mealType = [detail.meal_type];
+        } else if (detail.meal_type?.name) {
+          mealType = [detail.meal_type.name];
+        }
+        return {
+          id: detail.id,
+          recipeId: detail.recipe_id,
+          title: detail.recipe?.name ?? "Unknown recipe",
+          calories: detail.recipe?.calories ?? 0,
+          protein: detail.recipe?.protein ?? 0,
+          carbs: detail.recipe?.carbohydrates ?? 0,
+          fats: detail.recipe?.fat ?? 0,
+          mealType,
+          description: detail.meal_type ?? "",
+          images: getAllImages(detail.recipe?.image_url),
+          recipeUrl: detail.recipe?.recipe_url ?? undefined,
+        };
+      }),
     }));
 }
 
@@ -48,6 +71,7 @@ export default function MyPlanPage() {
       .catch(() => setWeekData([]))
       .finally(() => setLoading(false));
   }, []);
+  
   const macros = {
     calories: { current: 0, goal: profile?.calories_target || 0 },
     protein: { current: 0, goal: profile?.protein_target || 0 },
@@ -128,7 +152,7 @@ export default function MyPlanPage() {
       {loading ? (
         <div className="py-12 text-center text-muted-foreground">Loading plan...</div>
       ) : weekData.length === 0 ? (
-        <div className="py-12 text-center text-muted-foreground">No plan found. Generate one from the chat!</div>
+        <NoPlanCard />
       ) : (
         <>
           <DaySelector days={weekData} />
@@ -139,7 +163,6 @@ export default function MyPlanPage() {
           </div>
         </>
       )}
-
     </AppLayout>
   );
 }

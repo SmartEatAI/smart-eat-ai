@@ -6,10 +6,11 @@ interface ProposalCardProps {
     badge: string;
     title: string;
     description?: string;
+    extraInfo?: React.ReactNode;
     confirmText?: string;
     cancelText?: string;
-    onConfirm?: () => void;
-    onCancel?: () => void;
+    onConfirm?: () => void; // → llama a handleConfirm (guarda en API + actualiza estado)
+    onCancel?: () => void;  // → llama a setProposal(null) (descarta la propuesta)
 }
 
 export default function ProposalCard({
@@ -17,6 +18,7 @@ export default function ProposalCard({
     badge,
     title,
     description,
+    extraInfo,
     confirmText = "Confirm",
     cancelText = "Cancel",
     onConfirm,
@@ -45,6 +47,7 @@ export default function ProposalCard({
                             {description}
                         </p>
                     )}
+                    {extraInfo}
                 </div>
             </div>
 

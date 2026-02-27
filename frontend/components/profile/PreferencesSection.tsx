@@ -1,5 +1,13 @@
 import { useState, KeyboardEvent } from "react";
 import { Category } from "@/types/category";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command"
 
 type Props = {
   meals: number;
@@ -10,12 +18,15 @@ type Props = {
   setRestrictions: (r: string[]) => void;
   tastes: (string | Category)[];
   setTastes: (t: string[]) => void;
+  availableRestrictions?: string[];
+  availableTastes?: string[];
 };
 
 
 export default function PreferencesSection({ 
   meals, setMeals, dietTypes, setDietTypes,
-  restrictions, setRestrictions, tastes, setTastes
+  restrictions, setRestrictions, tastes, setTastes,
+  availableRestrictions = [], availableTastes = []
 }: Props) {
 
   
@@ -31,20 +42,32 @@ export default function PreferencesSection({
 
   const dietNames = getNames(dietTypes);
 
-  const handleAddTag = (
+  const addTagAction = (
+    value: string, 
+    currentItems: (string | Category)[], 
+    setter: (val: string[]) => void, 
+    inputSetter: (val: string) => void
+  ) => {
+    const trimmed = value.trim();
+    if (!trimmed) return;
+
+    const currentNames = getNames(currentItems);
+    if (!currentNames.includes(trimmed)) {
+      setter([...currentNames, trimmed]);
+    }
+    inputSetter("");
+  };
+
+  const handleKeyDown = (
     e: KeyboardEvent<HTMLInputElement>, 
     currentItems: (string | Category)[], 
     setter: (val: string[]) => void, 
     inputSetter: (val: string) => void,
     inputValue: string
   ) => {
-    if (e.key === "Enter" && inputValue.trim()) {
+    if (e.key === "Enter") {
       e.preventDefault();
-      const currentNames = getNames(currentItems);
-      if (!currentNames.includes(inputValue.trim())) {
-        setter([...currentNames, inputValue.trim()]);
-      }
-      inputSetter("");
+      addTagAction(inputValue, currentItems, setter, inputSetter);
     }
   };
 
@@ -118,28 +141,35 @@ return (
 
       <TagInputGroup 
         label="Restrictions"
-        placeholder="Add allergy..."
+        placeholder="Add restrictions..."
         items={getNames(restrictions)}
         inputValue={restrictionInput}
         setInputValue={setRestrictionInput}
-        onKeyDown={(e) => handleAddTag(e, restrictions, setRestrictions, setRestrictionInput, restrictionInput)}
+        suggestions={availableRestrictions}
+        onKeyDown={(e) => handleKeyDown(e, restrictions, setRestrictions, setRestrictionInput, restrictionInput)}
         onRemove={(name) => handleRemoveTag(name, restrictions, setRestrictions)}
+        // 2. Pasamos la nueva prop onSelect
+        onSelect={(val) => addTagAction(val, restrictions, setRestrictions, setRestrictionInput)}
+        id="restrictions"
       />
 
       <TagInputGroup 
         label="Tastes"
-        placeholder="Add preference..."
+        placeholder="Add tastes..."
         items={getNames(tastes)}
         inputValue={tasteInput}
         setInputValue={setTasteInput}
-        onKeyDown={(e) => handleAddTag(e, tastes, setTastes, setTasteInput, tasteInput)}
+        suggestions={availableTastes}
+        onKeyDown={(e) => handleKeyDown(e, tastes, setTastes, setTasteInput, tasteInput)}
         onRemove={(name) => handleRemoveTag(name, tastes, setTastes)}
+        // 2. Pasamos la nueva prop onSelect
+        onSelect={(val) => addTagAction(val, tastes, setTastes, setTasteInput)}
+        id="tastes"
       />
     </section>
   );
 }
 
-// Interfaz y componente TagInputGroup (igual que antes)
 interface TagInputGroupProps {
   label: string;
   placeholder: string;
@@ -148,28 +178,70 @@ interface TagInputGroupProps {
   setInputValue: (v: string) => void;
   onKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void;
   onRemove: (name: string) => void;
+  onSelect: (value: string) => void; // Nueva prop
+  suggestions?: string[];
+  id: string;
 }
 
-function TagInputGroup({ label, placeholder, items, inputValue, setInputValue, onKeyDown, onRemove }: TagInputGroupProps) {
+function TagInputGroup({ 
+  label, placeholder, items, inputValue, setInputValue, 
+  onKeyDown, onRemove, onSelect, suggestions = [], id 
+}: TagInputGroupProps) {
+  const [open, setOpen] = useState(false);
+
+  const filteredSuggestions = suggestions.filter(
+    (s) => !items.includes(s) && s.toLowerCase().includes(inputValue.toLowerCase())
+  );
+
   return (
-    <div className="flex flex-col gap-2">
-      <p className="text-text-secundary text-sm mb-3 font-medium">{label}</p>
-      <div className="bg-secondary/50 border border-border rounded-lg p-2 flex flex-wrap gap-2 items-center min-h-[48px] focus-within:ring-1 focus-within:ring-primary">
-        {items.map((name, index) => (
-          <span key={`${name}-${index}`} className="flex items-center gap-1 bg-primary/10 text-primary text-xs px-2 py-1 rounded-md border border-primary/20">
-            {name}
-            <button type="button" onClick={() => onRemove(name)} className="hover:text-destructive ml-1">×</button>
-          </span>
-        ))}
-        <input
-          type="text"
-          className="bg-transparent border-none outline-none text-sm flex-grow min-w-[120px] p-1"
-          placeholder={items.length === 0 ? placeholder : ""}
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={onKeyDown}
-        />
-      </div>
+    <div className="flex flex-col gap-2 relative">
+      <p className="text-text-secundary text-sm mb-1 font-medium">{label}</p>
+      
+      <Command className="overflow-visible bg-transparent" shouldFilter={false}>
+        <div className="bg-secondary/50 border border-border rounded-lg p-2 flex flex-wrap gap-2 items-center min-h-[48px] focus-within:ring-1 focus-within:ring-primary">
+          {items.map((name, index) => (
+            <span key={`${name}-${index}`} className="flex items-center gap-1 bg-primary/10 text-primary text-xs px-2 py-1 rounded-md border border-primary/20">
+              {name}
+              <button type="button" onClick={() => onRemove(name)} className="hover:text-destructive ml-1">×</button>
+            </span>
+          ))}
+
+          <input
+            type="text"
+            className="bg-transparent border-none outline-none text-sm flex-grow min-w-[120px] p-1"
+            placeholder={items.length === 0 ? placeholder : `Write more ${id}...`}
+            value={inputValue}
+            onChange={(e) => {
+                setInputValue(e.target.value);
+                setOpen(true);
+            }}
+            onKeyDown={onKeyDown}
+            onFocus={() => setOpen(true)}
+            onBlur={() => setTimeout(() => setOpen(false), 200)}
+          />
+        </div>
+
+        {open && filteredSuggestions.length > 0 && (
+          <div className="absolute top-[calc(100%+4px)] left-0 w-full z-50 bg-[#1a1a1a] border border-border rounded-md shadow-xl outline-none overflow-hidden">
+            <CommandList className="max-h-[200px] overflow-y-auto p-1 scrollbar-thin">
+                <CommandGroup>
+                  {filteredSuggestions.map((suggestion) => (
+                    <CommandItem
+                      key={suggestion}
+                      onSelect={() => {
+                        onSelect(suggestion); // Llama a la lógica de guardado directamente
+                        setOpen(false);
+                      }}
+                      className="cursor-pointer p-2 hover:bg-primary/20 aria-selected:bg-primary/20 rounded-sm text-sm"
+                    >
+                      {suggestion}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+            </CommandList>
+          </div>
+        )}
+      </Command>
     </div>
   );
 }
