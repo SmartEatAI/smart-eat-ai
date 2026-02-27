@@ -1,9 +1,9 @@
 import { useState } from "react";
 import Button from "../ui/Button";
 import { useRef, useEffect } from "react";
-import { Day } from "@/types/my-plan";
+import { DayPlan } from "@/types/my-plan";
 
-export default function DaySelector({ days }: { days: Day[] }) {
+export default function DaySelector({ days }: { days: DayPlan[] }) {
   const [selectedDay, setSelectedDay] = useState(
     days && days.length > 0 && days[0]?.name ? days[0].name.toLowerCase() : ""
   );
