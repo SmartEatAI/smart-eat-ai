@@ -59,7 +59,7 @@ export default function MealItem({ meal, onConfirm, onRequestSwap }: Props) {
 
   // Si no hay sugerencia, mostrar receta original con botón de swap
   return (
-    <RecipeCard {...meal.recipe} title={meal.recipe.name} image={meal.recipe.image_url}>
+    <RecipeCard {...meal.recipe} title={meal.recipe.name} images={meal.recipe.image_url}>
       <Button
         variant="primary"
         onClick={handleSwapClick}

@@ -8,6 +8,7 @@ import { Droplet, Dumbbell, Flame, Zap } from "lucide-react";
 import { useProfile } from "@/hooks/useProfile";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import NoPlanCard from "@/components/my-plan/NoPlanCard";
 
 const DAY_NAMES: Record<number, string> = {
   1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday",
