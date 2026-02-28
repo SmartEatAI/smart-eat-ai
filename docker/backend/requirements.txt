@@ -33,5 +33,6 @@ langchain-openai>=0.1.0
 langchain-ollama>=0.1.0
 
 langchainhub>=0.1.15
-
+langchain_chroma
 chromadb
+

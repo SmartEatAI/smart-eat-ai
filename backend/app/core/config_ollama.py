@@ -1,5 +1,5 @@
 from langchain_ollama import ChatOllama, OllamaEmbeddings
-from langchain_community.vectorstores import Chroma
+from langchain_community.vectorstores import Chroma # langchain_chroma
 from app.config import settings
 
 # Inicialización del LLM con soporte para tools

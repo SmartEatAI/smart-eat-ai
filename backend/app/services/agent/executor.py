@@ -4,7 +4,7 @@ from app.services.agent.prompts import get_nutritionist_prompt
 from app.services.agent.schemas import DietGraphState
 from langgraph.prebuilt import ToolNode
 
-from langchain_core.messages import AIMessage
+from langchain_core.messages import AIMessage, HumanMessage
 
 
 class AgentManager:
@@ -22,6 +22,17 @@ class AgentManager:
                             profile=profile, 
                             active_plan=active_plan,
                             )
+        
+        # Preparar mensajes
+        messages = [{"role": "system", "content": system_prompt}]
+        
+        # Añadir mensajes de la conversación
+        for msg in state["messages"]:
+            if isinstance(msg, HumanMessage):
+                messages.append({"role": "user", "content": msg.content})
+            elif isinstance(msg, AIMessage):
+                messages.append({"role": "assistant", "content": msg.content})
+        
         
         response = llm.invoke([{"role": "system", "content": system_prompt}] + state["messages"])
 
