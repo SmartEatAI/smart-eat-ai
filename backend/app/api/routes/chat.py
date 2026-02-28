@@ -39,12 +39,13 @@ async def send_message(
     }
 
     try:
-        # Inyectar el user_id en el mensaje para que el agente lo tenga siempre presente
-        enhanced_message = f"[USER_ID: {user.id}] {message}"
-
+        # CORREGIDO: Incluir el user_id DENTRO del contenido del mensaje
+        # para que el agente pueda extraerlo y usarlo en las tools
+        enhanced_message = f"{message} [USER_ID: {user.id}]"
+        
         result = app_graph.invoke(
             {
-                "messages": [HumanMessage(content=message)],
+                "messages": [HumanMessage(content=enhanced_message)],  # ← AHORA SÍ usa el mensaje mejorado
                 "profile": profile,
                 "active_plan": active_plan
             },
@@ -62,10 +63,15 @@ async def send_message(
         
         logger.info(f"Tools usadas: {used_tools if used_tools else 'NINGUNA - POSIBLE PROBLEMA'}")
         
+        # También loggear el contenido del último mensaje para debug
+        if not used_tools:
+            logger.warning(f"⚠️ Respuesta sin tools: {last_message.content[:100]}...")
+        
         return {
             "response": last_message.content,
             "used_tools": used_tools if used_tools else None
         }
     
     except Exception as e:
+        logger.error(f"Error en asistente: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error en el asistente: {str(e)}")
