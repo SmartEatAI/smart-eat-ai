@@ -16,6 +16,11 @@ from typing import Optional, List
 import json
 from app.models.recipe import Recipe
 from app.crud.category import get_or_create_category
+from app.schemas.profile import ProfileResponse
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 @tool
 def buscar_en_base_datos(query: str):
@@ -469,41 +474,28 @@ def get_user_profile_summary(user_id: int):
     """
     db = SessionLocal()
     try:
-        user = db.query(User).filter(User.id == user_id).first()
-        if not user or not user.profile:
-            return {"result": "Perfil no encontrado", "profile": None}
+        profile = ProfileService.get_user_profile(db, user_id=user_id)
         
-        profile = user.profile
-        age = calculate_age(profile.birth_date)
+        if not profile:
+            return {
+                "result": "No se encontró un perfil para este usuario",
+                "profile": None
+            }
         
-        # Calcular % grasa si no está
-        if not profile.body_fat_percentage:
-            profile.body_fat_percentage = calculate_fat_percentage(profile)
-        
-        from app.schemas.profile import ProfileResponse
+        # Convertir a diccionario para que sea serializable
         profile_data = ProfileResponse.model_validate(profile).model_dump()
-        
-        summary = {
-            "edad": age,
-            "género": profile.gender,
-            "peso": f"{profile.weight} kg",
-            "altura": f"{profile.height} cm",
-            "objetivo": profile.goal,
-            "comidas_diarias": profile.meals_per_day,
-            "calorías_diarias": profile.calories_target or "Por calcular",
-            "proteína_diaria": profile.protein_target or "Por calcular",
-            "gustos": [t.name for t in profile.tastes],
-            "restricciones": [r.name for r in profile.restrictions],
-            "tipo_dieta": [d.name for d in profile.diet_types]
-        }
         
         return {
             "result": "Perfil encontrado",
             "profile": profile_data,
-            "summary": summary
         }
+        
     except Exception as e:
-        return {"result": f"Error obteniendo perfil: {str(e)}", "profile": None}
+        logger.error(f"Error obteniendo perfil para usuario {user_id}: {str(e)}")
+        return {
+            "result": f"Error obteniendo perfil: {str(e)}",
+            "profile": None
+        }
     finally:
         db.close()
 
@@ -514,6 +506,7 @@ def get_current_plan_summary(user_id: int):
     """
     db = SessionLocal()
     try:
+        
         current_plan = PlanService.get_current_plan(db, user_id)
         
         if not current_plan:
@@ -523,45 +516,29 @@ def get_current_plan_summary(user_id: int):
                 "plan": None
             }
         
-        plan_response = PlanResponse.model_validate(current_plan).model_dump()
-        
-        # Crear resumen por días
-        daily_summary = []
-        for daily_menu in current_plan.daily_menus:
-            day_meals = []
-            total_calories_day = 0
-            
-            for meal in daily_menu.meal_details:
-                recipe = meal.recipe
-                calories_per_serving = recipe.calories / recipe.servings
-                total_calories_day += calories_per_serving
-                
-                day_meals.append({
-                    "tipo": meal.meal_type,
-                    "receta": recipe.name,
-                    "calorías": round(calories_per_serving, 1),
-                    "proteína": round(recipe.protein / recipe.servings, 1),
-                    "horario": f"{meal.schedule // 60}:{meal.schedule % 60:02d}"
-                })
-            
-            daily_summary.append({
-                "día": daily_menu.day_of_week,
-                "comidas": day_meals,
-                "total_calorías_día": round(total_calories_day, 1)
-            })
+        # Convertir a diccionario serializable
+        plan_data = PlanResponse.model_validate(current_plan).model_dump()
         
         return {
             "result": "Plan activo encontrado",
             "has_plan": True,
-            "plan": plan_response,
-            "summary": {
-                "calorías_diarias_objetivo": current_plan.calories_target,
-                "días": daily_summary
-            }
+            "plan": plan_data,
         }
         
+    except AttributeError as e:
+        logger.error(f"Error de atributo en get_current_plan_summary: {str(e)}")
+        return {
+            "result": f"Error al procesar el plan: {str(e)}",
+            "has_plan": False,
+            "plan": None
+        }
     except Exception as e:
-        return {"result": f"Error obteniendo plan: {str(e)}", "has_plan": False, "plan": None}
+        logger.error(f"Error obteniendo plan: {str(e)}")
+        return {
+            "result": f"Error obteniendo plan: {str(e)}", 
+            "has_plan": False, 
+            "plan": None
+        }
     finally:
         db.close()
 
