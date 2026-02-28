@@ -55,7 +55,7 @@ def update_meal_detail_recipe_id(db: Session, meal_detail_id: int, recipe_id: in
         if not recipe:
             print(f"Recipe with id {recipe_id} not found")
             return None
-        meal_detail.recipe_id = recipe.id
+        meal_detail.recipe_id = recipe.recipe_id
         db.commit()
         db.refresh(meal_detail)
         return meal_detail
