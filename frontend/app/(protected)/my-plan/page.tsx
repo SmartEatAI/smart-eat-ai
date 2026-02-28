@@ -66,6 +66,8 @@ export default function MyPlanPage() {
         }
       );
 
+      console.log("Swap recipe response status:", response);
+
       if (!response.ok) throw new Error("Swap recipe failed");
 
       const data = await response.json();

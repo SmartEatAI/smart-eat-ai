@@ -77,7 +77,7 @@ def swap_for_similar(
 
         neighbor = (
             db.query(Recipe)
-            .filter(Recipe.id == candidate_id)
+            .filter(Recipe.recipe_id == candidate_id)
             .first()
         )
 
