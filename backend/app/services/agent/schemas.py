@@ -1,22 +1,11 @@
+from typing import Annotated, TypedDict, List, Optional
+from langchain_core.messages import BaseMessage, HumanMessage
+import operator
+from app.schemas.profile import ProfileResponse
+from app.schemas.plan import PlanResponse
 from pydantic import BaseModel
-from typing import Optional, List, Union
 
-
-class Message(BaseModel):
-    role: str
-    content: str
-    
-class Suggestion(BaseModel):
-    meal_detail_id: int
-    recipe_id: int
-    status: bool
-
-
-class ChatPayload(BaseModel):
-    message: str
-    history: List[Union[Message, Suggestion]] = []
-
-class AgentResponse(BaseModel):
-    text: str
-    suggestion: Optional[Suggestion] = None
-    
+class DietGraphState(TypedDict):
+    messages: Annotated[List[BaseMessage], operator.add]
+    profile: Optional[ProfileResponse] # Usamos el Response porque incluye los IDs de gustos/restricciones
+    active_plan: Optional[PlanResponse] 

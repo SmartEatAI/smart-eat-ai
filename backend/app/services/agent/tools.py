@@ -3,6 +3,7 @@ from app.services.recipe import RecipeService
 from app.services.plan import PlanService
 from app.schemas.plan import PlanResponse
 from app.database import SessionLocal
+from app.core.config_ollama import vector_db
 
 @tool
 def search_recipes(query: str, meal_type_id: int = None):
@@ -66,4 +67,12 @@ def get_current_user_plan(user_id: int):
     finally:
         db.close()
 
-nutrition_tools = [get_current_user_plan, search_recipes, update_user_preferences]
+@tool
+def buscar_en_base_datos(query: str):
+    """Útil para buscar información específica sobre dietas, alimentos o nutrición."""
+    docs = vector_db.similarity_search(query)
+    return docs
+    #return "Resultado de la búsqueda: [Aquí iría el contexto relevante]"
+
+#nutrition_tools = [get_current_user_plan, search_recipes, update_user_preferences]
+nutrition_tools = [buscar_en_base_datos]
