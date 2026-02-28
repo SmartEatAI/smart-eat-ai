@@ -38,13 +38,14 @@ export default function MealItem({ meal, onConfirm, onRequestSwap }: MealItemPro
   const fats = meal.recipe.fat;
 
   return (
-    <RecipeCard
-      {...meal.recipe}
-      title={meal.recipe.name}
-      images={meal.recipe.image_url}
-      mealType={mealTypes}
-      fats={fats}
-    >
+      <RecipeCard
+        {...meal.recipe}
+        title={meal.recipe.name}
+        images={meal.recipe.image_url}
+        mealType={mealTypes}
+        fats={fats}
+        recipeUrl={meal.recipe.recipe_url}
+      >
       <Button
         variant="primary"
         onClick={handleSwapClick}
