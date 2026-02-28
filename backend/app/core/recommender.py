@@ -6,11 +6,6 @@ from app.schemas.recipe import RecipeResponse
 from sqlalchemy.orm import Session
 from app.core.ml_model import ml_model
 
-
-# =========================
-# CONFIG
-# =========================
-
 def get_meal_order(n_meals: int):
     mapping = {
         3: ["breakfast", "lunch", "dinner"],
@@ -20,9 +15,6 @@ def get_meal_order(n_meals: int):
     }
     return mapping.get(n_meals, mapping[3])
 
-# =========================
-# SWAP (KNN)
-# =========================
 def swap_for_similar(
     db: Session,
     user: User,
