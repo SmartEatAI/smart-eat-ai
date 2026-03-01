@@ -51,12 +51,13 @@ def update_meal_detail_recipe_id(db: Session, meal_detail_id: int, recipe_id: in
         if not meal_detail:
             return None
         
-        recipe = db.query(Recipe).filter(Recipe.recipe_id == recipe_id).first() # filter(Recipe.recipe_id == recipe_id).first()
-        print(f"Found recipe: {recipe}")
+        recipe = db.query(Recipe).filter(Recipe.recipe_id == recipe_id).first()
+
         if not recipe:
             print(f"Recipe with id {recipe_id} not found")
             return None
-        meal_detail.recipe_id = recipe.recipe_id
+
+        meal_detail.recipe_id = recipe.id
         db.commit()
         db.refresh(meal_detail)
         return meal_detail
