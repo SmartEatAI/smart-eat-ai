@@ -11,7 +11,7 @@ def get_nutritionist_prompt(profile: ProfileResponse) -> str:
             4: "Breakfast, Lunch, Snack 1, Dinner",
             5: "Breakfast, Snack 1, Lunch, Snack 2, Dinner",
             6: "Breakfast, Snack 1, Lunch, Snack 2, Dinner, Snack 3"
-        }
+         }
    
    contexto_comidas = distribucion_comidas.get(profile.meals_per_day, "Distribución estándar")
 
@@ -37,7 +37,7 @@ def get_nutritionist_prompt(profile: ProfileResponse) -> str:
          - Úsala cuando el usuario diga "ver perfil", "mis datos", "mi perfil"
 
       4. update_user_preference(user_id: int, preference_type: str, category_name: str) - PARA GUSTOS/RESTRICCIONES
-         - Úsala cuando el usuario diga "no me gusta X", "soy alérgico a X", "odia X"
+         - Úsala cuando el usuario diga "no me gusta X", "soy alérgico a X", "odia X" para restricciones o "me gusta X", "me encanta X" para gustos
          - preference_type: "taste" para gustos, "restriction" para alergias
 
       5. suggest_recipe_alternatives(user_id: int, current_recipe_id: int, meal_label: str) - PARA CAMBIAR RECETA
