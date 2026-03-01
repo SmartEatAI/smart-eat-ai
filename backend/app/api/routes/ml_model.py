@@ -12,7 +12,7 @@ router = APIRouter(prefix="/ml", tags=["ML Recommender"])
 def swap_recipe(
     recipe_id: int,
     meal_label: str,
-    n_search: int = 50,
+    n_search: int = 550,
     user: User = Depends(get_current_user), 
     db: Session = Depends(get_db) 
 ):
@@ -29,13 +29,3 @@ def swap_recipe(
             detail="No similar recipe found for this meal type"
         )
     return new_recipe
-
-# @router.post("/recommend")
-# def recommend_endpoint(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    
-#     recipes = recommend_recipes(
-#         db,
-#         user     
-#     )
-    
-#     return {"recipes": recipes}

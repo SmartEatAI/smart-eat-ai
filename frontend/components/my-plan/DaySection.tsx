@@ -1,26 +1,23 @@
-import { DayPlan } from "@/types/my-plan";
-import MealItem from "./MealItem";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+import { RecipeResponse, UIDayPlan } from "@/types/my-plan";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui/carousel";
+import MealItemTest from "./MealItemTest";
 
 export default function DaySection({
   day,
   dayIndex,
-  onSwapMeal,
-  onAcceptSwap,
+  onConfirmSwap,
+  fetchNewRecipe,
 }: {
-  day: DayPlan;
+  day: UIDayPlan;
   dayIndex: number;
-  onSwapMeal: (dayIndex: number, mealIndex: number) => void;
-  onAcceptSwap: (dayIndex: number, mealIndex: number) => void;
+  onConfirmSwap: (mealDetailId: number, newRecipe: RecipeResponse) => Promise<void>;
+  fetchNewRecipe: (mealType: string, recipeId: number) => Promise<RecipeResponse | null>;
 }) {
   return (
-    <section id={day.name.toLowerCase()} className="flex flex-col gap-4 scroll-mt-[20vh]">
+    <section
+      id={day.name.toLowerCase()}
+      className="flex flex-col gap-4 scroll-mt-[20vh]"
+    >
       <h3 className="text-xl font-bold">
         {day.name}
       </h3>
@@ -30,18 +27,21 @@ export default function DaySection({
           {day.meals.map((meal, mealIndex) =>
             meal.recipe ? (
               <CarouselItem
-                key={`meal-${dayIndex}-${mealIndex}-${meal.recipe.recipe_id}`}
+                key={`meal-${dayIndex}-${mealIndex}-${meal.id}`}
                 className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3 min-w-[220px] max-w-[350px] w-full"
               >
-                <MealItem
+                <MealItemTest
                   meal={meal}
-                  onConfirm={() => onAcceptSwap(dayIndex, mealIndex)}
-                  onRequestSwap={() => onSwapMeal(dayIndex, mealIndex)}
+                  mealDetailId={meal.id}
+                  swappable={true}
+                  onConfirmSwap={onConfirmSwap}
+                  fetchNewRecipe={fetchNewRecipe}
                 />
               </CarouselItem>
             ) : null
           )}
         </CarouselContent>
+
         <CarouselPrevious className="hidden lg:flex left-2" />
         <CarouselNext className="hidden lg:flex right-2" />
       </Carousel>
