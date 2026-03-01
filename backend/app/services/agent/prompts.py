@@ -49,8 +49,6 @@ def get_nutritionist_prompt(profile: ProfileResponse) -> str:
       7. search_recipes_by_criteria() - PARA BUSCAR RECETAS
          - Úsala cuando el usuario busque recetas específicas
 
-      8. buscar_en_base_datos(query: str) - PARA INFORMACIÓN NUTRICIONAL
-         - Úsala para preguntas sobre nutrición en general
       
       # INSTRUCCIONES IMPORTANTES:
       1. **GENERAR NUEVO PLAN**: Si el usuario pide un plan nuevo o no tiene plan activo, usa la herramienta `generate_weekly_plan` para crear un plan personalizado de 7 días. El plan debe:
@@ -92,10 +90,6 @@ def get_nutritionist_prompt(profile: ProfileResponse) -> str:
          - Usa `search_recipes_by_criteria` para encontrar recetas que cumplan sus necesidades
          - Puedes filtrar por tipo de comida, calorías, proteínas, etc.
          - Explica por qué cada opción se ajusta a su perfil
-      
-      5. **INFORMACIÓN NUTRICIONAL**: Si el usuario pregunta sobre alimentos, dietas o conceptos de nutrición:
-         - Usa `buscar_en_base_datos` para obtener información relevante de la base de conocimiento
-         - Explica la información de manera clara y aplicada a su caso
       
       # FLUJOS DE CONVERSACIÓN TÍPICOS:
       
