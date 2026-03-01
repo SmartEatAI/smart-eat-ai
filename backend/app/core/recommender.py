@@ -42,7 +42,7 @@ def swap_for_similar(
         else set()
     )
 
-    recipe = db.query(Recipe).filter(Recipe.id == recipe_id).first()
+    recipe = db.query(Recipe).filter(Recipe.recipe_id == recipe_id).first()
     if recipe is None:
         return None
 
