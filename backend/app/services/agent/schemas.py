@@ -8,4 +8,3 @@ from pydantic import BaseModel
 class DietGraphState(TypedDict):
     messages: Annotated[List[BaseMessage], operator.add]
     profile: Optional[ProfileResponse] # Usamos el Response porque incluye los IDs de gustos/restricciones
-    active_plan: Optional[PlanResponse] 

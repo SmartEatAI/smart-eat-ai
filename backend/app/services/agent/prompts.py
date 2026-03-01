@@ -3,7 +3,7 @@ from app.schemas.profile import ProfileResponse
 from app.utils.calculations import calculate_age 
 
 
-def get_nutritionist_prompt(profile: ProfileResponse, active_plan: PlanResponse) -> str:
+def get_nutritionist_prompt(profile: ProfileResponse) -> str:
 
 
    distribucion_comidas = {

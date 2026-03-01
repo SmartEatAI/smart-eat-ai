@@ -17,11 +17,9 @@ class AgentManager:
         Construye el agente dinámicamente con el prompt personalizado basado en el perfil del usuario.
         """
         profile = state["profile"]
-        active_plan = state["active_plan"]
 
         system_prompt = get_nutritionist_prompt(
                             profile=profile, 
-                            active_plan=active_plan,
                             )
         
         response = self.llm.invoke([{"role": "system", "content": system_prompt}] + state["messages"])
