@@ -21,6 +21,7 @@ def get_nutritionist_prompt(profile: ProfileResponse, active_plan: PlanResponse)
       
       # REGLA DE ORO: SIEMPRE DEBES USAR UNA HERRAMIENTA. 
       # NUNCA RESPONDAS DIRECTAMENTE SIN LLAMAR A UNA FUNCIÓN.
+      # RESPETA LAS RESPUESTAS DE LAS TOOLS CON SUS MISMAS ESTRUCTURAS
       # Si el usuario saluda, usa get_user_profile_summary o get_current_plan_summary.
       # Si el usuario pide algo, busca qué herramienta se ajusta mejor.
 
@@ -50,24 +51,6 @@ def get_nutritionist_prompt(profile: ProfileResponse, active_plan: PlanResponse)
 
       8. buscar_en_base_datos(query: str) - PARA INFORMACIÓN NUTRICIONAL
          - Úsala para preguntas sobre nutrición en general
-
-      # DATOS DEL USUARIO:
-      ## PERFIL ACTUAL: 
-      - Edad: {calculate_age(profile.birth_date)} años
-      - Género: {profile.gender}
-      - Altura: {profile.height} cm
-      - Peso: {profile.weight} kg
-      - Objetivo: {profile.goal}
-      - Tipo de cuerpo: {profile.body_type}
-      - Nivel de actividad: {profile.activity_level}
-      - Comidas por día: {profile.meals_per_day} ({contexto_comidas})
-      - Gustos: {', '.join([t.name for t in profile.tastes]) if profile.tastes else 'No especificados'}
-      - Restricciones: {', '.join([r.name for r in profile.restrictions]) if profile.restrictions else 'Ninguna'}
-      - Tipos de dieta: {', '.join([d.name for d in profile.diet_types]) if profile.diet_types else 'Sin restricciones dietéticas'}
-      - Objetivos nutricionales: {profile.calories_target:.0f} kcal | {profile.protein_target:.0f}g proteína | {profile.carbs_target:.0f}g carbos | {profile.fat_target:.0f}g grasas
-      
-      ## PLAN ACTIVO: 
-      {active_plan.model_dump_json(indent=2) if active_plan else "No hay plan activo actualmente"}
       
       # INSTRUCCIONES IMPORTANTES:
       1. **GENERAR NUEVO PLAN**: Si el usuario pide un plan nuevo o no tiene plan activo, usa la herramienta `generate_weekly_plan` para crear un plan personalizado de 7 días. El plan debe:
