@@ -1,5 +1,6 @@
 import { Card, CardFooter } from "@/components/ui/card";
 import Button from "@/components/ui/Button";
+import ImageCarousel from "../ui/ImageCarousel";
 
 interface ProposalCardProps {
     image: string;
@@ -9,8 +10,8 @@ interface ProposalCardProps {
     extraInfo?: React.ReactNode;
     confirmText?: string;
     cancelText?: string;
-    onConfirm?: () => void; // → llama a handleConfirm (guarda en API + actualiza estado)
-    onCancel?: () => void;  // → llama a setProposal(null) (descarta la propuesta)
+    onConfirm?: () => void;
+    onCancel?: () => void;
 }
 
 export default function ProposalCard({
@@ -25,30 +26,35 @@ export default function ProposalCard({
     onCancel,
 }: ProposalCardProps) {
     return (
-        <Card className="w-full min-w-[220px] max-w-[350px] min-h-[345px] border rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 bg-card flex flex-col">
-            {/* Imagen con Badge */}
-            <div className="relative h-40 md:h-52 w-full flex-shrink-0 flex-grow">
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                <div
-                    className="w-full h-full bg-cover bg-center"
-                    style={{
-                        backgroundImage: `url('${image}')`,
-                    }}
-                />
-                <div className="absolute bottom-4 left-4 right-4">
-                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-primary text-[#102216] uppercase tracking-wider inline-block mb-2">
-                        {badge}
-                    </span>
-                    <h3 className="text-white text-lg font-bold line-clamp-2">
-                        {title}
-                    </h3>
-                    {description && (
-                        <p className="text-gray-200 text-xs mt-2 line-clamp-2">
-                            {description}
-                        </p>
-                    )}
-                    {extraInfo}
-                </div>
+        <Card className="border rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 bg-card flex flex-col">
+            {/* Imagen / Carousel */}
+            <ImageCarousel 
+            key={image}
+            images={
+                image
+                    ? image.includes(", ")
+                        ? image.split(", ").map(img => img.trim())
+                        : [image.trim()]
+                    : []
+            } alt={title} />
+
+            {/* Contenido */}
+            <div className="p-5 flex flex-col gap-2">
+                {/* Badge */}
+                <span className="px-3 py-1 rounded-full text-xs font-bold bg-primary text-[#102216] uppercase tracking-wider inline-block mb-2">
+                    {badge}
+                </span>
+
+                {/* Título */}
+                <h3 className="text-lg font-semibold line-clamp-2 text-foreground">{title}</h3>
+
+                {/* Descripción / macros */}
+                {description && (
+                    <p className="text-sm text-muted-foreground line-clamp-2">{description}</p>
+                )}
+
+                {/* Extra info (ej: botón "Otra receta") */}
+                {extraInfo}
             </div>
 
             {/* Botones */}

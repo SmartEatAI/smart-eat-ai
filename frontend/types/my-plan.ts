@@ -1,66 +1,57 @@
-import { Category } from "./category";
+// ===== ENUMS =====
+export type MealTypeEnum = "breakfast" | "lunch" | "dinner" | "snack";
 
-export type Recipe = {
+// ===== CATEGORY =====
+export interface CategoryResponse {
+  id: number;
+  name: string;
+}
+
+// ===== RECIPE =====
+export interface RecipeResponse {
+  id: number;
   recipe_id: number;
   name: string;
-  image_url: string;
   calories: number;
   protein: number;
   carbs: number;
   fat: number;
-  meal_types: string[];
-  diet_types: string[];
-  recipe_url: string;
-};
+  image_url?: string | null;
+  recipe_url?: string | null;
+  meal_types: CategoryResponse[];
+  diet_types: CategoryResponse[];
+}
 
-export type MealItem = {
-  recipe: Recipe;
-  meal_type: string;
-  swapSuggestion?: Recipe; // alternativa sugerida por swap
-  accepted?: boolean; // si el usuario aceptó la sugerencia
-};
+// ===== MEAL DETAIL =====
+export interface MealDetailResponse {
+  id: number;
+  recipe_id: number;
+  schedule: number;
+  status: number;
+  meal_type: MealTypeEnum;
+  recipe: RecipeResponse;
+}
 
-export type DayPlan = {
+// ===== DAILY MENU =====
+export interface DailyMenuResponse {
+  id: number;
+  day_of_week: number; // 1-7
+  meal_details: MealDetailResponse[];
+}
+
+// ===== PLAN =====
+export interface PlanResponse {
+  id: number;
+  user_id: number;
+  created_at: string; // ISO datetime
+  updated_at: string; // ISO datetime
+  daily_menus: DailyMenuResponse[];
+  active: boolean;
+}
+
+export interface UIDayPlan {
+  id: number;
+  day_of_week: number;
   name: string;
-  meals: MealItem[];
-};
-
-export type StatsCardProps = {
-  title: string;
-  current: number | string;
-  goal: number | string;
-  unit?: string;
-  bgColor?: string;
-  icon?: React.ReactNode;
-};
-
-export type BiometricsSectionProps = {
-  data: any;
-  onChange: (field: string, value: any) => void;
-};
-
-export type GoalSectionProps = {
-  goal: string;
-  setGoal: (goal: string) => void;
-  activityLevel: string;
-  setActivityLevel: (level: string) => void;
-};
-
-export type PreferencesSectionProps = {
-  meals: number;
-  setMeals: (n: number) => void;
-  dietTypes: (string | Category)[];
-  setDietTypes: (diets: string[]) => void;
-  restrictions: (string | Category)[];
-  setRestrictions: (r: string[]) => void;
-  tastes: (string | Category)[];
-  setTastes: (t: string[]) => void;
-  availableRestrictions?: string[];
-  availableTastes?: string[];
-};
-
-export type MealItemProps = {
-  meal: MealItem;
-  onConfirm?: () => void;       // aceptar swap
-  onRequestSwap?: () => void;   // solicitar nueva sugerencia
-};
+  meals: MealDetailResponse[];
+}
