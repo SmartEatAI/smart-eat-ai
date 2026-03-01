@@ -6,11 +6,6 @@ from app.schemas.recipe import RecipeResponse
 from sqlalchemy.orm import Session
 from app.core.ml_model import ml_model
 
-
-# =========================
-# CONFIG
-# =========================
-
 def get_meal_order(n_meals: int):
     mapping = {
         3: ["breakfast", "lunch", "dinner"],
@@ -20,9 +15,6 @@ def get_meal_order(n_meals: int):
     }
     return mapping.get(n_meals, mapping[3])
 
-# =========================
-# SWAP (KNN)
-# =========================
 def swap_for_similar(
     db: Session,
     user: User,
@@ -58,7 +50,7 @@ def swap_for_similar(
     knn = ml_model.knn
     X_scaled_all = ml_model.X_scaled_all
 
-    required_diets = {d.name.lower() for d in profile.diet_types}
+    required_diets = {d.name.lower() for d in profile.diet_types} if profile.diet_types else set()
 
     idx_list = df_recipes.index[
         df_recipes["recipe_id"] == recipe_id
@@ -85,7 +77,7 @@ def swap_for_similar(
 
         neighbor = (
             db.query(Recipe)
-            .filter(Recipe.id == candidate_id)
+            .filter(Recipe.recipe_id == candidate_id)
             .first()
         )
 
@@ -98,7 +90,7 @@ def swap_for_similar(
         if meal_label.lower() not in recipe_meals:
             continue
 
-        if not required_diets.issubset(recipe_diets):
+        if required_diets and not required_diets.intersection(recipe_diets):
             continue
 
         response = RecipeResponse.model_validate(neighbor).model_dump()

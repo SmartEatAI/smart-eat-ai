@@ -9,100 +9,39 @@ import { useProfile } from "@/hooks/useProfile";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import NoPlanCard from "@/components/my-plan/NoPlanCard";
-import { DayPlan, MealItem, Recipe } from "@/types/my-plan";
+import { PlanResponse, RecipeResponse, UIDayPlan } from "@/types/my-plan";
 
 const DAY_NAMES: Record<number, string> = {
-  1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday",
-  5: "Friday", 6: "Saturday", 7: "Sunday",
+  1: "Monday",
+  2: "Tuesday",
+  3: "Wednesday",
+  4: "Thursday",
+  5: "Friday",
+  6: "Saturday",
+  7: "Sunday",
 };
 
-function transformPlan(plan: any): DayPlan[] {
+export function transformPlan(plan: PlanResponse | null): UIDayPlan[] {
   if (!plan?.daily_menus) return [];
-  return plan.daily_menus
-    .sort((a: any, b: any) => a.day_of_week - b.day_of_week)
-    .map((menu: any): DayPlan => ({
-      name: DAY_NAMES[menu.day_of_week] ?? `Day ${menu.day_of_week}`,
-      meals: (menu.meal_details ?? []).map((detail: any): MealItem => {
-        const recipeData = detail.recipe ?? {};
-        const recipe: Recipe = {
-          recipe_id: recipeData.recipe_id ?? 0,
-          name: recipeData.name ?? "Unknown recipe",
-          image_url: recipeData.image_url ?? "",
-          calories: recipeData.calories ?? 0,
-          protein: recipeData.protein ?? 0,
-          carbs: recipeData.carbs ?? 0,
-          fat: recipeData.fat ?? 0,
-          meal_types: recipeData.meal_types ?? [],
-          diet_types: recipeData.diet_types ?? [],
-          recipe_url: recipeData.recipe_url ?? "",
-        };
 
-        return {
-          recipe,
-          meal_type: detail.meal_type ?? "",
-          swapSuggestion: undefined,
-          accepted: false,
-        };
-      }),
+  return [...plan.daily_menus]
+    .sort((a, b) => a.day_of_week - b.day_of_week)
+    .map((menu) => ({
+      id: menu.id,
+      day_of_week: menu.day_of_week,
+      name: DAY_NAMES[menu.day_of_week] ?? `Day ${menu.day_of_week}`,
+      meals: [...menu.meal_details].sort(
+        (a, b) => a.schedule - b.schedule
+      ),
     }));
 }
 
 export default function MyPlanPage() {
-  const { user, token } = useAuth();
+  const { token } = useAuth();
 
   const { profile } = useProfile();
-  const [weekData, setWeekData] = useState<DayPlan[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [weekData, setWeekData] = useState<UIDayPlan[]>([]);
   const [loading, setLoading] = useState(true);
-
-  async function fetchNewRecipe(mealType: string, recipeId: number) {
-    try {
-      const response = await fetch(`http://localhost:8000/api/ml/swap-recipe?recipe_id=${recipeId}&meal_label=${mealType}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const data = await response.json();
-      return data; // Debería contener la nueva receta sugerida
-    } catch (error) {
-      console.error("Error fetching new recipe:", error);
-    }
-  }
-
-  const handleSwapMeal = async (dayIndex: number, mealIndex: number) => {
-    const meal = weekData[dayIndex].meals[mealIndex];
-    // Llamada a tu API para obtener nueva sugerencia
-    const mealType = Array.isArray(meal.meal_type)
-      ? meal.meal_type[0]
-      : meal.meal_type;
-    const newSwap = await fetchNewRecipe(mealType, meal.recipe.recipe_id);
-    if (!newSwap) return;
-
-    // Actualiza estado local
-    setWeekData(prev => {
-      const updated = [...prev];
-      updated[dayIndex].meals[mealIndex].swapSuggestion = newSwap;
-      updated[dayIndex].meals[mealIndex].accepted = false;
-      return updated;
-    });
-  };
-
-  const handleAcceptSwap = (dayIndex: number, mealIndex: number) => {
-    setWeekData(prev => {
-      const updated = [...prev];
-      const meal = updated[dayIndex].meals[mealIndex];
-      if (meal.swapSuggestion) {
-        meal.recipe = meal.swapSuggestion; // reemplaza la receta
-        meal.swapSuggestion = undefined;   // borra sugerencia
-        meal.accepted = true;
-      }
-      return updated;
-    });
-  };
 
   useEffect(() => {
     fetch("http://localhost:8000/api/plan/current", {
@@ -113,6 +52,67 @@ export default function MyPlanPage() {
       .catch(() => setWeekData([]))
       .finally(() => setLoading(false));
   }, []);
+
+  async function fetchNewRecipe(mealType: string, recipeId: number) {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/api/ml/swap-recipe?recipe_id=${recipeId}&meal_label=${mealType}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("Swap recipe response status:", response);
+
+      if (!response.ok) throw new Error("Swap recipe failed");
+
+      const data = await response.json();
+      return data as RecipeResponse; // asegurarte que backend devuelve la receta completa
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
+  }
+
+  async function updateMealRecipe(mealDetailId: number, newRecipeId: number) {
+    const response = await fetch(
+      `http://localhost:8000/api/meal-detail/${mealDetailId}?recipe_id=${newRecipeId}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to update meal detail");
+    }
+
+    return await response.json();
+  }
+
+  async function handleConfirmSwap(
+    mealDetailId: number,
+    newRecipe: RecipeResponse
+  ) {
+    await updateMealRecipe(mealDetailId, newRecipe.recipe_id);
+
+    setWeekData((prev) =>
+      prev.map((day) => ({
+        ...day,
+        meals: day.meals.map((meal) =>
+          meal.id === mealDetailId
+            ? { ...meal, recipe: newRecipe }
+            : meal
+        ),
+      }))
+    );
+  }
 
   const macros = {
     calories: { current: 0, goal: profile?.calories_target || 0 },
@@ -205,8 +205,8 @@ export default function MyPlanPage() {
                 key={day.name}
                 day={day}
                 dayIndex={dayIndex}
-                onSwapMeal={handleSwapMeal}
-                onAcceptSwap={handleAcceptSwap}
+                onConfirmSwap={handleConfirmSwap}
+                fetchNewRecipe={fetchNewRecipe}
               />
             ))}
           </div>

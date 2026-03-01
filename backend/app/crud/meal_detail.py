@@ -1,4 +1,5 @@
 from app.crud.recipe import get_recipe_by_id
+from app.models.recipe import Recipe
 from sqlalchemy.orm import Session
 from app.models.meal_detail import MealDetail
 from app.schemas.meal_detail import MealDetailCreate
@@ -46,9 +47,15 @@ def update_meal_detail_recipe_id(db: Session, meal_detail_id: int, recipe_id: in
     """Actualiza el ID de la receta asociada a un detalle de comida."""
     try:
         meal_detail = db.query(MealDetail).filter(MealDetail.id == meal_detail_id).first()
+        print(f"Updating meal_detail_id {meal_detail_id} with new recipe_id {recipe_id}")
         if not meal_detail:
             return None
-        meal_detail.recipe_id = recipe_id
+        
+        recipe = db.query(Recipe).filter(Recipe.recipe_id == recipe_id).first()
+        if not recipe:
+            print(f"Recipe with id {recipe_id} not found")
+            return None
+        meal_detail.recipe_id = recipe.recipe_id
         db.commit()
         db.refresh(meal_detail)
         return meal_detail
