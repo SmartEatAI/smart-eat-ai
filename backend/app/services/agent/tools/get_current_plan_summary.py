@@ -11,37 +11,24 @@ def get_current_plan_summary(user_id: int):
     """
     db = SessionLocal()
     try:
-        
         current_plan = PlanService.get_current_plan(db, user_id)
         
         if not current_plan:
-            return {
-                "result": "No tienes un plan activo actualmente. ¿Te gustaría que genere uno?",
-                "has_plan": False,
-                "plan": None
-            }
+            return "No tienes un plan activo actualmente. ¿Te gustaría que genere uno?"
         
-        # Crear resumen legible usando el objeto directamente
+        # 1. Creamos el resumen formateado usando tu lógica actual
         summary = _create_plan_summary(current_plan)
-        
         print(summary)
-        # También convertir a diccionario por si el agente necesita acceso estructurado
-        plan_dict = PlanResponse.model_validate(current_plan).model_dump()
-        
-        # En algunos frameworks puedes adjuntar "artifacts" o "metadata"
+        # 2. DEVOLVEMOS SOLO EL STRING FORMATEADO
         return {
-            "message": summary,  # El agente usará esto
-            "has_plan": True,
+            "result": "Perfil encontrado",
+            "plan": summary,
         }
         
     except Exception as e:
-        return {
-            "message": f"Error obteniendo plan: {str(e)}", 
-            "has_plan": False
-        }
+        return f"Error obteniendo plan: {str(e)}"
     finally:
         db.close()
-
 
 def _create_plan_summary(current_plan) -> str:
     """Crea un resumen legible del plan usando el objeto directamente"""
@@ -67,12 +54,12 @@ def _create_plan_summary(current_plan) -> str:
     
     # Mapeo de horarios
     SCHEDULE_MAP = {
-        1: "🌅 Desayuno (6:00-9:00)",
-        2: "🌄 Media mañana (9:00-12:00)", 
-        3: "☀️ Almuerzo (12:00-15:00)",
-        4: "⛅ Media tarde (15:00-18:00)",
-        5: "🌆 Cena (18:00-21:00)",
-        6: "🌙 Noche (21:00+)"
+        1: "1",
+        2: "2", 
+        3: "3",
+        4: "4",
+        5: "5",
+        6: "6"
     }
     
     daily_menus = current_plan.daily_menus
@@ -85,16 +72,16 @@ def _create_plan_summary(current_plan) -> str:
     
     # Estadísticas generales
     total_meals = sum(len(menu.meal_details) for menu in daily_menus)
-    active_plan = "✅ Activo" if current_plan.active else "❌ Inactivo"
+    active_plan = "Activo" if current_plan.active else "❌ Inactivo"
     
-    summary = f"📋 **Resumen de tu plan nutricional**\n\n"
-    summary += f"📊 Estado: {active_plan}\n"
-    summary += f"📅 Duración: {len(daily_menus)} días\n"
-    summary += f"🍽️ Total comidas: {total_meals}\n"
-    summary += f"🆔 ID del plan: {current_plan.id}\n\n"
+    summary = f"**Resumen de tu plan nutricional**\n\n"
+    summary += f"Estado: {active_plan}\n"
+    summary += f"Duración: {len(daily_menus)} días\n"
+    summary += f"Total comidas: {total_meals}\n"
+    summary += f"ID del plan: {current_plan.id}\n\n"
     
     # Detalle por día
-    summary += "**📅 Distribución semanal:**\n"
+    summary += "**Distribución semanal:**\n"
     
     # Acumuladores para estadísticas
     weekly_stats = {
@@ -110,7 +97,7 @@ def _create_plan_summary(current_plan) -> str:
         if meals:
             weekly_stats['days_with_meals'] += 1
         
-        summary += f"\n📌 **{day_name}** (ID menú: {menu.id})\n"
+        summary += f"\n**{day_name}**\n"
         
         # Ordenar comidas por schedule
         meals.sort(key=lambda x: x.schedule)
@@ -118,12 +105,6 @@ def _create_plan_summary(current_plan) -> str:
         # Mostrar cada comida
         for meal in meals:
             recipe = meal.recipe
-            
-            # Estado de la comida
-            status_icon = "✅" if meal.status == 1 else "⏳"
-            
-            # Tipo de comida
-            meal_type_name = MEAL_TYPE_MAP.get(meal.meal_type, meal.meal_type.capitalize())
             
             # Información nutricional
             calories = recipe.calories
@@ -139,31 +120,20 @@ def _create_plan_summary(current_plan) -> str:
             weekly_stats['meals_count'] += 1
             
             # Horario
-            schedule_text = SCHEDULE_MAP.get(meal.schedule, f"Horario {meal.schedule}")
+            schedule_text = SCHEDULE_MAP.get(f"Comida {meal.schedule}")
             
             # Información de la receta
-            summary += f"  {status_icon} **{meal_type_name}**: {recipe.name}\n"
-            summary += f"    • 📊 {calories} kcal | 🥩 {protein}g prot | 🍚 {carbs}g carb | 🥑 {fat}g grasa\n"
-            summary += f"    • ⏰ {schedule_text}\n"
-            
-            # Mostrar categorías si existen
-            if recipe.meal_types:
-                meal_cats = [cat.name for cat in recipe.meal_types if cat.name]
-                if meal_cats:
-                    summary += f"    • 🍽️ Tipo: {', '.join(meal_cats)}\n"
-            
-            if recipe.diet_types:
-                diet_cats = [cat.name for cat in recipe.diet_types if cat.name]
-                if diet_cats:
-                    summary += f"    • 🥗 Dieta: {', '.join(diet_cats)}\n"
+            summary += f"{schedule_text}\n"
+            summary += f"{recipe.name}\n"
+            summary += f"- {calories} kcal {protein}g prot {carbs}g carb {fat}g grasa\n"
             
             # Enlaces si existen
             if recipe.recipe_url or recipe.image_url:
                 url = recipe.recipe_url or recipe.image_url
-                summary += f"    • 🔗 [Ver receta]({url})\n"
+                summary += f"[Ver receta]({url})\n"
         
         # Si no hay comidas para este día
         if not meals:
-            summary += f"  📭 Sin comidas asignadas\n"
+            summary += f"Sin comidas asignadas\n"
     
     return summary

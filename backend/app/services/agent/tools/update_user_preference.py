@@ -1,5 +1,7 @@
 from app.database import SessionLocal
 from app.models.user import User
+from app.models.taste import Taste
+from app.models.restriction import Restriction
 from app.crud.category import get_or_create_category
 
 from langchain.tools import tool
@@ -15,8 +17,9 @@ def update_user_preference(user_id: int, preference_type: str, category_name: st
         if preference_type not in ['taste', 'restriction']:
             return {"result": "Error: preference_type debe ser 'taste' o 'restriction'."}
         
-        # Buscar o crear categoría
-        category = get_or_create_category(db, category_name)
+        # Buscar o crear categoría con el modelo correcto
+        model = Taste if preference_type == 'taste' else Restriction
+        category = get_or_create_category(db, model, category_name)
         
         # Añadir al perfil
         user = db.query(User).filter(User.id == user_id).first()
