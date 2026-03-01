@@ -1,5 +1,5 @@
 from app.core.config_ollama import llm
-from backend.app.services.agent.tools.tools import nutrition_tools
+from app.services.agent.tools.tools import nutrition_tools
 from app.services.agent.prompts import get_nutritionist_prompt
 from app.services.agent.schemas import DietGraphState
 import logging
