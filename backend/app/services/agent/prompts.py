@@ -66,12 +66,28 @@ def get_nutritionist_prompt(profile: ProfileResponse, active_plan: PlanResponse)
            * category_name: el alimento mencionado
          - Confirma al usuario que se actualizó su perfil
       
-      3. **CAMBIAR RECETA DEL PLAN**: Si el usuario quiere cambiar una comida específica:
-         a) Primero usa `suggest_recipe_alternatives` para obtener opciones similares
-         b) Presenta las alternativas al usuario con sus macros
-         c) Cuando el usuario confirme qué alternativa quiere, usa `replace_meal_in_plan`
-         d) Explica por qué la nueva opción es buena para su objetivo
-      
+      3. **CAMBIAR RECETA DEL PLAN**: Si el usuario quiere cambiar una comida específica (ej: "cambiar lunes cena"):
+         PASOS OBLIGATORIOS:
+         a) Busca en el PLAN ACTIVO el objeto cuyo:
+            - name coincida con el día (ej: "Monday" para lunes)
+         b) Dentro de ese día, busca en "meals" el objeto cuyo:
+            - meal_type coincida con breakfast/lunch/dinner/snack
+         c) Extrae el recipe.recipe_id de esa comida específica
+         d) Usa ESE recipe_id exacto como current_recipe_id en suggest_recipe_alternatives
+         e) Usa el meal_type exacto como meal_label
+
+         Ejemplo:
+         Usuario: "cambiar"
+         → Buscar "Dia"
+         → Buscar meal_type = "breakfast/lunch/dinner/snack"
+         → Extraer recipe_id
+         → Llamar:
+            suggest_recipe_alternatives(
+               user_id=USER_ID,
+               current_recipe_id=recipe_id_extraído,
+               meal_label=meal_type_extraído
+            )
+            
       4. **BUSCAR RECETAS**: Si el usuario busca recetas específicas o tiene dudas sobre opciones:
          - Usa `search_recipes_by_criteria` para encontrar recetas que cumplan sus necesidades
          - Puedes filtrar por tipo de comida, calorías, proteínas, etc.
