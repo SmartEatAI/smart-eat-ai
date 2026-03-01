@@ -10,6 +10,11 @@ def suggest_recipe_alternatives(user_id: int, current_recipe_id: int, meal_label
     """
     Sugiere recetas alternativas similares a la actual usando KNN.
     meal_label debe ser: 'breakfast', 'lunch', 'dinner', o 'snack'
+    
+    Devuelve hasta 3 alternativas con:
+    - recipe_id: ID necesario para replace_meal_in_plan
+    - name: Nombre de la receta
+    - calories, protein, carbs, fat: Valores nutricionales
     """
     db = SessionLocal()
     try:
@@ -18,28 +23,38 @@ def suggest_recipe_alternatives(user_id: int, current_recipe_id: int, meal_label
         if not user:
             return {"result": "Usuario no encontrado", "alternatives": []}
         
-        # Usar el recommender existente
-        alternative = swap_for_similar(
-            db=db,
-            user=user,
-            recipe_id=current_recipe_id,
-            meal_label=meal_label,
-            n_search=550
-        )
+        # Obtener múltiples alternativas
+        alternatives = []
+        for _ in range(3):  # Intentar obtener 3 alternativas
+            alternative = swap_for_similar(
+                db=db,
+                user=user,
+                recipe_id=current_recipe_id,
+                meal_label=meal_label,
+                n_search=550
+            )
+            if alternative and alternative not in alternatives:
+                alternatives.append(alternative)
         
-        if not alternative:
+        if not alternatives:
             return {
                 "result": "No encontré alternativas similares que cumplan con tus restricciones",
                 "alternatives": []
             }
         
-        # swap_for_similar devuelve una sola alternativa, pero podemos buscar más
-        # Por ahora, devolvemos esa como principal
+        # Formatear respuesta con IDs claros
+        formatted_alternatives = []
+        for alt in alternatives:
+            formatted_alternatives.append(
+                f"[ID: {alt['recipe_id']}] {alt['name']} - {alt['calories']} kcal, {alt['protein']}g prot"
+            )
+        
         return {
-            "result": f"Encontré esta alternativa similar",
+            "result": f"Encontré {len(alternatives)} alternativas similares. Elige una diciéndome su ID:",
             "current_recipe_id": current_recipe_id,
-            "alternatives": [alternative],
-            "reason": "basada en similitud nutricional"
+            "alternatives": formatted_alternatives,
+            "alternatives_data": alternatives,
+            "reason": "basadas en similitud nutricional"
         }
         
     except Exception as e:
