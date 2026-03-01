@@ -16,13 +16,13 @@ def get_current_plan_summary(user_id: int):
         if not current_plan:
             return "No tienes un plan activo actualmente. ¿Te gustaría que genere uno?"
         
-        # 1. Creamos el resumen formateado usando tu lógica actual
         summary = _create_plan_summary(current_plan)
-        print(summary)
-        # 2. DEVOLVEMOS SOLO EL STRING FORMATEADO
+
+        plan_data = PlanResponse.model_validate(current_plan).model_dump()
+        
         return {
-            "result": "Perfil encontrado",
-            "plan": summary,
+            "result": summary,
+            "plan": plan_data,
         }
         
     except Exception as e:
@@ -52,7 +52,7 @@ def _create_plan_summary(current_plan) -> str:
         "snack": "Snack"
     }
     
-    # Mapeo de horarios
+    # Mapeo de horarios (simplificado)
     SCHEDULE_MAP = {
         1: "1",
         2: "2", 
@@ -119,8 +119,8 @@ def _create_plan_summary(current_plan) -> str:
             weekly_stats['fat'] += fat
             weekly_stats['meals_count'] += 1
             
-            # Horario
-            schedule_text = SCHEDULE_MAP.get(f"Comida {meal.schedule}")
+            # CORRECCIÓN: Usar meal.schedule directamente como clave numérica
+            schedule_text = SCHEDULE_MAP.get(meal.schedule, str(meal.schedule))
             
             # Información de la receta
             summary += f"{schedule_text}\n"
@@ -131,6 +131,10 @@ def _create_plan_summary(current_plan) -> str:
             if recipe.recipe_url or recipe.image_url:
                 url = recipe.recipe_url or recipe.image_url
                 summary += f"[Ver receta]({url})\n"
+            
+            # Añadir un separador entre comidas para mejor legibilidad
+            if meal != meals[-1]:  # Si no es la última comida
+                summary += "---\n"
         
         # Si no hay comidas para este día
         if not meals:
