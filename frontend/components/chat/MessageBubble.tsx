@@ -32,9 +32,9 @@ export default function MessageBubble({
                         ? "rounded-tr-none bg-primary text-[#111813]"
                         : "rounded-tl-none bg-green-950/70 text-primary border border-green-900"}`}
                 >
-                    <p className="text-sm md:text-base leading-relaxed">
+                    <div className="text-sm md:text-base leading-relaxed">
                         <ReactMarkdown>{text}</ReactMarkdown>
-                    </p>
+                    </div>
                 </div>
             </div>
         </div>
