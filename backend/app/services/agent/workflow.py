@@ -1,9 +1,10 @@
 from langgraph.graph import StateGraph, END
 from langgraph.checkpoint.memory import MemorySaver
+from langgraph.prebuilt import ToolNode
 from app.services.agent.schemas import DietGraphState
 from app.services.agent.executor import agent
-from app.services.agent.tools import nutrition_tools
-from langgraph.prebuilt import ToolNode
+from backend.app.services.agent.tools.tools import nutrition_tools
+
 import logging
 
 # Configurar logging

@@ -1,12 +1,8 @@
 from app.core.config_ollama import llm
-from app.services.agent.tools import nutrition_tools
+from backend.app.services.agent.tools.tools import nutrition_tools
 from app.services.agent.prompts import get_nutritionist_prompt
 from app.services.agent.schemas import DietGraphState
-from langgraph.prebuilt import ToolNode
-
-from langchain_core.messages import AIMessage
 import logging
-import json
 
 logger = logging.getLogger(__name__)
 
