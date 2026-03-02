@@ -45,8 +45,8 @@ const Navbar: React.FC = () => {
 
                 {/* Desktop Buttons */}
                 <div className="hidden md:flex gap-3">
-                    <Button variant="secondary" as="a" href="/auth">Log in</Button>
-                    <Button variant="primary" as="a" href="/auth">Sign up</Button>
+                    <Button variant="secondary" as="a" href="/auth?mode=login">Log in</Button>
+                    <Button variant="primary" as="a" href="/auth?mode=register">Sign up</Button>
                 </div>
 
                 {/* Mobile Menu Button */}
@@ -116,7 +116,7 @@ const Navbar: React.FC = () => {
                     <Button     
                         variant="secondary"
                         as="a" 
-                        href="/auth" 
+                        href="/auth?mode=login" 
                         onClick={() => setMobileOpen(false)}
                         className="flex-1"
                     >
@@ -124,7 +124,7 @@ const Navbar: React.FC = () => {
                     </Button>
                     <Button 
                         variant="primary" 
-                        as="a" href="/auth" 
+                        as="a" href="/auth?mode=register" 
                         onClick={() => setMobileOpen(false)} className="flex-1"
                     >
                         Sign up
