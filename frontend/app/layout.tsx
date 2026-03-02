@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Figtree } from 'next/font/google';
 import { AuthProvider } from "@/context/AuthContext";
-
 import "./globals.css";
 
 const figtree = Figtree({
@@ -10,8 +9,6 @@ const figtree = Figtree({
   weight: ['300', '400', '500', '600', '700', '800', '900'],
   style: ['normal', 'italic'],
 });
-
-
 
 export const metadata: Metadata = {
   title: "SmartEat AI",
@@ -29,7 +26,9 @@ export default function RootLayout({
   return (
     <html lang="es" className="dark">
       <body className={`${figtree.variable} antialiased`}>
-          {children}
+          <AuthProvider>
+            {children}
+          </AuthProvider>
       </body>
     </html>
   );
