@@ -29,8 +29,16 @@ async def send_message(
     db_profile = ProfileService.get_user_profile(db, user.id)
     profile = ProfileResponse.model_validate(db_profile) 
 
-    db_plan = PlanService.get_current_plan(db, user.id)
-    active_plan = PlanResponse.model_validate(db_plan) if db_plan else None
+    # Obtener plan activo (puede no existir)
+    try:
+        db_plan = PlanService.get_current_plan(db, user.id)
+        active_plan = PlanResponse.model_validate(db_plan)
+    except HTTPException as e:
+        if e.status_code == 404:
+            active_plan = None
+            logger.info("Usuario no tiene plan activo")
+        else:
+            raise
 
     config = {
         "configurable": {

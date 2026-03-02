@@ -45,7 +45,8 @@ def update_user_preference(user_id: int, preference_type: str, category_name: st
             pass
         
         from app.schemas.profile import ProfileResponse
-        profile_response = ProfileResponse.model_validate(profile).model_dump()
+        # mode='json' asegura que date/datetime se serialice como string ISO
+        profile_response = ProfileResponse.model_validate(profile).model_dump(mode='json')
         
         return {
             "result": result_msg,

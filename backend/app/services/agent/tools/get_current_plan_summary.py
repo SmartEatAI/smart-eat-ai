@@ -18,7 +18,8 @@ def get_current_plan_summary(user_id: int):
         
         summary = _create_plan_summary(current_plan)
 
-        plan_data = PlanResponse.model_validate(current_plan).model_dump()
+        # mode='json' asegura que datetime se serialice como string ISO
+        plan_data = PlanResponse.model_validate(current_plan).model_dump(mode='json')
         
         return {
             "result": summary,

@@ -197,10 +197,8 @@ export default function Dashboard() {
             subtitleAlign="right"
         >
             {/* Macronutrients */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-                <div className="lg:col-span-2">
-                    <MacronutrientCard {...macronutrients} />
-                </div>
+            <div className="mb-6">
+                <MacronutrientCard {...macronutrients} />
             </div>
 
             {/* Today's Meals */}
@@ -222,7 +220,7 @@ export default function Dashboard() {
                             <div className="flex items-center gap-4 flex-1">
                                 <div className="w-16 h-16 relative">
                                     <Image
-                                        src={meal.recipe?.image_url?.split(", ").map(img => img.trim())[0] || "/images/Image_not_available.png"}
+                                        src={meal.recipe?.image_url?.split(", ").map((img: string) => img.trim())[0] || "/images/Image_not_available.png"}
                                         alt={meal.recipe?.name}
                                         fill
                                         className="object-cover rounded-md"
@@ -244,11 +242,12 @@ export default function Dashboard() {
                             <Button
                                 variant={meal.status === 1 ? "primary" : "secondary"}
                                 onClick={() => toggleStatus(meal.id, meal.status)}
+                                className={meal.status === 1 ? "flex items-center gap-2" : undefined}
                             >
                                 {meal.status === 1 ? (
                                     <>
-                                        <Check className="h-4 w-4 mr-1" />
-                                        Consumed
+                                        <Check className="h-4 w-4" />
+                                        <span>Consumed</span>
                                     </>
                                 ) : (
                                     "Mark as consumed"

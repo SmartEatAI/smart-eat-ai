@@ -276,7 +276,8 @@ def generate_weekly_plan(user_id: int):
         
         # Obtener plan completo con todos los detalles
         complete_plan = PlanService.get_current_plan(db, user_id)
-        plan_response = PlanResponse.model_validate(complete_plan).model_dump()
+        # mode='json' asegura que datetime se serialice como string ISO
+        plan_response = PlanResponse.model_validate(complete_plan).model_dump(mode='json')
         
         # Preparar resumen con información de recetas
         recipes_found_summary = {}
