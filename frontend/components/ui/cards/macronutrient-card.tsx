@@ -22,10 +22,10 @@ const MacronutrientCard: React.FC<MacronutrientCardProps> = ({
     const fatsPercentage = (fats.current / fats.goal) * 100;
 
     return (
-        <Card className="bg-gradient-to-br from-green-950/80 to-green-900/60 border-green-800/50 w-full h-full">
-            <CardContent className="p-6 h-full flex flex-col">
+        <Card className="bg-gradient-to-br from-green-950/80 to-green-900/60 border-green-800/50 w-full h-full border rounded-lg shadow-lg">
+            <CardContent className="p-6 h-full flex flex-col w-full max-w-none">
                 <div className="flex flex-col items-center mb-6">
-                    <h2 className="text-xl font-semibold text-primary flex items-center gap-2">
+                    <h2 className="text-2xl font-semibold text-primary flex items-center gap-2">
                         Calories & Macros
                     </h2>
                 </div>
@@ -68,7 +68,7 @@ const MacronutrientCard: React.FC<MacronutrientCardProps> = ({
                     </div>
 
                     {/* Barras de progreso de macros */}
-                    <div className="space-y-6">
+                    <div className="space-y-6 md:-ml-12 pr-8 md:pr-16">
                         {/* Proteína */}
                         <div>
                             <div className="flex items-center justify-between mb-2">
