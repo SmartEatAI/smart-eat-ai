@@ -19,7 +19,6 @@ interface RecipeCardProps {
 export default function RecipeCard({ title, calories, protein, carbs, fats, mealType, images, recipeUrl, children }: RecipeCardProps) {
   // Debug: log mealType prop and its type
   if (typeof window !== "undefined") {
-     
   }
 
   // Función para formatear el mealType (ej: "breakfast" → "Breakfast")

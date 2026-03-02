@@ -64,15 +64,16 @@ export default function MealItemTest({
         image={proposal.image_url ?? ""}
         badge="New suggestion"
         title={proposal.name}
+        calories={proposal.calories}
+        protein={proposal.protein}
+        carbs={proposal.carbs}
+        fats={proposal.fat}
+        recipeUrl={proposal.recipe_url ?? undefined}
         confirmText="Accept"
-        cancelText="Keep current"
+        cancelText="Return"
         onConfirm={handleConfirm}
         onCancel={handleCancel}
-        extraInfo={
-          <Button onClick={handleAnother} className="mt-2 w-full">
-            Another suggestion
-          </Button>
-        }
+        onAnother={handleAnother}
       />
     );
   }
