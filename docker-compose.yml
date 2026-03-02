@@ -61,14 +61,14 @@ services:
       - OLLAMA_CONTEXT_LENGTH=65536
     # Este deploy solo en caso de tener/querer usar GPU NVIDIA
     deploy:
-     resources:
-       reservations:
-         devices:
-           - driver: nvidia
-             count: 1
-             capabilities: [gpu]
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
     entrypoint: /bin/bash
-    command: -c "ollama serve" 
+    command: -c "ollama serve"
 volumes:
   postgres_data:
   ollama_data:
