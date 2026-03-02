@@ -9,6 +9,7 @@ from app.services.profile import ProfileService
 from app.services.plan import PlanService
 from app.schemas.profile import ProfileResponse
 from app.schemas.plan import PlanResponse
+from datetime import datetime
 import logging
 
 logger = logging.getLogger(__name__)
@@ -40,9 +41,11 @@ async def send_message(
         else:
             raise
 
+    ahora=datetime.now()
+
     config = {
         "configurable": {
-            "thread_id": user.id
+            "thread_id": f"{user.id}-{ahora.date()}"
         }
     }
 

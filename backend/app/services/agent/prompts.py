@@ -28,6 +28,7 @@ NUNCA pidas IDs al usuario - el sistema los resuelve internamente.
 ### 1. generate_weekly_plan(user_id)
 Genera un plan nutricional de 7 días.
 - Usar cuando: "nuevo plan", "genera un plan", "necesito un plan"
+- Tras generarlo muestra el plan actual del usuario `get_current_plan_summary`
 
 ### 2. get_current_plan_summary(user_id)
 Muestra el plan activo actual.
