@@ -1,3 +1,5 @@
+import React from "react";
+
 // ===== ENUMS =====
 export type MealTypeEnum = "breakfast" | "lunch" | "dinner" | "snack";
 
@@ -54,4 +56,14 @@ export interface UIDayPlan {
   day_of_week: number;
   name: string;
   meals: MealDetailResponse[];
+}
+
+// ===== STATS CARD =====
+export interface StatsCardProps {
+  title: string;
+  current: number | string;
+  goal: number | string;
+  unit?: string;
+  bgColor?: string;
+  icon?: React.ReactNode;
 }
