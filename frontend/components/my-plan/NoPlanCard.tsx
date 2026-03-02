@@ -1,3 +1,4 @@
+"use client";
 import { Utensils } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { useRouter } from "next/navigation";
