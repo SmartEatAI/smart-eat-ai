@@ -13,7 +13,7 @@ const STORAGE_KEY = "chat_messages";
 const EXPIRATION_TIME = 24 * 60 * 60 * 1000; // 24h
 
 export default function ChatPage() {
-    const { token } = useAuth();
+    const { user, token } = useAuth();
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     // ===============================
@@ -22,7 +22,7 @@ export default function ChatPage() {
     const [messages, setMessages] = useState<Message[]>(() => {
         if (typeof window === "undefined") return [];
 
-        const stored = localStorage.getItem(STORAGE_KEY);
+        const stored = localStorage.getItem(`${STORAGE_KEY}_${user?.id}`);
         if (!stored) return [];
 
         try {
@@ -37,7 +37,7 @@ export default function ChatPage() {
 
             // 🔥 Si pasaron más de 24h, limpiar
             if (now - lastMessageTime > EXPIRATION_TIME) {
-                localStorage.removeItem(STORAGE_KEY);
+                localStorage.removeItem(`${STORAGE_KEY}_${user?.id}`);
                 return [];
             }
 
@@ -58,7 +58,7 @@ export default function ChatPage() {
     // ===============================
     useEffect(() => {
         if (typeof window === "undefined") return;
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+        localStorage.setItem(`${STORAGE_KEY}_${user?.id}`, JSON.stringify(messages));
     }, [messages]);
 
     // ===============================

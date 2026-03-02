@@ -51,7 +51,8 @@ export default function Dashboard() {
     // 🔥 Fetch plan
     useEffect(() => {
         if (!token) {
-            router.push("/login");
+            router.push("/auth");
+
             return;
         }
 
