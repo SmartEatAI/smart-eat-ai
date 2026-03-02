@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
@@ -18,6 +18,17 @@ import { ToastState, FormData, AuthMode } from "@/types/authform";
 
 const AuthForm: React.FC = () => {
     const [mode, setMode] = useState<AuthMode>("register");
+
+    // Leer el parámetro 'mode' de la URL al montar
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const params = new URLSearchParams(window.location.search);
+            const urlMode = params.get("mode");
+            if (urlMode === "login" || urlMode === "register") {
+                setMode(urlMode);
+            }
+        }
+    }, []);
     const [showPassword, setShowPassword] = useState(false);
     const [toast, setToast] = useState<ToastState | null>(null);
 
