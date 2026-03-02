@@ -18,21 +18,21 @@ export default function StatsCard({
     : "text-primary";
 
   return (
-    <div className={`rounded-xl p-5 border flex items-center gap-4 ${bgColor}`}>
+    <div className={`rounded-xl p-4 sm:p-5 border flex items-center gap-3 sm:gap-4 ${bgColor}`}>
       {icon && (
-        <div className="text-2xl flex-shrink-0">
+        <div className="text-xl sm:text-2xl flex-shrink-0">
           {icon}
         </div>
       )}
-      <div>
-        <p className="text-xs uppercase text-[#9db9ab] font-bold">
+      <div className="flex-1 min-w-0">
+        <p className="text-xs uppercase text-[#9db9ab] font-bold truncate">
           {title}
         </p>
-        <div className="flex items-baseline gap-2">
-          <p className={`text-2xl font-bold ${currentColor}`}>{current}</p>
-          <span className="text-lg font-bold text-[#9db9ab]">/</span>
-          <p className="text-2xl font-bold text-chart-2">{goal}</p>
-          {unit && <p className="text-sm text-[#9db9ab]">{unit}</p>}
+        <div className="flex items-baseline gap-1.5 sm:gap-2 flex-wrap">
+          <p className={`text-xl sm:text-2xl font-bold ${currentColor}`}>{current}</p>
+          <span className="text-base sm:text-lg font-bold text-[#9db9ab]">/</span>
+          <p className="text-xl sm:text-2xl font-bold text-chart-2">{goal}</p>
+          {unit && <p className="text-xs sm:text-sm text-[#9db9ab]">{unit}</p>}
         </div>
       </div>
     </div>
