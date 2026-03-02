@@ -29,9 +29,7 @@ export default function RootLayout({
   return (
     <html lang="es" className="dark">
       <body className={`${figtree.variable} antialiased`}>
-        <AuthProvider>
           {children}
-        </AuthProvider>
       </body>
     </html>
   );

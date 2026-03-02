@@ -1,48 +1,85 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.database import get_db
-from app.services.agent.executor import agent_manager
-from app.services.profile import ProfileService
-from app.api.deps import get_current_user
 from app.models.user import User
-from app.services.agent.schemas import AgentResponse, ChatPayload, Suggestion
+from app.database import get_db
+from app.api.deps import get_current_user
+from app.services.agent.workflow import app_graph
+from langchain_core.messages import HumanMessage
+from app.services.profile import ProfileService
+from app.services.plan import PlanService
+from app.schemas.profile import ProfileResponse
+from app.schemas.plan import PlanResponse
+import logging
 
-router = APIRouter()
+logger = logging.getLogger(__name__)
 
-def profile_to_dict(profile_obj):
-    if hasattr(profile_obj, 'dict'):
-        return profile_obj.dict()
-    return {c: getattr(profile_obj, c, None) for c in dir(profile_obj) if not c.startswith('_') and not callable(getattr(profile_obj, c, None))}
+router = APIRouter(prefix="/chat")
 
-def parse_agent_response(response):
-    if response and "messages" in response and len(response["messages"]) > 0:
-        last_message = response["messages"][-1]
-        if hasattr(last_message, 'content'):
-            return last_message.content
-        elif isinstance(last_message, dict) and 'content' in last_message:
-            return last_message['content']
+@router.post("/")
+async def send_message(
+    message: str, 
+    user: User = Depends(get_current_user), 
+    db: Session = Depends(get_db),
+    ):
+    
+    # Log para debugging
+    logger.info(f"Usuario {user.id} envió: {message}")
+
+    # convertir el objeto ORM a Pydantic
+    db_profile = ProfileService.get_user_profile(db, user.id)
+    profile = ProfileResponse.model_validate(db_profile) 
+
+    # Obtener plan activo (puede no existir)
+    try:
+        db_plan = PlanService.get_current_plan(db, user.id)
+        active_plan = PlanResponse.model_validate(db_plan)
+    except HTTPException as e:
+        if e.status_code == 404:
+            active_plan = None
+            logger.info("Usuario no tiene plan activo")
         else:
-            return str(last_message)
-    return "Lo siento, no pude procesar tu solicitud."
+            raise
 
-@router.post("/chat", response_model=AgentResponse)
-async def chat_with_agent(payload: ChatPayload, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    profile_obj = ProfileService.get_user_profile(db, current_user.id)
-    profile_data = profile_to_dict(profile_obj)
-    profile_data['user_id'] = current_user.id
-
-    agent = agent_manager.build_agent(profile_data)
-
-    messages = [{"role": msg.role, "content": msg.content} for msg in payload.history] if payload.history else []
-    messages.append({"role": "user", "content": payload.message})
+    config = {
+        "configurable": {
+            "thread_id": user.id
+        }
+    }
 
     try:
-        response = await agent.ainvoke({"messages": messages})
-        ai_text = parse_agent_response(response)
-        suggestion = None
-        keywords = ["receta", "plato", "comida", "desayuno", "almuerzo", "cena"]
-        if ai_text and any(keyword in ai_text.lower() for keyword in keywords):
-            suggestion = Suggestion(meal_detail_id=0, recipe_id=0, status=False)
-        return AgentResponse(text=ai_text, suggestion=suggestion)
+        # CORREGIDO: Incluir el user_id DENTRO del contenido del mensaje
+        # para que el agente pueda extraerlo y usarlo en las tools
+        enhanced_message = f"{message} [USER_ID: {user.id}]"
+        
+        result = app_graph.invoke(
+            {
+                "messages": [HumanMessage(content=enhanced_message)],  # ← AHORA SÍ usa el mensaje mejorado
+                "profile": profile,
+                "active_plan": active_plan
+            },
+            config=config
+        )
+
+        last_message = result["messages"][-1]
+        
+        # Verificar si el agente usó tools
+        used_tools = []
+        for msg in result["messages"]:
+            if hasattr(msg, 'tool_calls') and msg.tool_calls:
+                for tool_call in msg.tool_calls:
+                    used_tools.append(tool_call['name'])
+        
+        logger.info(f"Tools usadas: {used_tools if used_tools else 'NINGUNA - POSIBLE PROBLEMA'}")
+        
+        # También loggear el contenido del último mensaje para debug
+        if not used_tools:
+            logger.warning(f"⚠️ Respuesta sin tools: {last_message.content[:100]}...")
+        
+        return {
+            "response": last_message.content,
+            "used_tools": used_tools if used_tools else None
+        }
+    
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error en el agente: {str(e)}")
+        logger.error(f"Error en asistente: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error en el asistente: {str(e)}")

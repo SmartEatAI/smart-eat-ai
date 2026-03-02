@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from fastapi import HTTPException
 from app.crud.recipe import (
+    get_all_recipes,
     get_recipe_by_id,
     get_recipes_by_meal_type,
     get_recipes_by_diet_type
@@ -9,6 +10,14 @@ from app.crud.recipe import (
 from app.core.validation import ValidationService
 
 class RecipeService:
+    @staticmethod
+    def get_all_recipes(db: Session):
+        try:
+            return get_all_recipes(db)
+        except SQLAlchemyError as e:
+            print(f"Error getting all recipes: {e}")
+            raise HTTPException(status_code=500, detail="Error retrieving all recipes")
+        
     @staticmethod
     def get_recipe(db: Session, recipe_id: int):
         recipe = get_recipe_by_id(db, recipe_id)

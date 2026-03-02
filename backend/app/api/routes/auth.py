@@ -5,6 +5,7 @@ from app.schemas.user import UserCreate, UserLogin, UserResponse, Token
 from app.services.auth import AuthService
 from app.api.deps import get_current_user
 from app.models.user import User
+from app.core.security import verify_token
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -27,3 +28,12 @@ def login(user_data: UserLogin, db: Session = Depends(get_db)):
 def get_me(current_user: User = Depends(get_current_user)):
     """Get current user information."""
     return current_user
+
+@router.get("/", response_model=bool)
+def verify_token_endpoint(token: str):
+    """Endpoint to verify if a token is valid."""
+    try:
+        payload = verify_token(token)
+        return True if payload else False
+    except Exception:
+        return False

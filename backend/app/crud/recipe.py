@@ -5,6 +5,14 @@ from app.models.recipe import Recipe
 from fastapi import HTTPException
 from app.crud.category import process_categories
 
+def get_all_recipes(db: Session):
+    """Obtiene todas las recetas de la base de datos."""
+    try:
+        return db.query(Recipe).all()
+    except Exception as e:
+        print(f"Database error when get_all_recipes: {e}")
+        raise HTTPException(status_code=500, detail="Database error when get_all_recipes")
+
 def get_recipe_by_id(db: Session, recipe_id: int):
   """Obtiene una receta por su ID."""
   try:
