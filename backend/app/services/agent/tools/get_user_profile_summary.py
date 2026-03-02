@@ -8,6 +8,7 @@ from langchain.tools import tool
 def get_user_profile_summary(user_id: int):
     """
     Obtiene un resumen del perfil del usuario incluyendo edad y metas.
+    Eliminar el campo 'Nombre' si no existe o dejarlo fuera de la respuesta
     """
     db = SessionLocal()
     try:
@@ -20,7 +21,8 @@ def get_user_profile_summary(user_id: int):
             }
         
         # Convertir a diccionario para que sea serializable
-        profile_data = ProfileResponse.model_validate(profile).model_dump()
+        # mode='json' asegura que date/datetime se serialice como string ISO
+        profile_data = ProfileResponse.model_validate(profile).model_dump(mode='json')
         
         return {
             "result": "Perfil encontrado",
