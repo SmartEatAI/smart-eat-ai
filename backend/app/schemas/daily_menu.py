@@ -5,8 +5,6 @@ from .meal_detail import MealDetailResponse, MealDetailBase
 
 # Esquemas para Menú Diario
 class DailyMenuBase(BaseModel):
-    # Este campo no es necesario
-    #plan_id: int = Field(..., description="Plan ID to which this daily menu belongs")
     day_of_week: int = Field(..., gte=1, lte=7, description="Day of the week (1-7, where 1 is Monday)")
 
 class DailyMenuCreate(DailyMenuBase):
