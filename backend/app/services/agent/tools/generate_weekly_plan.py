@@ -1,24 +1,26 @@
 from langchain.tools import tool
+from sqlalchemy import and_
 from app.database import SessionLocal
-from typing import List, Dict, Any
+from typing import List, Dict
 
 # Servicios / Modelos / Esquemas
 from app.services.profile import ProfileService
-from app.services.recipe import RecipeService
 from app.services.plan import PlanService
 from app.schemas.plan import PlanResponse, PlanCreate
 from app.schemas.meal_detail import MealDetailBase
 from app.schemas.daily_menu import DailyMenuCreate
 from app.schemas.enums import MealTypeEnum
-from app.config import settings
+from app.models.recipe import Recipe
+from app.models.diet_type import DietType
+from app.models.meal_type import MealType
+from app.schemas.recipe import RecipeResponse
+from app.services.profile import ProfileService
 
 # Funciones
 from app.core.recommender import get_meal_order
-from app.utils.calculations import calculate_age
 
-# Chroma / Embedding
-from langchain_chroma import Chroma
-from app.core.config_ollama import embeddings
+
+
 
 
 
@@ -65,79 +67,76 @@ def calculate_calorie_ranges(calories_target: float, n_meals: int) -> Dict[str, 
     
     return calorie_ranges
 
-
-def all_recipes_for_user(user_id: int) -> List[Dict[str, Any]]:
+def all_recipes_for_user(user_id: int) -> Dict[str, List[RecipeResponse]]:
     """
     Obtiene todas las recetas que coinciden con el perfil del usuario
     basado en tipos de comida, dietas y rangos de calorías.
     """
     db = SessionLocal()
-
-    # Obtener perfil de usuario
-    profile = ProfileService.get_user_profile(db, user_id)
-
-    # Calcular rangos de calorías
-    calorie_ranges = calculate_calorie_ranges(
-        profile.calories_target, 
-        profile.meals_per_day
-    )
-
-    # Filtro por tipo de comida sin repetir
-    meal_types = list(dict.fromkeys(get_meal_order(profile.meals_per_day)))
-
-    # Filtro por tipo de dieta
-    diet_type_names = [diet_type.name for diet_type in profile.diet_types]
-
-    vector_db = Chroma(
-        persist_directory=settings.CHROMA_DB,
-        embedding_function=embeddings
-    )
-
-    # Resultados por tipo de comida
-    all_recipes = {}
-
-    for meal_type in meal_types:
-            # Construir filtro de metadatos para este tipo de comida
-            where_filter = {
-                "$and": [
-                    # Filtro por tipo de comida (exacto)
-                    #{"meal_types": {"$eq": meal_type}},
-                    
-                    # Filtro por tipo de dieta (el usuario puede tener múltiples)
-                    {"diet_types": {"$in": diet_type_names}},
-                    
-                    # Filtro por rango de calorías
-                    #{
-                    #    "$and": [
-                    #        {"calories": {"$gte": calorie_ranges[meal_type]["min"]}},
-                    #        {"calories": {"$lte": calorie_ranges[meal_type]["max"]}}
-                    #    ]
-                    #}
-                ]
-            }
-
     
-            # Búsqueda semántica con filtros
-            results = vector_db.similarity_search(
-                query=f"{meal_type}",
-                k=1000,  # Número de resultados por tipo de comida
-                #filter=where_filter
+    try:
+        # Obtener perfil de usuario
+        profile = ProfileService.get_user_profile(db, user_id)
+        
+        if not profile:
+            return {}
+        
+        # Calcular rangos de calorías
+        calorie_ranges = calculate_calorie_ranges(
+            profile.calories_target, 
+            profile.meals_per_day
+        )
+        
+        # Filtro por tipo de comida sin repetir
+        meal_types = list(dict.fromkeys(get_meal_order(profile.meals_per_day)))
+        
+        # Obtener nombres de dietas del usuario
+        diet_type_names = [diet_type.name for diet_type in profile.diet_types]
+        
+        # Resultados por tipo de comida
+        all_recipes = {}
+        
+        for meal_type_name in meal_types:
+            # Consulta base
+            query = db.query(Recipe).distinct()
+            
+            # Filtrar por tipo de comida
+            query = query.join(Recipe.meal_types).filter(
+                MealType.name == meal_type_name
             )
-
-            # Procesar resultados
-            recipes_for_meal = []
-            for doc in results:
-                recipes_for_meal.append({
-                    "name": doc.page_content.split("Name: ")[1].split(". Diet")[0] if "Name:" in doc.page_content else doc.page_content,
-                    "metadata": doc.metadata,
-                    "content": doc.page_content
-                })
             
-            all_recipes[meal_type] = recipes_for_meal
+            # Filtrar por tipos de dieta (el usuario puede tener múltiples)
+            if diet_type_names:
+                query = query.join(Recipe.diet_types).filter(
+                    DietType.name.in_(diet_type_names)
+                )
             
-            print(f"Para {meal_type} hay {len(all_recipes[meal_type])} coincidencias.")
-    return all_recipes
-
+            # Filtrar por rango de calorías
+            calorie_range = calorie_ranges.get(meal_type_name, {})
+            if calorie_range:
+                query = query.filter(
+                    and_(
+                        Recipe.calories >= calorie_range.get("min", 0),
+                        Recipe.calories <= calorie_range.get("max", float('inf'))
+                    )
+                )
+            
+            # Ejecutar consulta y obtener resultados
+            recipes = query.all()
+            
+            # Convertir a RecipeResponse
+            recipes_response = []
+            for recipe in recipes:
+                recipe_response = RecipeResponse.model_validate(recipe)
+                recipes_response.append(recipe_response)
+            
+            all_recipes[meal_type_name] = recipes_response
+            print(f"Para {meal_type_name} hay {len(recipes_response)} coincidencias.")
+        
+        return all_recipes
+    
+    finally:
+        db.close()
 
 
 
@@ -151,9 +150,14 @@ def generate_weekly_plan(user_id: int):
     db = SessionLocal()
 
     try:
-
         # Obtener perfil
         profile = ProfileService.get_user_profile(db, user_id)
+        
+        if not profile:
+            return {
+                "result": "No se encontró perfil para el usuario", 
+                "plan": None
+            }
         
         # Obtener orden de comidas según meals_per_day
         meal_order = get_meal_order(profile.meals_per_day)
@@ -161,14 +165,14 @@ def generate_weekly_plan(user_id: int):
         # Obtener recetas disponibles usando la nueva función
         recipes_by_meal_type = all_recipes_for_user(user_id)
         
-         # Verificar si hay recetas disponibles
-        if not any(recipes_by_meal_type.values()):
+        # Verificar si hay recetas disponibles
+        if not recipes_by_meal_type or not any(recipes_by_meal_type.values()):
             return {
                 "result": "No hay recetas disponibles que cumplan con las restricciones y rangos calóricos", 
                 "plan": None
             }
         
-        # Calcular distribución de calorías por comida usando meal_calories_distribution
+        # Calcular distribución de calorías por comida
         calorie_distribution = meal_calories_distribution(profile.meals_per_day)
         
         # Crear mapeo de distribución por tipo de comida
@@ -181,7 +185,7 @@ def generate_weekly_plan(user_id: int):
         calorie_ranges = calculate_calorie_ranges(profile.calories_target, profile.meals_per_day)
         
         # Diccionario para llevar control de recetas usadas por tipo
-        #used_recipe_ids = {}
+        used_recipe_ids = {}
         
         # Lista para almacenar todos los daily_menus del plan
         daily_menus_data = []
@@ -202,38 +206,38 @@ def generate_weekly_plan(user_id: int):
                 if candidates:
                     # Filtrar recetas no usadas recientemente (últimos 3 días)
                     available_candidates = []
-                    for recipe_data in candidates:
-                        recipe_id = recipe_data['metadata'].get('id')
+                    for recipe_response in candidates:
+                        recipe_id = recipe_response.id
                         
                         # Verificar si la receta ya se usó en los últimos 3 días
-                        #if recipe_id in used_recipe_ids.get(meal_label, {}):
-                        #    days_since_used = day - used_recipe_ids[meal_label].get(recipe_id, 0)
-                        #    if days_since_used <= 3:
-                        #        continue
+                        if recipe_id in used_recipe_ids.get(meal_label, {}):
+                            days_since_used = day - used_recipe_ids[meal_label].get(recipe_id, 0)
+                            if days_since_used <= 3:
+                                continue
                         
                         # Verificar que cumpla con el rango de calorías
-                        recipe_calories = recipe_data['metadata'].get('calories', 0)
+                        recipe_calories = recipe_response.calories
                         calorie_range = calorie_ranges.get(meal_label, {})
                         
                         min_calories = calorie_range.get('min', target_calories * 0.7)
                         max_calories = calorie_range.get('max', target_calories * 1.3)
                         
                         if min_calories <= recipe_calories <= max_calories:
-                            available_candidates.append(recipe_data)
+                            available_candidates.append(recipe_response)
                     
                     if available_candidates:
                         # Elegir el que más se acerque a las calorías objetivo
-                        selected_recipe_data = min(available_candidates, 
-                            key=lambda r: abs(r['metadata'].get('calories', 0) - target_calories))
+                        selected_recipe = min(available_candidates, 
+                            key=lambda r: abs(r.calories - target_calories))
                         
-                        selected_recipe_id = selected_recipe_data['metadata'].get('id')
+                        selected_recipe_id = selected_recipe.id
                         
                         # Registrar uso de la receta
-                        #if meal_label not in used_recipe_ids:
-                        #    used_recipe_ids[meal_label] = {}
-                        #used_recipe_ids[meal_label][selected_recipe_id] = day
+                        if meal_label not in used_recipe_ids:
+                            used_recipe_ids[meal_label] = {}
+                        used_recipe_ids[meal_label][selected_recipe_id] = day
                         
-                        # Crear MealDetailBase (sin daily_menu_id porque eso va en DailyMenuCreate)
+                        # Crear MealDetailBase
                         meal_detail_data = MealDetailBase(
                             recipe_id=selected_recipe_id,
                             schedule=meal_idx + 1,
@@ -244,27 +248,39 @@ def generate_weekly_plan(user_id: int):
                         meal_details_for_day.append(meal_detail_data)
             
             # Crear DailyMenuCreate con todos los meal_details del día
-            # Nota: plan_id se asignará automáticamente en el CRUD cuando se cree el plan
-            daily_menu_data = DailyMenuCreate(
-                plan_id=0,  # Este valor se ignorará/sobrescribirá en el CRUD
-                day_of_week=day,
-                meal_details=meal_details_for_day
-            )
-            
-            daily_menus_data.append(daily_menu_data)
+            if meal_details_for_day:  # Solo crear si hay comidas para el día
+                daily_menu_data = DailyMenuCreate(
+                    plan_id=0,  # Este valor se ignorará/sobrescribirá en el CRUD
+                    day_of_week=day,
+                    meal_details=meal_details_for_day
+                )
+                
+                daily_menus_data.append(daily_menu_data)
+        
+        # Verificar si se pudo generar algún menú
+        if not daily_menus_data:
+            return {
+                "result": "No se pudo generar un plan con las recetas disponibles", 
+                "plan": None
+            }
         
         # Crear el objeto PlanCreate con todos los daily_menus
         plan_create_data = PlanCreate(
             daily_menus=daily_menus_data
         )
         
-        # Crear el plan usando el servicio que internamente usa el CRUD con cascada
+        # Crear el plan usando el servicio
         new_plan = PlanService.create_plan(db, plan_create_data, user_id)
         
         # Obtener plan completo con todos los detalles
         complete_plan = PlanService.get_current_plan(db, user_id)
         plan_response = PlanResponse.model_validate(complete_plan).model_dump()
-    
+        
+        # Preparar resumen con información de recetas
+        recipes_found_summary = {}
+        for meal, recipes in recipes_by_meal_type.items():
+            if recipes:
+                recipes_found_summary[meal] = len(recipes)
         
         return {
             "result": f"✅ Plan semanal generado exitosamente.",
@@ -278,7 +294,7 @@ def generate_weekly_plan(user_id: int):
                 "meal_distribution": meal_order,
                 "calorie_distribution": meal_calorie_distribution,
                 "calorie_ranges": calorie_ranges,
-                "recipes_found": {meal: len(recipes) for meal, recipes in recipes_by_meal_type.items() if recipes},
+                "recipes_found": recipes_found_summary,
                 "total_recipes_used": sum(len(day.meal_details) for day in daily_menus_data)
             }
         }
