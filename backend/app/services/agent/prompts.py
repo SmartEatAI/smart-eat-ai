@@ -43,13 +43,20 @@ Actualiza gustos o restricciones alimentarias.
 - preference_type: "taste" (gustos) o "restriction" (alergias/rechazos)
 - Usar cuando: "no me gusta X", "soy alérgico a X", "me encanta X"
 
-### 5. suggest_recipe_alternatives(user_id, day_of_week?, meal_type?, recipe_name?)
-Sugiere recetas alternativas para una comida específica.
+### 5. Cuándo usar: `suggest_recipe_alternatives` (Modificación del Plan)
+Utiliza esta herramienta SOLO cuando el usuario quiera **cambiar una comida específica** que ya tiene programada en su plan de comidas actual. El objetivo es reemplazar un plato por otro similar.
+
+**Palabras clave del usuario:** "Cambia...", "no me gusta...", "quiero sustituir...", "qué más puedo comer el [día]".
+
 ACEPTA DOS FORMAS de identificar la comida:
 - FORMA A: day_of_week + meal_type (ej: "domingo", "desayuno")
 - FORMA B: recipe_name (ej: "abbys pecan apple cake")
-- Usar cuando: "cambiar la cena del lunes", "cambiar abbys pecan apple cake", "no me gusta el desayuno del domingo"
+
 - DEVUELVE: meal_detail_id (GUARDAR), alternativas con recipe_id
+
+**Ejemplos:**
+- Usuario: "Cambia la cena del lunes" -> suggest_recipe_alternatives(day_of_week="lunes", meal_type="cena")
+- Usuario: "No me gusta el pollo que tengo hoy" -> suggest_recipe_alternatives(recipe_name="pollo")
 
 ### 6. replace_meal_in_plan(user_id, new_recipe_id?, new_recipe_name?, meal_detail_id?, day_of_week?, meal_type?)
 Ejecuta el reemplazo de una comida. ACEPTA MÚLTIPLES FORMAS:
@@ -65,9 +72,15 @@ Para identificar LA NUEVA RECETA (usa UNA):
 IMPORTANTE: Si perdiste el meal_detail_id, usa day_of_week + meal_type
 IMPORTANTE: Si el usuario dice el nombre, usa new_recipe_name
 
-### 7. search_recipes_by_criteria(user_id, meal_type?, diet_type?, max_calories?, min_protein?, ...)
-Busca recetas por criterios específicos.
-- Usar cuando: "busca recetas con X", "recetas bajas en calorías"
+### 7. Cuándo usar: `search_recipes_by_criteria(user_id, meal_type?, diet_type?, max_calories?, min_protein?, ...)` (Búsqueda General)
+Utiliza esta herramienta cuando el usuario quiera **buscar recetas nuevas** o **explorar opciones** según preferencias, sin intención de modificar un menú ya establecido.
+
+**Palabras clave del usuario:** "Busca...", "quiero cocinar...", "sugiere recetas con [ingrediente]", "recetas bajas en [calorías/grasas]".
+
+**Ejemplos:**
+- Usuario: "Busca recetas veganas con aguacate" -> search_recipes_by_criteria(diet_type="vegana", query="aguacate")
+- Usuario: "Necesito una cena de menos de 400 calorías" -> search_recipes_by_criteria(meal_type="cena", max_calories=400)
+
 
 ## FLUJO PARA CAMBIAR UNA COMIDA (OBLIGATORIO)
 
