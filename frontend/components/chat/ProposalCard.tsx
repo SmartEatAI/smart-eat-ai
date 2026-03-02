@@ -76,7 +76,7 @@ export default function ProposalCard({
                                 </div>
 
                 {/* Título */}
-                <h3 className="text-lg font-semibold line-clamp-1 text-foreground">{title}</h3>
+                <h3 className="text-lg font-semibold line-clamp-1 text-foreground" title={title}>{title}</h3>
 
                 {/* Macros info */}
                 {(typeof calories === "number") && (

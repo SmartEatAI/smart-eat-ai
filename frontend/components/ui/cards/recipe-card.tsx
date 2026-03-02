@@ -51,7 +51,7 @@ export default function RecipeCard({ title, calories, protein, carbs, fats, meal
       <ImageCarousel images={imageArray} alt={title} />
       <div className="p-5">
         <div className="flex items-start justify-between gap-2 mb-2">
-          <h3 className="text-lg font-semibold line-clamp-1 text-foreground">{title}</h3>
+          <h3 className="text-lg font-semibold line-clamp-1 text-foreground" title={title}>{title}</h3>
           {recipeUrl && (
             <a
               href={recipeUrl}
