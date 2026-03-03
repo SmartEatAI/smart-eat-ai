@@ -268,7 +268,7 @@ def generate_weekly_plan(user_id: int):
                         meal_details_for_day.append(meal_detail_data)
             
             # Crear DailyMenuCreate con todos los meal_details del día
-            if meal_details_for_day:  # Solo crear si hay comidas para el día
+            if meal_details_for_day or len(meal_details_for_day) == profile.meals_per_day:  # Solo crear si hay comidas para el día
                 daily_menu_data = DailyMenuCreate(
                     plan_id=0,  # Este valor se ignorará/sobrescribirá en el CRUD
                     day_of_week=day,
@@ -278,9 +278,9 @@ def generate_weekly_plan(user_id: int):
                 daily_menus_data.append(daily_menu_data)
         
         # Verificar si se pudo generar algún menú
-        if not daily_menus_data:
+        if not daily_menus_data or len(daily_menus_data) != 7:
             return {
-                "result": "No se pudo generar un plan con las recetas disponibles", 
+                "result": "No se pudo generar un plan. No hay suficientes recetas disponibles que cumplan con las restricciones y rangos calóricos.", 
                 "plan": None
             }
         
@@ -305,7 +305,6 @@ def generate_weekly_plan(user_id: int):
         
         return {
             "result": f"✅ Plan semanal generado exitosamente.",
-            "plan": plan_response,
         }
         
     except Exception as e:

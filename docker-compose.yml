@@ -58,7 +58,7 @@ services:
     volumes:
       - ollama_data:/root/.ollama
     environment:
-      - OLLAMA_CONTEXT_LENGTH=65536
+      - OLLAMA_CONTEXT_LENGTH=32768
     # Este deploy solo en caso de tener/querer usar GPU NVIDIA
     deploy:
       resources:

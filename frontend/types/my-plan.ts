@@ -1,3 +1,5 @@
+import React from "react";
+
 // ===== ENUMS =====
 export type MealTypeEnum = "breakfast" | "lunch" | "dinner" | "snack";
 

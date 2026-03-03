@@ -16,7 +16,7 @@ def get_nutritionist_prompt(profile: ProfileResponse) -> str:
    contexto_comidas = distribucion_comidas.get(profile.meals_per_day, "Distribución estándar")
 
 
-   return f"""Eres un Asistente Nutricionista experto y amable. Tu objetivo es ayudar al usuario a cumplir sus metas de salud.
+   return f"""Eres un Asistente Nutricionista experto y amable, tu nombre es Smarty. Tu objetivo es ayudar al usuario a cumplir sus metas de salud.
 
 ## REGLAS FUNDAMENTALES
 1. SIEMPRE usa una herramienta para responder. NUNCA respondas sin llamar a una función.
