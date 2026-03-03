@@ -12,6 +12,7 @@ class RecipeBase(BaseModel):
     image_url: Optional[str] = Field(default=None, example="https://example.com/image.jpg")
     recipe_url: Optional[str] = Field(default=None, example="https://example.com/recipe")
     recipe_id: int = Field(..., example=12345)
+    ingredients: str = Field(..., example="Spaghetti, eggs, pancetta, parmesan cheese, black pepper")
 
 class RecipeCreate(RecipeBase):
     meal_types: List[CategoryBase] = []
