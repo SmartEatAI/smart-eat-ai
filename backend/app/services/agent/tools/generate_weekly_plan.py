@@ -20,6 +20,9 @@ from app.services.profile import ProfileService
 # Funciones
 from app.core.recommender import get_meal_order
 
+# LLM para preguntar si cumple o no con las restricciones
+from app.core.config_ollama import llm  # Tu instancia de ChatOllama
+
 
 
 def meal_calories_distribution(n_meals: int):
@@ -123,10 +126,76 @@ def all_recipes_for_user(user_id: int,  max_recipes_per_type: int = 50) -> Dict[
             recipes = query.all()
 
             random.shuffle(recipes)
+            print(f"Antes de filtrar con IA - {meal_type_name}: {len(recipes)} recetas")
 
-            # Limitar a max_recipes_per_type para tener variedad
-            limited_recipes = recipes[:max_recipes_per_type]
+
+            # Si hay restricciones o dietas, filtrar con IA
+            if profile.restrictions or profile.diet_types:
+                # Obtener nombres de las restricciones del usuario
+                if profile.restrictions:
+                    restrictions_names = [restriction.name for restriction in profile.restrictions]
+                    restrictions_text = ", ".join(restrictions_names)
+                else:
+                    restrictions_text = "ninguna"
+
+                 # Verificar si hay dietas veganas/vegetarianas
+                dietas_objetivo = {"vegan", "vegetarian"}
+
+                # Filtramos la lista original
+                diet_type_names = [name.lower() for name in diet_type_names if name.lower() in dietas_objetivo]
+
+                # Obtener nombres de dietas del usuario
+                diet_text = ", ".join(diet_type_names)
+
+                print(f"Filtrando con IA - Restricciones: [{restrictions_text}], Dietas: [{diet_text}]")
+                
+                filtered_recipes = []
+                
+                # Procesar recetas hasta encontrar suficientes que cumplan
+                for recipe in recipes[:max_recipes_per_type*2]:
+
+                    # Construir mensaje para el LLM
+                    # 1. Definir la parte de la dieta solo si existe
+                    diet_line = f"y quiero dietas: [{diet_text}]." if diet_text else ""
+
+                    # 2. Construir el mensaje final
+                    mensaje = (
+                        f"responde SOLO con SI o NO. "
+                        f"Tengo un perfil alimenticio con restriccion de [{restrictions_text}] {diet_line}."
+                        f"Esta receta cumple con mis restricciones: {recipe.name} Ingredientes: [{recipe.ingredients}]"
+                    )
+
+                    try:
+                        # Llamar a Ollama con el modelo base sin tools ni contexto
+                        response = llm.invoke(mensaje)
+                        respuesta = response.content.strip().upper()
+                        
+                        print(f"- Receta: {recipe.name} -> {respuesta}")
+                        
+                        # Si la respuesta es SI, añadir a filtradas
+                        if respuesta == "SI":
+                            filtered_recipes.append(recipe)
+                            
+                            # Si ya tenemos suficientes, salir del bucle
+                            if len(filtered_recipes) >= max_recipes_per_type:
+                                print(f"  ✓ Alcanzado límite de {max_recipes_per_type} recetas para {meal_type_name}")
+                                break
+                    
+                    except Exception as e:
+                        print(f"  ✗ Error procesando receta {recipe.name}: {e}")
+                        continue
+                
+                print(f"Después de filtrar con IA - {meal_type_name}: {len(filtered_recipes)} recetas válidas")
+                
+                # Usar las recetas filtradas
+                limited_recipes = filtered_recipes
+                
+            else:
+                # Sin filtros de IA, limitar directamente
+                limited_recipes = recipes[:max_recipes_per_type]
+                print(f"Sin filtros IA - {meal_type_name}: {len(limited_recipes)} recetas")
             
+
             # Convertir a RecipeResponse
             recipes_response = []
             for recipe in limited_recipes:
