@@ -7,7 +7,18 @@ from langchain.tools import tool
 @tool
 def get_current_plan_summary(user_id: int):
     """
-    Obtiene un resumen del plan activo del usuario.
+    Muestra el plan nutricional semanal ACTIVO del usuario con todas sus comidas programadas.
+    
+    CUÁNDO USAR:
+    - Cuando el usuario pregunta por su plan actual, menú semanal o comidas programadas
+    - Cuando dice: "mi plan", "ver plan", "qué tengo hoy", "mis comidas", "menú de la semana"
+    - Antes de sugerir cambios en el plan (para conocer el estado actual)
+    
+    CUÁNDO NO USAR:
+    - Para buscar recetas nuevas fuera del plan (usar search_recipes_by_criteria)
+    - Para ver el perfil del usuario (usar get_user_profile_summary)
+    
+    Retorna: resumen del plan con comidas por día, o indica si no hay plan activo.
     """
     db = SessionLocal()
     try:

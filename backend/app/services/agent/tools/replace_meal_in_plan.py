@@ -9,30 +9,13 @@ from typing import Optional
 import logging
 
 from langchain.tools import tool
+from .constants import (
+    DAYS_MAP as DAYS_MAP_ES,
+    MEAL_TYPE_MAP as MEAL_TYPE_MAP_ES,
+    get_meal_type_value as _get_meal_type_value
+)
 
 logger = logging.getLogger(__name__)
-
-# Mapeo de días en español a números
-DAYS_MAP_ES = {
-    "lunes": 1, "martes": 2, "miércoles": 3, "miercoles": 3,
-    "jueves": 4, "viernes": 5, "sábado": 6, "sabado": 6, "domingo": 7,
-    "monday": 1, "tuesday": 2, "wednesday": 3, "thursday": 4,
-    "friday": 5, "saturday": 6, "sunday": 7
-}
-
-# Mapeo de tipos de comida en español
-MEAL_TYPE_MAP_ES = {
-    "desayuno": "breakfast", "almuerzo": "lunch", "comida": "lunch",
-    "cena": "dinner", "snack": "snack", "merienda": "snack",
-    "breakfast": "breakfast", "lunch": "lunch", "dinner": "dinner"
-}
-
-
-def _get_meal_type_value(meal_type) -> str:
-    """Extrae el valor string del meal_type, sea enum o string."""
-    if hasattr(meal_type, 'value'):
-        return meal_type.value.lower()
-    return str(meal_type).lower()
 
 
 @tool
@@ -45,19 +28,35 @@ def replace_meal_in_plan(
     meal_type: Optional[str] = None
 ):
     """
-    Reemplaza una comida específica en el plan actual con una nueva receta.
+    Ejecuta el reemplazo de una comida en el plan activo. Es el PASO 2 del flujo de cambio.
     
-    IDENTIFICAR LA COMIDA A REEMPLAZAR (usa UNA opción):
-    - meal_detail_id: ID del detalle de comida (de suggest_recipe_alternatives)
-    - day_of_week + meal_type: ej "lunes" + "desayuno"
+    PREREQUISITO OBLIGATORIO:
+    SIEMPRE llamar suggest_recipe_alternatives ANTES para mostrar opciones al usuario.
+    NUNCA llamar directamente sin que el usuario haya elegido una alternativa.
     
-    IDENTIFICAR LA NUEVA RECETA (usa UNA opción):
-    - new_recipe_id: ID numérico de la receta (de alternatives_data)
-    - new_recipe_name: Nombre de la receta elegida (ej: "Kumara salad")
+    CUÁNDO USAR:
+    - DESPUÉS de que suggest_recipe_alternatives mostró alternativas
+    - DESPUÉS de que el usuario eligió una opción (por nombre o número)
     
-    Ejemplos de uso:
-    - replace_meal_in_plan(user_id=1, meal_detail_id=42, new_recipe_id=12345)
-    - replace_meal_in_plan(user_id=1, day_of_week="lunes", meal_type="desayuno", new_recipe_name="Kumara salad")
+    CUÁNDO NO USAR:
+    - Cuando el usuario dice "cambiar X" → primero usar suggest_recipe_alternatives
+    - Sin confirmación del usuario sobre qué alternativa prefiere
+    
+    IDENTIFICAR LA COMIDA A REEMPLAZAR (una opción):
+    - day_of_week + meal_type: "lunes" + "desayuno" (preferido)
+    - meal_detail_id: ID del suggest_recipe_alternatives
+    
+    IDENTIFICAR LA NUEVA RECETA (una opción):
+    - new_recipe_name: nombre de la receta elegida (preferido cuando el usuario dice el nombre)
+    - new_recipe_id: ID numérico de alternatives_data
+    
+    EJEMPLOS:
+    - Usuario dice "la opción 1 que es Kumara salad":
+      → replace_meal_in_plan(user_id=X, day_of_week="lunes", meal_type="desayuno", new_recipe_name="Kumara salad")
+    - Usuario dice "quiero la número 2":
+      → identificar el nombre de la opción 2 y usar new_recipe_name
+    
+    Retorna: confirmación del cambio y plan actualizado.
     """
     db = SessionLocal()
     try:
