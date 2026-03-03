@@ -9,8 +9,24 @@ from langchain.tools import tool
 @tool
 def update_user_preference(user_id: int, preference_type: str, category_name: str):
     """
-    Añade un nuevo gusto o restricción al perfil del usuario.
-    preference_type: 'taste' (gusto) o 'restriction' (alergia/restricción)
+    Añade gustos, preferencias, restricciones, intolerancias o alergias al perfil del usuario.
+    
+    CUÁNDO USAR:
+    - "No me gusta el pescado" → preference_type="restriction", category_name="pescado"
+    - "Soy alérgico a los frutos secos" → preference_type="restriction", category_name="frutos secos"
+    - "Me encanta el pollo" → preference_type="taste", category_name="pollo"
+    - "Soy intolerante a la lactosa" → preference_type="restriction", category_name="lactosa"
+    - "Prefiero comida mediterránea" → preference_type="taste", category_name="mediterránea"
+    
+    CUÁNDO NO USAR:
+    - Para ver el perfil (usar get_user_profile_summary)
+    - Para modificar el plan (usar suggest_recipe_alternatives + replace_meal_in_plan)
+    
+    PARÁMETROS:
+    - preference_type: "taste" (gustos positivos) o "restriction" (alergias, intolerancias, rechazos)
+    - category_name: el alimento, ingrediente o estilo culinario mencionado
+    
+    Esta información se usa automáticamente en futuras búsquedas y generación de planes.
     """
     db = SessionLocal()
     try:

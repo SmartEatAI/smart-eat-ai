@@ -23,8 +23,29 @@ def search_recipes_by_criteria(
     query: Optional[str] = None
 ):
     """
-    Busca recetas según criterios nutricionales (calorias, proteinas, grasas...), tipo de comida (desayuno, almuerzo, cena),
-    tipo de dieta (vegetariana, vegana, sin gluten, etc.) y preferencias del perfil del usuario.
+    Busca recetas en la BASE DE DATOS GENERAL según criterios específicos. NO está relacionada con el plan activo.
+    
+    CUÁNDO USAR (búsquedas generales de recetas):
+    - "Busca recetas con pollo", "recetas veganas", "opciones bajas en calorías"
+    - "Dame recetas altas en proteína", "recetas para el desayuno"
+    - Cuando el usuario quiere EXPLORAR recetas nuevas SIN modificar su plan
+    - Cuando pide recomendaciones generales o ideas de comidas
+    
+    CUÁNDO NO USAR (usa suggest_recipe_alternatives en su lugar):
+    - "Quiero cambiar el desayuno del lunes" → suggest_recipe_alternatives
+    - "Cambia la cena del domingo" → suggest_recipe_alternatives  
+    - Cualquier solicitud de MODIFICAR una comida del plan activo
+    
+    DIFERENCIA CLAVE: Esta tool busca en toda la base de datos.
+    suggest_recipe_alternatives busca alternativas SIMILARES a una comida específica del plan.
+    
+    Parámetros:
+    - meal_type: breakfast, lunch, dinner, snack
+    - diet_type: vegetarian, vegan, gluten-free, etc.
+    - max_calories, min_protein, max_carbs, max_fat: filtros nutricionales
+    - query: búsqueda semántica por ingredientes o descripción
+    
+    Por defecto devuelve 5 recetas.
     """
     db: Session = SessionLocal()
     try:

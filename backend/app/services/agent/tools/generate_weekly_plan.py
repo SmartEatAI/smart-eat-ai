@@ -147,8 +147,26 @@ def all_recipes_for_user(user_id: int,  max_recipes_per_type: int = 50) -> Dict[
 @tool
 def generate_weekly_plan(user_id: int):
     """
-    Genera un plan nutricional semanal personalizado basado en el perfil del usuario.
-    Utiliza el perfil para calcular macros y selecciona recetas apropiadas.
+    Genera un plan nutricional semanal completo (7 días) personalizado para el usuario.
+    
+    CUÁNDO USAR:
+    - "Genera un plan", "necesito un plan nuevo", "crear plan semanal"
+    - "Quiero empezar un plan nutricional", "hazme un menú semanal"
+    - Cuando el usuario no tiene plan activo y quiere uno nuevo
+    - Cuando quiere reemplazar completamente su plan actual
+    
+    CUÁNDO NO USAR:
+    - Para ver el plan existente (usar get_current_plan_summary)
+    - Para cambiar una sola comida (usar suggest_recipe_alternatives + replace_meal_in_plan)
+    - Para buscar recetas específicas (usar search_recipes_by_criteria)
+    
+    El plan se genera basándose en:
+    - Restricciones dietéticas del perfil
+    - Objetivo calórico calculado
+    - Número de comidas diarias configurado
+    - Gustos y preferencias guardadas
+    
+    Retorna: plan completo de 7 días con todas las comidas.
     """
 
     db = SessionLocal()

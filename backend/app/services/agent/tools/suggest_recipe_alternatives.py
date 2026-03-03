@@ -7,42 +7,15 @@ from typing import Optional
 import logging
 
 from langchain.tools import tool
+from .constants import (
+    DAYS_MAP as DAYS_MAP_ES,
+    DAYS_NUM_TO_NAME,
+    MEAL_TYPE_MAP as MEAL_TYPE_MAP_ES,
+    MEAL_TYPE_TO_DISPLAY as MEAL_TYPE_TO_ES,
+    get_meal_type_value as _get_meal_type_value
+)
 
 logger = logging.getLogger(__name__)
-
-# Mapeo de días en español a números
-DAYS_MAP_ES = {
-    "lunes": 1, "martes": 2, "miércoles": 3, "miercoles": 3,
-    "jueves": 4, "viernes": 5, "sábado": 6, "sabado": 6, "domingo": 7,
-    "monday": 1, "tuesday": 2, "wednesday": 3, "thursday": 4,
-    "friday": 5, "saturday": 6, "sunday": 7
-}
-
-# Mapeo inverso de números a nombres de días
-DAYS_NUM_TO_NAME = {
-    1: "lunes", 2: "martes", 3: "miércoles", 4: "jueves",
-    5: "viernes", 6: "sábado", 7: "domingo"
-}
-
-# Mapeo de tipos de comida en español
-MEAL_TYPE_MAP_ES = {
-    "desayuno": "breakfast", "almuerzo": "lunch", "comida": "lunch",
-    "cena": "dinner", "snack": "snack", "merienda": "snack",
-    "breakfast": "breakfast", "lunch": "lunch", "dinner": "dinner"
-}
-
-# Mapeo inverso de meal_type a español
-MEAL_TYPE_TO_ES = {
-    "breakfast": "desayuno", "lunch": "almuerzo", 
-    "dinner": "cena", "snack": "snack"
-}
-
-
-def _get_meal_type_value(meal_type) -> str:
-    """Extrae el valor string del meal_type, sea enum o string."""
-    if hasattr(meal_type, 'value'):
-        return meal_type.value.lower()
-    return str(meal_type).lower()
 
 
 def _find_meal_by_recipe_name(plan, recipe_name: str):
@@ -82,21 +55,36 @@ def suggest_recipe_alternatives(
     current_recipe_id: Optional[int] = None
 ):
     """
-    Sugiere recetas alternativas similares a una comida actual del plan.
+    Sugiere 3 recetas SIMILARES a una comida específica del PLAN ACTIVO del usuario.
+    Es el PASO 1 para cambiar una comida del plan (el PASO 2 es replace_meal_in_plan).
     
-    Puedes identificar la comida de TRES formas:
-    1. Por día y tipo: day_of_week="domingo", meal_type="desayuno"
-    2. Por nombre de receta: recipe_name="abbys pecan apple cake"
-    3. Por ID de receta: current_recipe_id=12345 (menos común)
+    CUÁNDO USAR (modificar comidas del plan activo):
+    - "Quiero cambiar el desayuno del lunes" → usar day_of_week + meal_type
+    - "Cambia la cena del domingo" → usar day_of_week + meal_type
+    - "No me gusta la receta X de mi plan" → usar recipe_name
+    - "Busca alternativas para el almuerzo del martes" → usar day_of_week + meal_type
     
-    Parámetros:
-    - user_id: ID del usuario (obligatorio)
-    - day_of_week: Día de la semana (ej: "lunes", "domingo") - usar con meal_type
-    - meal_type: Tipo de comida (ej: "desayuno", "cena", "snack") - usar con day_of_week  
-    - recipe_name: Nombre de la receta a cambiar (búsqueda parcial)
-    - current_recipe_id: ID de la receta actual (opcional, se detecta automáticamente)
+    CUÁNDO NO USAR (usa search_recipes_by_criteria en su lugar):
+    - "Busca recetas veganas" → búsqueda general
+    - "Dame recetas con pollo" → búsqueda por ingredientes
+    - Cualquier búsqueda que NO sea para cambiar una comida específica del plan
     
-    Devuelve alternativas con recipe_id para usar en replace_meal_in_plan.
+    DIFERENCIA CLAVE: Esta tool busca alternativas SIMILARES a una comida del plan.
+    search_recipes_by_criteria busca en toda la base de datos por criterios generales.
+    
+    FORMAS DE IDENTIFICAR LA COMIDA:
+    - day_of_week + meal_type: "lunes" + "desayuno", "domingo" + "cena"
+    - recipe_name: nombre de la receta que aparece en el plan
+    
+    FLUJO OBLIGATORIO:
+    1. Llamar esta tool para obtener 3 alternativas
+    2. Mostrar alternativas al usuario y preguntar cuál prefiere
+    3. Cuando el usuario elija, llamar replace_meal_in_plan con la selección
+    
+    Días válidos: lunes, martes, miércoles, jueves, viernes, sábado, domingo
+    Comidas válidas: desayuno, almuerzo/comida, cena, snack/merienda
+    
+    Retorna: alternativas con recipe_id y meal_detail_id para el reemplazo.
     """
     db = SessionLocal()
     try:

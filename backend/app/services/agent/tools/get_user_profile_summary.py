@@ -7,8 +7,18 @@ from langchain.tools import tool
 @tool
 def get_user_profile_summary(user_id: int):
     """
-    Obtiene un resumen del perfil del usuario incluyendo edad y metas.
-    Eliminar el campo 'Nombre' si no existe o dejarlo fuera de la respuesta
+    Obtiene el perfil completo del usuario: datos personales, metas de salud, gustos y restricciones alimentarias.
+    
+    CUÁNDO USAR:
+    - Cuando el usuario saluda o inicia conversación (para personalizar la respuesta)
+    - Cuando pregunta por sus datos, perfil, preferencias o restricciones
+    - Cuando dice: "mis datos", "mi perfil", "qué sabes de mí", "mis preferencias"
+    
+    CUÁNDO NO USAR:
+    - Para ver el plan nutricional (usar get_current_plan_summary)
+    - Para buscar recetas (usar search_recipes_by_criteria)
+    
+    Retorna: datos del perfil sin el nombre del usuario.
     """
     db = SessionLocal()
     try:

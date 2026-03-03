@@ -13,7 +13,8 @@ class Recipe(Base):
     image_url = Column(String, default="/images/Image_not_available.png")
     recipe_url = Column(String)
     recipe_id = Column(Integer, unique=True, nullable=False)
-
+    ingredients = Column(String, nullable=False)
+    
     meal_types = relationship(
         "MealType", 
         secondary="recipe_meal_types",

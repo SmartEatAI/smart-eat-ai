@@ -25,6 +25,7 @@ def upgrade() -> None:
                existing_type=postgresql.TIMESTAMP(),
                nullable=True)
     op.add_column('recipes', sa.Column('recipe_id', sa.Integer(), nullable=False, unique=True)),
+    op.add_column('recipes', sa.Column('ingredients', sa.String(), nullable=False))
     # ### end Alembic commands ###
 
 
@@ -37,4 +38,5 @@ def downgrade() -> None:
                existing_type=postgresql.TIMESTAMP(),
                nullable=False)
     op.drop_column('recipes', 'recipe_id')
+    op.drop_column('recipes', 'ingredients')
     # ### end Alembic commands ###
