@@ -1,8 +1,10 @@
 from app.database import SessionLocal
 from app.models.user import User
+from app.models.profile import Profile
 from app.models.plan import Plan
 from app.models.recipe import Recipe
 from app.core.recommender import swap_for_similar
+from app.core.config_ollama import llm
 from typing import Optional
 import logging
 
@@ -92,6 +94,30 @@ def suggest_recipe_alternatives(
         user = db.query(User).filter(User.id == user_id).first()
         if not user:
             return {"result": "Usuario no encontrado", "alternatives": []}
+        
+        # Obtener perfil para restricciones y dietas
+        profile = db.query(Profile).filter(Profile.user_id == user_id).first()
+        use_llm_filter = False
+        restrictions_text = ""
+        diet_text = ""
+        if profile:
+            # Obtener nombres de las restricciones del usuario
+            if profile.restrictions:
+                restriction_names = [r.name for r in profile.restrictions]
+                restrictions_text = ", ".join(restriction_names)
+            else:
+                restrictions_text = "ninguna"
+            
+            # Verificar si hay dietas veganas/vegetarianas (igual que en generate_weekly_plan)
+            diet_type_names = [d.name for d in profile.diet_types] if profile.diet_types else []
+            target_diets = {"vegan", "vegetarian"}
+            diet_text_list = [name for name in diet_type_names if name.lower() in target_diets]
+            diet_text = ", ".join(diet_text_list)
+            
+            # Activar filtro LLM solo si hay restricciones reales o dietas veganas/vegetarianas
+            if (profile.restrictions and len(profile.restrictions) > 0) or diet_text_list:
+                use_llm_filter = True
+                logger.info(f"Filtro IA activado - Restricciones: [{restrictions_text}], Dietas: [{diet_text}]")
         
         # Obtener plan activo
         plan = db.query(Plan).filter(
@@ -193,22 +219,52 @@ def suggest_recipe_alternatives(
         if not meal_type_normalized:
             meal_type_normalized = _get_meal_type_value(meal_detail.meal_type)
         
-        # Obtener múltiples alternativas
+        # Obtener múltiples alternativas con validación LLM
         alternatives = []
         seen_ids = set()
-        for _ in range(8):  # Intentar más veces para obtener 3 únicas
-            alternative = swap_for_similar(
+        max_attempts = 20
+        attempts = 0
+        
+        while len(alternatives) < 3 and attempts < max_attempts:
+            attempts += 1
+            candidate = swap_for_similar(
                 db=db,
                 user=user,
                 recipe_id=actual_recipe_id,
                 meal_label=meal_type_normalized,
                 n_search=550
             )
-            if alternative and alternative['recipe_id'] not in seen_ids:
-                seen_ids.add(alternative['recipe_id'])
-                alternatives.append(alternative)
-                if len(alternatives) >= 3:
-                    break
+            if not candidate:
+                continue
+            if candidate['recipe_id'] in seen_ids:
+                continue
+            
+            # Si el usuario tiene restricciones/dietas, validar con LLM
+            if use_llm_filter:
+                # Obtener la receta completa para acceder a ingredientes
+                recipe = db.query(Recipe).filter(Recipe.recipe_id == candidate['recipe_id']).first()
+                if not recipe:
+                    continue
+                
+                # Construir prompt igual que en generate_weekly_plan
+                diet_line = f"y quiero dietas: [{diet_text}]." if diet_text else ""
+                mensaje = (
+                    f"responde SOLO con SI o NO. "
+                    f"Tengo un perfil alimenticio con restriccion de [{restrictions_text}] {diet_line}."
+                    f"Esta receta cumple con mis restricciones: {recipe.name} Ingredientes: [{recipe.ingredients}]"
+                )
+                try:
+                    response = llm.invoke(mensaje)
+                    respuesta = response.content.strip().upper()
+                    if respuesta != "SI":
+                        continue  # No cumple, probar siguiente candidato
+                except Exception as e:
+                    logger.warning(f"Error en LLM al evaluar receta {recipe.name}: {e}")
+                    continue  # Ante error, saltamos esta receta
+            
+            # Si llegamos aquí, la receta es válida
+            seen_ids.add(candidate['recipe_id'])
+            alternatives.append(candidate)
         
         if not alternatives:
             return {
