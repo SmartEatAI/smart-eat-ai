@@ -55,3 +55,13 @@ export interface UIDayPlan {
   name: string;
   meals: MealDetailResponse[];
 }
+
+// ===== STATS CARD =====
+export interface StatsCardProps {
+  title: string;
+  current: number | string;
+  goal: number | string;
+  unit?: string;
+  bgColor?: string;
+  icon?: React.ReactNode;
+}
