@@ -58,7 +58,11 @@ services:
     volumes:
       - ollama_data:/root/.ollama
     environment:
+      # Reducido de 32768 para optimizar rendimiento en 8GB VRAM
       - OLLAMA_CONTEXT_LENGTH=32768
+      # Configuraciones adicionales para rendimiento
+      - OLLAMA_NUM_PARALLEL=1
+      - OLLAMA_MAX_LOADED_MODELS=1
     # Este deploy solo en caso de tener/querer usar GPU NVIDIA
     deploy:
       resources:
