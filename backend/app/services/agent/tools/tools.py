@@ -5,13 +5,11 @@ from .suggest_recipe_alternatives import suggest_recipe_alternatives
 from .replace_meal_in_plan import replace_meal_in_plan
 from .get_user_profile_summary import get_user_profile_summary
 from .get_current_plan_summary import get_current_plan_summary
-from .all_recipes_for_user import all_recipes_for_user
 
 # Actualizar lista de herramientas disponibles
 nutrition_tools = [
     search_recipes_by_criteria,
     generate_weekly_plan,
-    #all_recipes_for_user,
     update_user_preference,
     suggest_recipe_alternatives,
     replace_meal_in_plan,

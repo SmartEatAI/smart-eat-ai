@@ -23,7 +23,7 @@ class AgentManager:
     def __init__(self):
         self.llm = llm.bind_tools(nutrition_tools)
         self.tools = {tool.name: tool for tool in nutrition_tools}
-        logger.info(f"🤖 Agente inicializado con {len(nutrition_tools)} herramientas")
+        logger.info(f"🤖 Agent initialized with {len(nutrition_tools)} tools")
 
     def build_agent(self, state: DietGraphState):
         """
