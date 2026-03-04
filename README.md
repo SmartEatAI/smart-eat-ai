@@ -1,7 +1,8 @@
+<center>
 <h1>SmartEat AI</h1>
-<p align="center">
-  <img src="https://images.emojiterra.com/google/android-12l/512px/1f957.png" alt="Logo" width="400">
-</p>
+	
+<img src="https://images.emojiterra.com/google/android-12l/512px/1f957.png" alt="Logo" width="400">
+</center>
 
 
 
