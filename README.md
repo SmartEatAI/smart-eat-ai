@@ -60,6 +60,8 @@ El propósito de SmartEat AI es facilitar la adopción de hábitos alimenticios 
 
 ## 5. Arquitectura del Sistema
 
+![Arquitectura](img/arquitectura-smarteatai)
+
 ## 6. Pipeline de Ciencia de Datos
 
 En este apartado se describen de forma resumida los pasos realizados para preparar los datos y entrenar el modelo KNN, utilizado como recomendador de recetas. Se detalla el proceso de limpieza, transformación, etiquetado y escalado de los datos, así como la configuración y entrenamiento del modelo para garantizar recomendaciones precisas y personalizadas.
