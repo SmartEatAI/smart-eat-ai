@@ -60,7 +60,7 @@ El propósito de SmartEat AI es facilitar la adopción de hábitos alimenticios 
 
 ## 5. Arquitectura del Sistema
 
-![Arquitectura](img/arquitectura-smarteatai)
+![Arquitectura](/img/arquitectura-smarteatai.png)
 
 ## 6. Pipeline de Ciencia de Datos
 
