@@ -173,19 +173,6 @@ Name: count, Length: 32600, dtype: int64
 
 <div id="df-5f113fac-dfa4-4346-8697-d88b702d547a" class="colab-df-container">
     <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
