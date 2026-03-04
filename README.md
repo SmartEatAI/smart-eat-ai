@@ -135,10 +135,7 @@ smart-eat-ai/
 └── LICENSE
 ```
 
-
-
-
-## Instalación Rápida
+## Instalación Rápida y Despliegue
 
 Sigue estos pasos para clonar el repositorio, instalar las dependencias y levantar los contenedores con Docker:
 
