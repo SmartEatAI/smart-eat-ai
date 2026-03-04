@@ -1,4 +1,4 @@
-<h1 align="center">SmartEat AI 🥗</h1> 
+<h1 align="center">SmartEat AI 🥗 - Tu asistente personal de planes nutricionales personalizados</h1> 
 
 <img width="1812" height="283" alt="image" src="https://github.com/user-attachments/assets/b512a89e-0954-41e2-8ff4-f83f52e4a789" />
 
@@ -8,9 +8,28 @@
 
 **SmartEat AI** es un proyecto de Trabajo Fin de Máster (TFM) del Curso de Especialización en Inteligencia Artificial y Big Data. Esta aplicación utiliza tecnologías de IA para proporcionar recomendaciones inteligentes sobre alimentación y nutrición.
 
-## 📋 Descripción General
+# Índice
+
+- [Justificación y descripción del proyecto](#justificaciony-descripcion)
+- [Obtención de datos](#obtencion-de-datos)
+- [Limpieza de datos](#limpieza-de-datos)
+- [Exploración y visualización de los datos](#exploracion-y-visualizacion-de-los-datos)
+- [Preparación de los datos](#preparacion-de-los-datos)
+- [Procesamiento de Lenguaje Natural](#procesamiento-de-lenguaje-natural)
+- [Entrenamiento del modelo](#entrenamiento-del-modelo)
+- [Comprobación del rendimiento](#comprobacion-del-rendimiento)
+- [Aplicacion Web](#aplicacion-web)
+- [IA Agéntica](#ia-agentica)
+- [Conclusión](#conclusión)
+- [Recursos utilizados](#recursos-utilizados)
+- [Autores](#autores)
+
+
+## 📋 Justificación y descripción del proyecto
 
 SmartEat AI es una plataforma innovadora que combina inteligencia artificial y gestión nutricional para ofrecer una experiencia personalizada a los usuarios. El sistema analiza preferencias alimentarias, restricciones dietéticas y objetivos nutricionales para generar recomendaciones adaptadas a cada perfil.
+
+Enlace al video explicatorio [click aqui]()
 
 ## 🌟 Visión y Propósito
 
