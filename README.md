@@ -31,6 +31,14 @@ SmartEat AI es una plataforma innovadora que combina inteligencia artificial y g
 
 Enlace al video explicatorio [click aqui]()
 
+
+## 🎣 Obtención de los datos
+
+Para el entrenamiento del modelo se han sacado los datos de un dataset de Kaggle.
+Este dataset se obtuvo mediante webscraping de la web de [Food.com](https://www.food.com/)
+[Food.com - Recipes and Reviews](https://www.kaggle.com/datasets/irkaal/foodcom-recipes-and-reviews)
+
+
 ## 🌟 Visión y Propósito
 
 El propósito de SmartEat AI es facilitar la adopción de hábitos alimenticios saludables mediante el uso de tecnología avanzada. La visión del proyecto es convertirse en una herramienta de referencia para la personalización nutricional, ayudando a los usuarios a alcanzar sus metas de bienestar de forma sencilla y efectiva.
