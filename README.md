@@ -1,5 +1,5 @@
+<h1>SmartEat AI</h1>
 <p align="center">
-  <h1>SmartEat AI</h1>
   <img src="https://images.emojiterra.com/google/android-12l/512px/1f957.png" alt="Logo" width="400">
 </p>
 
