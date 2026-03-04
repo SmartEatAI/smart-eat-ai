@@ -22,6 +22,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isValid, setIsValid] = useState(true);
   const router = useRouter();
   const [showTokenExpired, setShowTokenExpired] = useState(false);
+  const [manualLogout, setManualLogout] = useState(false);
 
   useEffect(() => {
     // Aquí puedes cargar el usuario desde localStorage o cookies si es necesario
@@ -41,8 +42,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'token' && !e.newValue && token) {
         // Token fue eliminado manualmente
-        console.log("Token eliminado del localStorage");
-        setShowTokenExpired(true);
+        if (!manualLogout) {
+          setShowTokenExpired(true);
+        }
         setUser(null);
         setToken(null);
         setTimeout(() => {
@@ -63,8 +65,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // Primero verificar si el token sigue en localStorage
       const storedToken = localStorage.getItem('token');
       if (!storedToken) {
-        console.log("Token eliminado del localStorage");
-        setShowTokenExpired(true);
+        if (!manualLogout) {
+          setShowTokenExpired(true);
+        }
         setUser(null);
         setToken(null);
         setTimeout(() => {
@@ -80,8 +83,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setIsValid(valid);
 
         if (!valid) {
-          console.log("Token inválido, limpiando sesión...");
-          setShowTokenExpired(true);
+          if (!manualLogout) {
+            setShowTokenExpired(true);
+          }
           logout(); // Limpiar usuario y token
           setTimeout(() => {
             setShowTokenExpired(false);
@@ -91,7 +95,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } catch (error) {
         console.error("Error verificando token:", error);
         setIsValid(false);
-        setShowTokenExpired(true);
+        if (!manualLogout) {
+          setShowTokenExpired(true);
+        }
         logout();
         setTimeout(() => {
           setShowTokenExpired(false);
@@ -110,11 +116,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = (userData: User, token: string) => {
     setUser(userData);
     setToken(token);
+    setManualLogout(false);
     localStorage.setItem('user', JSON.stringify(userData));
     localStorage.setItem('token', token);
   };
 
   const logout = () => {
+    setManualLogout(true);
     setUser(null);
     localStorage.removeItem('user');
     localStorage.removeItem('token');
@@ -123,11 +131,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   return (
     <AuthContext.Provider value={{ user, token, loading, login, logout }}>
       {children}
-      {showTokenExpired && (
+      {showTokenExpired && !manualLogout && (
         <Toast
           message="Your session has expired. Please log in again."
           type="error"
-          onClose={() => setShowTokenExpired(false)}
+          onClose={() => {
+            setShowTokenExpired(false);
+            setManualLogout(false);
+          }}
         />
       )}
     </AuthContext.Provider>

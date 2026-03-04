@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { LogOut, ChevronLeft, ChevronRight, LayoutDashboard, ClipboardList, Menu, X, MessagesSquare, UserRoundPen } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
 
 const links = [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -23,11 +24,9 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     const [isOpen, setIsOpen] = useState(true);
     const [isMobileOpen, setIsMobileOpen] = useState(false);
 
+    const { logout } = useAuth();
     const handleLogout = () => {
-        // Remove token and user data from localStorage
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        // Redirect to landing page
+        logout();
         router.push("/");
     };
 
