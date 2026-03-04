@@ -8,24 +8,21 @@
 
 **SmartEat AI** es un proyecto de Trabajo Fin de Máster (TFM) del Curso de Especialización en Inteligencia Artificial y Big Data. Esta aplicación utiliza tecnologías de IA para proporcionar recomendaciones inteligentes sobre alimentación y nutrición.
 
-# Índice
+## Índice
+1. [Descripción del proyecto](#descripción-del-proyecto)
+2. [Visión y propósito](#visión-y-propósito)
+3. [Características principales](#características-principales)
+4. [Tecnologías utilizadas](#tecnologías-principales)
+5. [Arquitectura del sistema](#estructura-general-del-proyecto)
+6. [Pipeline de Ciencia de Datos](#pipeline-de-ciencia-de-datos)
+7. [Aplicación Web](#aplicación-web)
+8. [Instalación y despliegue](#instalación-rápida)
+9. [Alcance del proyecto](#alcance-del-proyecto)
+10. [Recursos utilizados](#recursos-utilizados)
+11. [Autores](#autores-y--distribución-de-tareas)
+12. [Licencia](#licencia)
 
-- [Justificación y descripción del proyecto](#justificaciony-descripcion)
-- [Obtención de datos](#obtencion-de-datos)
-- [Limpieza de datos](#limpieza-de-datos)
-- [Exploración y visualización de los datos](#exploracion-y-visualizacion-de-los-datos)
-- [Preparación de los datos](#preparacion-de-los-datos)
-- [Procesamiento de Lenguaje Natural](#procesamiento-de-lenguaje-natural)
-- [Entrenamiento del modelo](#entrenamiento-del-modelo)
-- [Comprobación del rendimiento](#comprobacion-del-rendimiento)
-- [Aplicacion Web](#aplicacion-web)
-- [IA Agéntica](#ia-agentica)
-- [Conclusión](#conclusión)
-- [Recursos utilizados](#recursos-utilizados)
-- [Autores](#autores)
-
-
-## 📋 Justificación y descripción del proyecto
+## 📋 Descripción del proyecto
 
 SmartEat AI es una plataforma innovadora que combina inteligencia artificial y gestión nutricional para ofrecer una experiencia personalizada a los usuarios. El sistema analiza preferencias alimentarias, restricciones dietéticas y objetivos nutricionales para generar recomendaciones adaptadas a cada perfil.
 
@@ -43,18 +40,9 @@ SmartEat AI surge como respuesta a esta necesidad, proponiendo un sistema que:
 
 - Ofrece asistencia conversacional mediante un agente inteligente.
 
-- Inteligencia artificial aplicada a la recomendación en tiempo real.
+- Modelo de Machine Learning para la recomendación en tiempo real.
 
 Enlace al video explicatorio [click aqui]()
-
-
-## 🎣 Obtención de los datos
-
-Para el entrenamiento del modelo se han sacado los datos de un dataset de Kaggle.
-Este dataset se obtuvo mediante webscraping de la web de [Food.com](https://www.food.com/).
-
-[Food.com - Recipes and Reviews](https://www.kaggle.com/datasets/irkaal/foodcom-recipes-and-reviews)
-
 
 ## 🌟 Visión y Propósito
 
@@ -75,7 +63,18 @@ El propósito de SmartEat AI es facilitar la adopción de hábitos alimenticios 
 - **IA & Machine Learning**: scikit-learn, joblib, LangChain, LangGraph, modelos de recomendación, procesamiento de lenguaje natural (NLP)
 - **DevOps**: Docker, Docker Compose, Node 20+
 
-## 📁 Estructura General del Proyecto
+## Pipeline de Ciencia de Datos
+
+### 🎣 Obtención de los datos
+
+Para el entrenamiento del modelo se han sacado los datos de un dataset de Kaggle.
+Este dataset se obtuvo mediante webscraping de la web de [Food.com](https://www.food.com/).
+
+[Food.com - Recipes and Reviews](https://www.kaggle.com/datasets/irkaal/foodcom-recipes-and-reviews)
+
+## Aplicacion Web
+
+### 📁 Estructura General del Proyecto
 
 ```
 smart-eat-ai/
