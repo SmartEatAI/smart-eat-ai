@@ -7,18 +7,18 @@ from langchain.tools import tool
 @tool
 def get_user_profile_summary(user_id: int):
     """
-    Obtiene el perfil completo del usuario: datos personales, metas de salud, gustos y restricciones alimentarias.
+    Gets the complete user profile: personal data, health goals, tastes, and dietary restrictions.
     
-    CUÁNDO USAR:
-    - Cuando el usuario saluda o inicia conversación (para personalizar la respuesta)
-    - Cuando pregunta por sus datos, perfil, preferencias o restricciones
-    - Cuando dice: "mis datos", "mi perfil", "qué sabes de mí", "mis preferencias"
+    WHEN TO USE:
+    - When the user greets or starts a conversation (to personalize the response)
+    - When they ask about their data, profile, preferences, or restrictions
+    - When they say: "my data", "my profile", "what do you know about me", "my preferences"
     
-    CUÁNDO NO USAR:
-    - Para ver el plan nutricional (usar get_current_plan_summary)
-    - Para buscar recetas (usar search_recipes_by_criteria)
+    WHEN NOT TO USE:
+    - To view the nutritional plan (use get_current_plan_summary)
+    - To search for recipes (use search_recipes_by_criteria)
     
-    Retorna: datos del perfil sin el nombre del usuario.
+    Returns: profile data without the user's name.
     """
     db = SessionLocal()
     try:
@@ -26,22 +26,22 @@ def get_user_profile_summary(user_id: int):
         
         if not profile:
             return {
-                "result": "No se encontró un perfil para este usuario",
+                "result": "No profile found for this user",
                 "profile": None
             }
         
-        # Convertir a diccionario para que sea serializable
-        # mode='json' asegura que date/datetime se serialice como string ISO
+        # Convert to dictionary to make it serializable
+        # mode='json' ensures date/datetime is serialized as ISO string
         profile_data = ProfileResponse.model_validate(profile).model_dump(mode='json')
         
         return {
-            "result": "Perfil encontrado",
+            "result": "Profile found",
             "profile": profile_data,
         }
         
     except Exception as e:
         return {
-            "result": f"Error obteniendo perfil: {str(e)}",
+            "result": f"Error getting profile: {str(e)}",
             "profile": None
         }
     finally:

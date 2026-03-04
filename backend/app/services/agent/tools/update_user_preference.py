@@ -9,59 +9,59 @@ from langchain.tools import tool
 @tool
 def update_user_preference(user_id: int, preference_type: str, category_name: str):
     """
-    Añade gustos, preferencias, restricciones, intolerancias o alergias al perfil del usuario.
+    Adds tastes, preferences, restrictions, intolerances, or allergies to the user's profile.
     
-    CUÁNDO USAR:
-    - "No me gusta el pescado" → preference_type="restriction", category_name="pescado"
-    - "Soy alérgico a los frutos secos" → preference_type="restriction", category_name="frutos secos"
-    - "Me encanta el pollo" → preference_type="taste", category_name="pollo"
-    - "Soy intolerante a la lactosa" → preference_type="restriction", category_name="lactosa"
-    - "Prefiero comida mediterránea" → preference_type="taste", category_name="mediterránea"
+    WHEN TO USE:
+    - "I don't like fish" → preference_type="restriction", category_name="fish"
+    - "I'm allergic to nuts" → preference_type="restriction", category_name="nuts"
+    - "I love chicken" → preference_type="taste", category_name="chicken"
+    - "I'm lactose intolerant" → preference_type="restriction", category_name="lactose"
+    - "I prefer Mediterranean food" → preference_type="taste", category_name="Mediterranean"
     
-    CUÁNDO NO USAR:
-    - Para ver el perfil (usar get_user_profile_summary)
-    - Para modificar el plan (usar suggest_recipe_alternatives + replace_meal_in_plan)
+    WHEN NOT TO USE:
+    - To view the profile (use get_user_profile_summary)
+    - To modify the plan (use suggest_recipe_alternatives + replace_meal_in_plan)
     
-    PARÁMETROS:
-    - preference_type: "taste" (gustos positivos) o "restriction" (alergias, intolerancias, rechazos)
-    - category_name: el alimento, ingrediente o estilo culinario mencionado
+    PARAMETERS:
+    - preference_type: "taste" (positive likes) or "restriction" (allergies, intolerances, dislikes)
+    - category_name: the food, ingredient, or culinary style mentioned
     
-    Esta información se usa automáticamente en futuras búsquedas y generación de planes.
+    This information is automatically used in future searches and plan generation.
     """
     db = SessionLocal()
     try:
         if preference_type not in ['taste', 'restriction']:
-            return {"result": "Error: preference_type debe ser 'taste' o 'restriction'."}
+            return {"result": "Error: preference_type must be 'taste' or 'restriction'."}
         
-        # Buscar o crear categoría con el modelo correcto
+        # Find or create category with the correct model
         model = Taste if preference_type == 'taste' else Restriction
         category = get_or_create_category(db, model, category_name)
         
-        # Añadir al perfil
+        # Add to profile
         user = db.query(User).filter(User.id == user_id).first()
         if not user or not user.profile:
-            return {"result": "Usuario o perfil no encontrado", "profile": None}
+            return {"result": "User or profile not found", "profile": None}
         
         profile = user.profile
         
         if preference_type == 'taste':
             if category not in profile.tastes:
                 profile.tastes.append(category)
-            result_msg = f"👍 Gusto '{category_name}' añadido a tu perfil"
+            result_msg = f"👍 Taste '{category_name}' added to your profile"
         else:
             if category not in profile.restrictions:
                 profile.restrictions.append(category)
-            result_msg = f"⚠️ Restricción '{category_name}' añadida a tu perfil"
+            result_msg = f"⚠️ Restriction '{category_name}' added to your profile"
         
         db.commit()
         
-        # Recalcular macros si es necesario (por si la restricción afecta)
+        # Recalculate macros if necessary (in case the restriction affects)
         if preference_type == 'restriction':
-            # Podrías querer regenerar el plan si hay un plan activo
+            # You might want to regenerate the plan if there is an active plan
             pass
         
         from app.schemas.profile import ProfileResponse
-        # mode='json' asegura que date/datetime se serialice como string ISO
+        # mode='json' ensures date/datetime is serialized as ISO string
         profile_response = ProfileResponse.model_validate(profile).model_dump(mode='json')
         
         return {
@@ -70,6 +70,6 @@ def update_user_preference(user_id: int, preference_type: str, category_name: st
         }
     except Exception as e:
         db.rollback()
-        return {"result": f"Error actualizando preferencias: {str(e)}", "profile": None}
+        return {"result": f"Error updating preferences: {str(e)}", "profile": None}
     finally:
         db.close()

@@ -28,62 +28,62 @@ def replace_meal_in_plan(
     meal_type: Optional[str] = None
 ):
     """
-    Ejecuta el reemplazo de una comida en el plan activo. Es el PASO 2 del flujo de cambio.
+    Executes the replacement of a meal in the active plan. This is STEP 2 of the change flow.
     
-    PREREQUISITO OBLIGATORIO:
-    SIEMPRE llamar suggest_recipe_alternatives ANTES para mostrar opciones al usuario.
-    NUNCA llamar directamente sin que el usuario haya elegido una alternativa.
+    MANDATORY PREREQUISITE:
+    ALWAYS call suggest_recipe_alternatives FIRST to show options to the user.
+    NEVER call directly without the user having chosen an alternative.
     
-    CUÁNDO USAR:
-    - DESPUÉS de que suggest_recipe_alternatives mostró alternativas
-    - DESPUÉS de que el usuario eligió una opción (por nombre o número)
+    WHEN TO USE:
+    - AFTER suggest_recipe_alternatives showed alternatives
+    - AFTER the user chose an option (by name or number)
     
-    CUÁNDO NO USAR:
-    - Cuando el usuario dice "cambiar X" → primero usar suggest_recipe_alternatives
-    - Sin confirmación del usuario sobre qué alternativa prefiere
+    WHEN NOT TO USE:
+    - When the user says "change X" → first use suggest_recipe_alternatives
+    - Without user confirmation about which alternative they prefer
     
-    IDENTIFICAR LA COMIDA A REEMPLAZAR (una opción):
-    - day_of_week + meal_type: "lunes" + "desayuno" (preferido)
-    - meal_detail_id: ID del suggest_recipe_alternatives
+    IDENTIFY THE MEAL TO REPLACE (one option):
+    - day_of_week + meal_type: "monday" + "breakfast" (preferred)
+    - meal_detail_id: ID from suggest_recipe_alternatives
     
-    IDENTIFICAR LA NUEVA RECETA (una opción):
-    - new_recipe_name: nombre de la receta elegida (preferido cuando el usuario dice el nombre)
-    - new_recipe_id: ID numérico de alternatives_data
+    IDENTIFY THE NEW RECIPE (one option):
+    - new_recipe_name: name of the chosen recipe (preferred when the user says the name)
+    - new_recipe_id: numeric ID from alternatives_data
     
-    EJEMPLOS:
-    - Usuario dice "la opción 1 que es Kumara salad":
-      → replace_meal_in_plan(user_id=X, day_of_week="lunes", meal_type="desayuno", new_recipe_name="Kumara salad")
-    - Usuario dice "quiero la número 2":
-      → identificar el nombre de la opción 2 y usar new_recipe_name
+    EXAMPLES:
+    - User says "option 1 which is Kumara salad":
+      → replace_meal_in_plan(user_id=X, day_of_week="monday", meal_type="breakfast", new_recipe_name="Kumara salad")
+    - User says "I want number 2":
+      → identify the name of option 2 and use new_recipe_name
     
-    Retorna: confirmación del cambio y plan actualizado.
+    Returns: change confirmation and updated plan.
     """
     db = SessionLocal()
     try:
-        # Obtener usuario y validar
+        # Get user and validate
         user = db.query(User).filter(User.id == user_id).first()
         if not user:
-            return {"result": "Usuario no encontrado", "plan": None}
+            return {"result": "User not found", "plan": None}
         
-        # RESOLVER LA NUEVA RECETA
+        # RESOLVE THE NEW RECIPE
         new_recipe = None
         
-        # Opción 1: Por recipe_id (ID del dataset)
+        # Option 1: By recipe_id (dataset ID)
         if new_recipe_id:
             new_recipe = db.query(Recipe).filter(Recipe.recipe_id == new_recipe_id).first()
             if not new_recipe:
-                # Intentar también por id interno
+                # Also try by internal id
                 new_recipe = db.query(Recipe).filter(Recipe.id == new_recipe_id).first()
         
-        # Opción 2: Por nombre de receta (búsqueda parcial case-insensitive)
+        # Option 2: By recipe name (case-insensitive partial search)
         if not new_recipe and new_recipe_name:
             recipe_name_lower = new_recipe_name.lower().strip()
-            # Buscar coincidencia exacta primero
+            # Try exact match first
             new_recipe = db.query(Recipe).filter(
                 Recipe.name.ilike(recipe_name_lower)
             ).first()
             
-            # Si no hay exacta, buscar parcial
+            # If no exact match, try partial
             if not new_recipe:
                 new_recipe = db.query(Recipe).filter(
                     Recipe.name.ilike(f"%{recipe_name_lower}%")
@@ -91,53 +91,53 @@ def replace_meal_in_plan(
             
             if not new_recipe:
                 return {
-                    "result": f"No encontré una receta llamada '{new_recipe_name}'",
+                    "result": f"I couldn't find a recipe named '{new_recipe_name}'",
                     "plan": None
                 }
         
         if not new_recipe:
             return {
-                "result": "Debes proporcionar new_recipe_id O new_recipe_name para indicar la nueva receta",
+                "result": "You must provide either new_recipe_id OR new_recipe_name to indicate the new recipe",
                 "plan": None
             }
         
-        # Verificar restricciones dietéticas del usuario
+        # Check user's dietary restrictions
         if user.profile and user.profile.diet_types:
             user_diets = {d.name.lower() for d in user.profile.diet_types}
             recipe_diets = {d.name.lower() for d in new_recipe.diet_types}
             
-            # La receta debe incluir al menos una de las dietas del usuario
+            # The recipe must include at least one of the user's diets
             if user_diets and not user_diets.intersection(recipe_diets):
                 return {
-                    "result": f"Esta receta no cumple con tus restricciones dietéticas ({', '.join(user_diets)})",
+                    "result": f"This recipe does not comply with your dietary restrictions ({', '.join(user_diets)})",
                     "plan": None
                 }
         
-        # RESOLVER EL MEAL_DETAIL_ID
+        # RESOLVE THE MEAL_DETAIL_ID
         target_meal_detail_id = meal_detail_id
         
-        # Si no se proporciona meal_detail_id, buscarlo por día y tipo de comida
+        # If meal_detail_id is not provided, find it by day and meal type
         if not target_meal_detail_id and day_of_week and meal_type:
-            # Normalizar día
+            # Normalize day
             day_normalized = DAYS_MAP_ES.get(day_of_week.lower().strip())
             if not day_normalized:
-                return {"result": f"Día '{day_of_week}' no reconocido", "plan": None}
+                return {"result": f"Day '{day_of_week}' not recognized", "plan": None}
             
-            # Normalizar tipo de comida
+            # Normalize meal type
             meal_type_normalized = MEAL_TYPE_MAP_ES.get(meal_type.lower().strip())
             if not meal_type_normalized:
-                return {"result": f"Tipo de comida '{meal_type}' no reconocido", "plan": None}
+                return {"result": f"Meal type '{meal_type}' not recognized", "plan": None}
             
-            # Obtener plan activo
+            # Get active plan
             plan = db.query(Plan).filter(
                 Plan.user_id == user_id,
                 Plan.active.is_(True)
             ).first()
             
             if not plan:
-                return {"result": "No tienes un plan activo", "plan": None}
+                return {"result": "You don't have an active plan", "plan": None}
             
-            # Buscar el meal_detail
+            # Find the meal_detail
             for dm in plan.daily_menus:
                 if dm.day_of_week == day_normalized:
                     for md in dm.meal_details:
@@ -149,18 +149,18 @@ def replace_meal_in_plan(
             
             if not target_meal_detail_id:
                 return {
-                    "result": f"No encontré {meal_type} para el {day_of_week} en tu plan",
+                    "result": f"I couldn't find {meal_type} for {day_of_week} in your plan",
                     "plan": None
                 }
         
         if not target_meal_detail_id:
             return {
-                "result": "Debes proporcionar meal_detail_id O (day_of_week + meal_type) para identificar qué comida reemplazar",
+                "result": "You must provide either meal_detail_id OR (day_of_week + meal_type) to identify which meal to replace",
                 "plan": None
             }
         
-        # Actualizar usando el servicio existente
-        # Nota: update_meal_detail_recipe_id espera el recipe_id del dataset
+        # Update using the existing service
+        # Note: update_meal_detail_recipe_id expects the dataset recipe_id
         updated_meal = MealDetailService.update_meal_detail_recipe_id(
             db, 
             target_meal_detail_id, 
@@ -168,16 +168,16 @@ def replace_meal_in_plan(
         )
         
         if not updated_meal:
-            return {"result": "No se pudo actualizar la comida", "plan": None}
+            return {"result": "Could not update the meal", "plan": None}
         
-        # Obtener plan actualizado
+        # Get updated plan
         current_plan = PlanService.get_current_plan(db, user_id)
         if current_plan:
-            # mode='json' asegura que datetime se serialice como string ISO
+            # mode='json' ensures datetime is serialized as ISO string
             plan_response = PlanResponse.model_validate(current_plan).model_dump(mode='json')
             
             return {
-                "result": f"✅ Comida reemplazada exitosamente por **{new_recipe.name}** ({new_recipe.calories} kcal, {new_recipe.protein}g proteína)",
+                "result": f"✅ Meal successfully replaced with **{new_recipe.name}** ({new_recipe.calories} kcal, {new_recipe.protein}g protein)",
                 "plan": plan_response,
                 "new_recipe": {
                     "name": new_recipe.name,
@@ -189,13 +189,13 @@ def replace_meal_in_plan(
             }
         else:
             return {
-                "result": f"✅ Comida reemplazada por {new_recipe.name}, pero no se encontró plan activo para mostrar",
+                "result": f"✅ Meal replaced with {new_recipe.name}, but no active plan found to display",
                 "plan": None
             }
             
     except Exception as e:
         db.rollback()
-        logger.error(f"Error en replace_meal_in_plan: {str(e)}")
-        return {"result": f"Error reemplazando comida: {str(e)}", "plan": None}
+        logger.error(f"Error in replace_meal_in_plan: {str(e)}")
+        return {"result": f"Error replacing meal: {str(e)}", "plan": None}
     finally:
         db.close()

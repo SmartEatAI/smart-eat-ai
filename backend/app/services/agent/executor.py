@@ -27,8 +27,8 @@ class AgentManager:
 
     def build_agent(self, state: DietGraphState):
         """
-        Construye el agente dinámicamente con el prompt personalizado basado en el perfil del usuario.
-        Optimizado para reducir latencia en GPUs con memoria limitada.
+        Dynamically builds the agent with a customized prompt based on the user's profile.
+        Optimized to reduce latency on GPUs with limited memory.
         """
         # Paso 1: Optimizar estado (comprime tool results si es necesario)
         optimized_state = optimize_state_for_inference(state)

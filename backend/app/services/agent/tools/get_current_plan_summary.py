@@ -7,29 +7,29 @@ from langchain.tools import tool
 @tool
 def get_current_plan_summary(user_id: int):
     """
-    Muestra el plan nutricional semanal ACTIVO del usuario con todas sus comidas programadas.
+    Displays the user's ACTIVE weekly nutritional plan with all scheduled meals.
     
-    CUÁNDO USAR:
-    - Cuando el usuario pregunta por su plan actual, menú semanal o comidas programadas
-    - Cuando dice: "mi plan", "ver plan", "qué tengo hoy", "mis comidas", "menú de la semana"
-    - Antes de sugerir cambios en el plan (para conocer el estado actual)
+    WHEN TO USE:
+    - When the user asks about their current plan, weekly menu, or scheduled meals
+    - When they say: "my plan", "view plan", "what do I have today", "my meals", "week's menu"
+    - Before suggesting changes to the plan (to know the current state)
     
-    CUÁNDO NO USAR:
-    - Para buscar recetas nuevas fuera del plan (usar search_recipes_by_criteria)
-    - Para ver el perfil del usuario (usar get_user_profile_summary)
+    WHEN NOT TO USE:
+    - To search for new recipes outside the plan (use search_recipes_by_criteria)
+    - To view the user's profile (use get_user_profile_summary)
     
-    Retorna: resumen del plan con comidas por día, o indica si no hay plan activo.
+    Returns: summary of the plan with meals per day, or indicates if there is no active plan.
     """
     db = SessionLocal()
     try:
         current_plan = PlanService.get_current_plan(db, user_id)
         
         if not current_plan:
-            return "No tienes un plan activo actualmente. ¿Te gustaría que genere uno?"
+            return "You don't have an active plan at the moment. Would you like me to generate one?"
         
         summary = _create_plan_summary(current_plan)
 
-        # mode='json' asegura que datetime se serialice como string ISO
+        # mode='json' ensures datetime is serialized as ISO string
         plan_data = PlanResponse.model_validate(current_plan).model_dump(mode='json')
         
         return {
@@ -38,33 +38,33 @@ def get_current_plan_summary(user_id: int):
         }
         
     except Exception as e:
-        return f"Error obteniendo plan: {str(e)}"
+        return f"Error getting plan: {str(e)}"
     finally:
         db.close()
 
 def _create_plan_summary(current_plan) -> str:
-    """Crea un resumen legible del plan usando el objeto directamente"""
+    """Creates a readable summary of the plan using the object directly"""
     
-    # Mapeo de días (1 = Monday en el schema)
+    # Day mapping (1 = Monday in the schema)
     DAYS_MAP = {
-        1: "Lunes",
-        2: "Martes", 
-        3: "Miércoles",
-        4: "Jueves",
-        5: "Viernes",
-        6: "Sábado",
-        7: "Domingo"
+        1: "Monday",
+        2: "Tuesday", 
+        3: "Wednesday",
+        4: "Thursday",
+        5: "Friday",
+        6: "Saturday",
+        7: "Sunday"
     }
     
-    # Mapeo de tipos de comida
+    # Meal type mapping
     MEAL_TYPE_MAP = {
-        "breakfast": "Desayuno",
-        "lunch": "Almuerzo", 
-        "dinner": "Cena",
+        "breakfast": "Breakfast",
+        "lunch": "Lunch", 
+        "dinner": "Dinner",
         "snack": "Snack"
     }
     
-    # Mapeo de horarios (simplificado)
+    # Schedule mapping (simplified)
     SCHEDULE_MAP = {
         1: "1",
         2: "2", 
@@ -77,25 +77,25 @@ def _create_plan_summary(current_plan) -> str:
     daily_menus = current_plan.daily_menus
     
     if not daily_menus:
-        return "Tu plan está activo pero no tiene menús diarios asignados."
+        return "Your plan is active but has no assigned daily menus."
     
-    # Ordenar por día de la semana
+    # Sort by day of week
     daily_menus.sort(key=lambda x: x.day_of_week)
     
-    # Estadísticas generales
+    # Overall statistics
     total_meals = sum(len(menu.meal_details) for menu in daily_menus)
-    active_plan = "Activo" if current_plan.active else "❌ Inactivo"
+    active_plan = "Active" if current_plan.active else "❌ Inactive"
     
-    summary = f"**Resumen de tu plan nutricional**\n\n"
-    summary += f"Estado: {active_plan}\n"
-    summary += f"Duración: {len(daily_menus)} días\n"
-    summary += f"Total comidas: {total_meals}\n"
-    summary += f"ID del plan: {current_plan.id}\n\n"
+    summary = f"**Your nutritional plan summary**\n\n"
+    summary += f"Status: {active_plan}\n"
+    summary += f"Duration: {len(daily_menus)} days\n"
+    summary += f"Total meals: {total_meals}\n"
+    summary += f"Plan ID: {current_plan.id}\n\n"
     
-    # Detalle por día
-    summary += "**Distribución semanal:**\n"
+    # Daily details
+    summary += "**Weekly distribution:**\n"
     
-    # Acumuladores para estadísticas
+    # Accumulators for statistics
     weekly_stats = {
         'calories': 0, 'protein': 0, 'carbs': 0, 'fat': 0,
         'meals_count': 0, 'days_with_meals': 0
@@ -103,7 +103,7 @@ def _create_plan_summary(current_plan) -> str:
     
     for menu in daily_menus:
         day_num = menu.day_of_week
-        day_name = DAYS_MAP.get(day_num, f"Día {day_num}")
+        day_name = DAYS_MAP.get(day_num, f"Day {day_num}")
         meals = menu.meal_details
         
         if meals:
@@ -111,45 +111,45 @@ def _create_plan_summary(current_plan) -> str:
         
         summary += f"\n**{day_name}**\n"
         
-        # Ordenar comidas por schedule
+        # Sort meals by schedule
         meals.sort(key=lambda x: x.schedule)
         
-        # Mostrar cada comida
+        # Show each meal
         for meal in meals:
             recipe = meal.recipe
             
-            # Información nutricional
+            # Nutritional information
             calories = recipe.calories
             protein = recipe.protein
             carbs = recipe.carbs
             fat = recipe.fat
             
-            # Acumular estadísticas
+            # Accumulate statistics
             weekly_stats['calories'] += calories
             weekly_stats['protein'] += protein
             weekly_stats['carbs'] += carbs
             weekly_stats['fat'] += fat
             weekly_stats['meals_count'] += 1
             
-            # CORRECCIÓN: Usar meal.schedule directamente como clave numérica
+            # Use meal.schedule directly as numeric key
             schedule_text = SCHEDULE_MAP.get(meal.schedule, str(meal.schedule))
             
-            # Información de la receta
+            # Recipe information
             summary += f"{schedule_text}\n"
             summary += f"{recipe.name}\n"
-            summary += f"- {calories} kcal {protein}g prot {carbs}g carb {fat}g grasa\n"
+            summary += f"- {calories} kcal {protein}g prot {carbs}g carb {fat}g fat\n"
             
-            # Enlaces si existen
+            # Links if they exist
             if recipe.recipe_url or recipe.image_url:
                 url = recipe.recipe_url or recipe.image_url
-                summary += f"[Ver receta]({url})\n"
+                summary += f"[View recipe]({url})\n"
             
-            # Añadir un separador entre comidas para mejor legibilidad
-            if meal != meals[-1]:  # Si no es la última comida
+            # Add separator between meals for better readability
+            if meal != meals[-1]:  # If not the last meal
                 summary += "---\n"
         
-        # Si no hay comidas para este día
+        # If no meals for this day
         if not meals:
-            summary += f"Sin comidas asignadas\n"
+            summary += f"No meals assigned\n"
     
     return summary

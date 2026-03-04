@@ -1,8 +1,8 @@
 """
-Gestión eficiente de memoria y contexto para el agente nutricional.
-Optimizado para entornos con GPU limitada (8GB VRAM).
+Efficient memory and context management for the nutritional agent.
+Optimized for environments with limited GPU (8GB VRAM).
 
-Configuración actual:
+Current configuration:
 - OLLAMA_CONTEXT_LENGTH: 32768 (docker-compose)
 - num_ctx: 16384 (config_ollama)
 - MAX_CONTEXT_TOKENS: 10000 (memory.py)
@@ -15,19 +15,19 @@ import copy
 
 logger = logging.getLogger(__name__)
 
-# Configuración de límites - valores aumentados para preservar contexto del plan
-MAX_CONTEXT_TOKENS = 10000  # Aumentado de 4000 para no perder contexto
-TOOL_RESULT_MAX_LENGTH = 6000  # Aumentado de 2000 para planes completos
+# Configuration limits – increased to preserve plan context
+MAX_CONTEXT_TOKENS = 10000  # Increased from 4000 to avoid losing context
+TOOL_RESULT_MAX_LENGTH = 6000  # Increased from 2000 for full plans
 
 class ConversationMemory:
     """
-    Gestiona el historial de conversación de forma eficiente.
-    Implementa estrategias de compresión conservadoras.
+    Manages conversation history efficiently.
+    Implements conservative compression strategies.
     """
     
     @staticmethod
     def count_tokens(messages: List[BaseMessage]) -> int:
-        """Cuenta tokens aproximados en una lista de mensajes."""
+        """Approximately counts tokens in a list of messages."""
         if not messages:
             return 0
         return count_tokens_approximately(messages)
@@ -35,37 +35,37 @@ class ConversationMemory:
     @staticmethod
     def compress_tool_results(messages: List[BaseMessage]) -> List[BaseMessage]:
         """
-        Comprime resultados de herramientas que sean muy largos.
-        CONSERVADOR: Solo comprime si excede TOOL_RESULT_MAX_LENGTH.
-        Mantiene la estructura original del mensaje.
+        Compresses tool results that are too long.
+        CONSERVATIVE: Only compresses if it exceeds TOOL_RESULT_MAX_LENGTH.
+        Preserves the original message structure.
         """
         if not messages:
             return []
         
-        # Crear copia para no modificar originales
+        # Create a copy to avoid modifying originals
         compressed = []
         
         for msg in messages:
-            # Solo procesar ToolMessages
+            # Only process ToolMessages
             if hasattr(msg, 'type') and msg.type == 'tool':
                 content = getattr(msg, 'content', '')
                 
-                # Si el contenido es un dict, extraer 'result' si existe
+                # If content is a dict, extract 'result' if it exists
                 if isinstance(content, dict):
                     result_text = content.get('result', str(content))
                     if len(result_text) > TOOL_RESULT_MAX_LENGTH:
-                        # Comprimir manteniendo inicio y final
-                        truncated = result_text[:TOOL_RESULT_MAX_LENGTH - 100] + "\n\n[...contenido truncado...]\n\n" + result_text[-100:]
-                        # Crear copia del mensaje con contenido comprimido
+                        # Compress keeping beginning and end
+                        truncated = result_text[:TOOL_RESULT_MAX_LENGTH - 100] + "\n\n[...truncated content...]\n\n" + result_text[-100:]
+                        # Create a copy of the message with compressed content
                         new_content = content.copy()
                         new_content['result'] = truncated
                         msg = _copy_message_with_content(msg, new_content)
-                        logger.debug(f"🗜️ Tool result comprimido: {len(result_text)} -> {len(truncated)} chars")
+                        logger.debug(f"🗜️ Tool result compressed: {len(result_text)} -> {len(truncated)} chars")
                 
                 elif isinstance(content, str) and len(content) > TOOL_RESULT_MAX_LENGTH:
-                    truncated = content[:TOOL_RESULT_MAX_LENGTH - 100] + "\n\n[...contenido truncado...]\n\n" + content[-100:]
+                    truncated = content[:TOOL_RESULT_MAX_LENGTH - 100] + "\n\n[...truncated content...]\n\n" + content[-100:]
                     msg = _copy_message_with_content(msg, truncated)
-                    logger.debug(f"🗜️ Tool result comprimido: {len(content)} -> {len(truncated)} chars")
+                    logger.debug(f"🗜️ Tool result compressed: {len(content)} -> {len(truncated)} chars")
             
             compressed.append(msg)
         
@@ -74,19 +74,19 @@ class ConversationMemory:
     @staticmethod
     def extract_essential_context(messages: List[BaseMessage], max_tokens: int = MAX_CONTEXT_TOKENS) -> List[BaseMessage]:
         """
-        Extrae el contexto esencial manteniendo los mensajes más recientes.
-        Estrategia conservadora: prioriza mensajes recientes.
+        Extracts essential context keeping the most recent messages.
+        Conservative strategy: prioritizes recent messages.
         """
         if not messages:
             return []
         
-        # Siempre mantener los últimos 6 mensajes (3 turnos de conversación)
+        # Always keep the last 6 messages (3 conversation turns)
         min_messages = min(6, len(messages))
         essential = messages[-min_messages:]
         
         current_tokens = ConversationMemory.count_tokens(essential)
         
-        # Si tenemos espacio y más mensajes, añadir anteriores
+        # If we have space and more messages, add older ones
         if current_tokens < max_tokens and len(messages) > min_messages:
             remaining_tokens = max_tokens - current_tokens
             
@@ -103,42 +103,42 @@ class ConversationMemory:
 
 def _copy_message_with_content(msg: BaseMessage, new_content: Any) -> BaseMessage:
     """
-    Crea una copia del mensaje con nuevo contenido.
-    Preserva todos los atributos originales.
+    Creates a copy of the message with new content.
+    Preserves all original attributes.
     """
     try:
-        # Intentar crear copia usando el constructor
+        # Try to create a copy using the constructor
         msg_dict = {
             'content': new_content,
             'name': getattr(msg, 'name', None),
             'tool_call_id': getattr(msg, 'tool_call_id', None),
         }
-        # Filtrar None values
+        # Filter out None values
         msg_dict = {k: v for k, v in msg_dict.items() if v is not None}
         
-        # Usar el mismo tipo de mensaje
+        # Use the same message type
         msg_type = type(msg)
         return msg_type(**msg_dict)
     except Exception:
-        # Fallback: modificar in-place (menos ideal pero funciona)
+        # Fallback: modify in-place (less ideal but works)
         msg.content = new_content
         return msg
 
 
 def optimize_state_for_inference(state: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Optimiza el estado completo antes de enviarlo al modelo.
+    Optimizes the entire state before sending it to the model.
     
-    IMPORTANTE: Esta función es CONSERVADORA para no romper el flujo del agente.
-    Solo aplica compresión cuando es necesario.
+    IMPORTANT: This function is CONSERVATIVE to avoid breaking the agent flow.
+    Only applies compression when necessary.
     
     Args:
-        state: Estado del grafo con messages, profile, etc.
+        state: Graph state with messages, profile, etc.
     
     Returns:
-        Estado optimizado (copia, no modifica el original)
+        Optimized state (copy, does not modify the original)
     """
-    # Crear copia superficial del estado
+    # Create shallow copy of the state
     optimized = state.copy()
     
     if 'messages' not in optimized or not optimized['messages']:
@@ -148,14 +148,14 @@ def optimize_state_for_inference(state: Dict[str, Any]) -> Dict[str, Any]:
     original_count = len(messages)
     original_tokens = ConversationMemory.count_tokens(messages)
     
-    # Solo optimizar si excedemos el límite
+    # Only optimize if we exceed the limit
     if original_tokens > MAX_CONTEXT_TOKENS:
-        logger.info(f"📊 Optimizando: {original_tokens} tokens > {MAX_CONTEXT_TOKENS} límite")
+        logger.info(f"📊 Optimizing: {original_tokens} tokens > {MAX_CONTEXT_TOKENS} limit")
         
-        # 1. Comprimir tool results largos
+        # 1. Compress long tool results
         messages = ConversationMemory.compress_tool_results(messages)
         
-        # 2. Si aún excede, extraer contexto esencial
+        # 2. If still exceeding, extract essential context
         current_tokens = ConversationMemory.count_tokens(messages)
         if current_tokens > MAX_CONTEXT_TOKENS:
             messages = ConversationMemory.extract_essential_context(messages, MAX_CONTEXT_TOKENS)
@@ -163,17 +163,17 @@ def optimize_state_for_inference(state: Dict[str, Any]) -> Dict[str, Any]:
         optimized['messages'] = messages
         
         final_tokens = ConversationMemory.count_tokens(messages)
-        logger.info(f"✅ Optimizado: {original_count} -> {len(messages)} mensajes, {original_tokens} -> {final_tokens} tokens")
+        logger.info(f"✅ Optimized: {original_count} -> {len(messages)} messages, {original_tokens} -> {final_tokens} tokens")
     else:
-        logger.debug(f"📊 Sin optimización necesaria: {original_tokens} tokens")
+        logger.debug(f"📊 No optimization needed: {original_tokens} tokens")
     
     return optimized
 
 
-# Utilidades adicionales para diagnóstico
+# Additional utilities for diagnostics
 def get_state_stats(state: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Devuelve estadísticas del estado para diagnóstico.
+    Returns state statistics for diagnostics.
     """
     messages = state.get('messages', [])
     

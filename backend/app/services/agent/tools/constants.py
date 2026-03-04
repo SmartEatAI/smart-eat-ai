@@ -1,40 +1,40 @@
 """
-Constantes compartidas para las tools del agente nutricional.
-Centraliza mapeos de días, tipos de comida y otras configuraciones.
+Shared constants for the nutritional agent tools.
+Centralizes mappings for days, meal types, and other configurations.
 """
 
-# Mapeo de días en español/inglés a números (ISO weekday: lunes=1)
+# Mapping of days in Spanish/English to numbers (ISO weekday: Monday=1)
 DAYS_MAP = {
-    # Español
+    # Spanish
     "lunes": 1, "martes": 2, "miércoles": 3, "miercoles": 3,
     "jueves": 4, "viernes": 5, "sábado": 6, "sabado": 6, "domingo": 7,
-    # Inglés
+    # English
     "monday": 1, "tuesday": 2, "wednesday": 3, "thursday": 4,
     "friday": 5, "saturday": 6, "sunday": 7
 }
 
-# Mapeo inverso: número a nombre del día (español)
+# Reverse mapping: number to day name (Spanish)
 DAYS_NUM_TO_NAME = {
     1: "lunes", 2: "martes", 3: "miércoles", 4: "jueves",
     5: "viernes", 6: "sábado", 7: "domingo"
 }
 
-# Mapeo de tipos de comida en español a inglés (interno)
+# Mapping of meal types from Spanish to English (internal)
 MEAL_TYPE_MAP = {
-    # Español
+    # Spanish
     "desayuno": "breakfast", 
     "almuerzo": "lunch", 
     "comida": "lunch",
     "cena": "dinner", 
     "snack": "snack", 
     "merienda": "snack",
-    # Inglés (para normalización)
+    # English (for normalization)
     "breakfast": "breakfast", 
     "lunch": "lunch", 
     "dinner": "dinner"
 }
 
-# Mapeo inverso: inglés a español (para mostrar al usuario)
+# Reverse mapping: English to Spanish (for displaying to the user)
 MEAL_TYPE_TO_DISPLAY = {
     "breakfast": "desayuno", 
     "lunch": "almuerzo", 
@@ -45,8 +45,8 @@ MEAL_TYPE_TO_DISPLAY = {
 
 def normalize_day(day_input: str) -> int | None:
     """
-    Normaliza un día de la semana a su número correspondiente.
-    Retorna None si no se reconoce.
+    Normalizes a day of the week to its corresponding number.
+    Returns None if not recognized.
     """
     if not day_input:
         return None
@@ -55,8 +55,8 @@ def normalize_day(day_input: str) -> int | None:
 
 def normalize_meal_type(meal_input: str) -> str | None:
     """
-    Normaliza un tipo de comida al formato interno (inglés).
-    Retorna None si no se reconoce.
+    Normalizes a meal type to the internal format (English).
+    Returns None if not recognized.
     """
     if not meal_input:
         return None
@@ -64,20 +64,20 @@ def normalize_meal_type(meal_input: str) -> str | None:
 
 
 def get_day_display_name(day_num: int) -> str:
-    """Obtiene el nombre del día para mostrar al usuario."""
+    """Gets the day name to display to the user (in Spanish)."""
     return DAYS_NUM_TO_NAME.get(day_num, f"día {day_num}")
 
 
 def get_meal_type_display(meal_type: str) -> str:
-    """Obtiene el nombre del tipo de comida para mostrar al usuario."""
+    """Gets the meal type name to display to the user (in Spanish)."""
     meal_type_lower = meal_type.lower() if meal_type else ""
     return MEAL_TYPE_TO_DISPLAY.get(meal_type_lower, meal_type_lower)
 
 
 def get_meal_type_value(meal_type) -> str:
     """
-    Extrae el valor string del meal_type, sea enum o string.
-    Útil cuando meal_type puede venir como enum de SQLAlchemy.
+    Extracts the string value from meal_type, whether it's an enum or a string.
+    Useful when meal_type may come as a SQLAlchemy enum.
     """
     if hasattr(meal_type, 'value'):
         return meal_type.value.lower()

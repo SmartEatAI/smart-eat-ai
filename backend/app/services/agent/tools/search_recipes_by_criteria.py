@@ -23,40 +23,40 @@ def search_recipes_by_criteria(
     query: Optional[str] = None
 ):
     """
-    Busca recetas en la BASE DE DATOS GENERAL según criterios específicos. NO está relacionada con el plan activo.
+    Searches for recipes in the GENERAL DATABASE according to specific criteria. NOT related to the active plan.
     
-    CUÁNDO USAR (búsquedas generales de recetas):
-    - "Busca recetas con pollo", "recetas veganas", "opciones bajas en calorías"
-    - "Dame recetas altas en proteína", "recetas para el desayuno"
-    - Cuando el usuario quiere EXPLORAR recetas nuevas SIN modificar su plan
-    - Cuando pide recomendaciones generales o ideas de comidas
+    WHEN TO USE (general recipe searches):
+    - "Search for chicken recipes", "vegan recipes", "low-calorie options"
+    - "Give me high-protein recipes", "breakfast recipes"
+    - When the user wants to EXPLORE new recipes WITHOUT modifying their plan
+    - When they ask for general recommendations or meal ideas
     
-    CUÁNDO NO USAR (usa suggest_recipe_alternatives en su lugar):
-    - "Quiero cambiar el desayuno del lunes" → suggest_recipe_alternatives
-    - "Cambia la cena del domingo" → suggest_recipe_alternatives  
-    - Cualquier solicitud de MODIFICAR una comida del plan activo
+    WHEN NOT TO USE (use suggest_recipe_alternatives instead):
+    - "I want to change Monday's breakfast" → suggest_recipe_alternatives
+    - "Change Sunday's dinner" → suggest_recipe_alternatives  
+    - Any request to MODIFY a meal from the active plan
     
-    DIFERENCIA CLAVE: Esta tool busca en toda la base de datos.
-    suggest_recipe_alternatives busca alternativas SIMILARES a una comida específica del plan.
+    KEY DIFFERENCE: This tool searches the entire database.
+    suggest_recipe_alternatives searches for SIMILAR alternatives to a specific meal from the plan.
     
-    Parámetros:
+    Parameters:
     - meal_type: breakfast, lunch, dinner, snack
     - diet_type: vegetarian, vegan, gluten-free, etc.
-    - max_calories, min_protein, max_carbs, max_fat: filtros nutricionales
-    - query: búsqueda semántica por ingredientes o descripción
+    - max_calories, min_protein, max_carbs, max_fat: nutritional filters
+    - query: semantic search by ingredients or description
     
-    Por defecto devuelve 5 recetas.
+    Returns 5 recipes by default.
     """
     db: Session = SessionLocal()
     try:
         user = db.query(User).filter(User.id == user_id).first()
         if not user or not user.profile:
-            return {"result": "Usuario o perfil no encontrado", "recipes": []}
+            return {"result": "User or profile not found", "recipes": []}
 
         profile = user.profile
 
-        # Solo filtrar estrictamente por dietas veganas/vegetarianas (igual que en generate_weekly_plan)
-        # Las demás dietas como "high protein" no deben excluir recetas
+        # Only strictly filter by vegan/vegetarian diets (same as in generate_weekly_plan)
+        # Other diets like "high protein" should not exclude recipes
         target_strict_diets = {"vegan", "vegetarian"}
         required_diets = set()
         if profile.diet_types:
@@ -92,9 +92,9 @@ def search_recipes_by_criteria(
                 )
             )
         recipes = query_db.all()
-        logging.info(f"Total recetas tras filtro meal_type/diet_type: {len(recipes)}")
+        logging.info(f"Total recipes after meal_type/diet_type filter: {len(recipes)}")
 
-        # Filtrado nutricional y dietas
+        # Nutritional and diet filtering
         filtered_recipes: List[Recipe] = []
         for recipe in recipes:
             if recipe.recipe_id in exclude_ids:
@@ -111,60 +111,60 @@ def search_recipes_by_criteria(
             if max_fat is not None and recipe.fat > max_fat:
                 continue
             filtered_recipes.append(recipe)
-        logging.info(f"Recetas tras filtro nutricional: {len(filtered_recipes)}")
+        logging.info(f"Recipes after nutritional filter: {len(filtered_recipes)}")
 
-        # Filtrado con IA para restricciones alimenticias
+        # AI filtering for dietary restrictions
         use_llm_filter = False
         restrictions_text = ""
         diet_text = ""
         
         if profile.restrictions or profile.diet_types:
-            # Obtener nombres de las restricciones del usuario
+            # Get user restriction names
             restriction_names = [r.name for r in profile.restrictions] if profile.restrictions else []
             restrictions_text = ", ".join(restriction_names)
             
-            # Verificar si hay dietas veganas/vegetarianas
+            # Check for vegan/vegetarian diets
             diet_type_names = [d.name for d in profile.diet_types] if profile.diet_types else []
             target_diets = {"vegan", "vegetarian"}
             diet_text_list = [name for name in diet_type_names if name.lower() in target_diets]
             diet_text = ", ".join(diet_text_list)
             
-            # Activar filtro LLM si hay restricciones o dietas veganas/vegetarianas
+            # Activate LLM filter if there are restrictions or vegan/vegetarian diets
             if restriction_names or diet_text_list:
                 use_llm_filter = True
-                logging.info(f"Aplicando filtro IA - Restricciones: [{restrictions_text}], Dietas: [{diet_text}]")
+                logging.info(f"Applying AI filter - Restrictions: [{restrictions_text}], Diets: [{diet_text}]")
         
         if use_llm_filter:
             llm_filtered_recipes: List[Recipe] = []
             
             for recipe in filtered_recipes:
-                # Construir mensaje para el LLM
-                diet_line = f"y quiero dietas: [{diet_text}]." if diet_text else ""
-                mensaje = (
-                    f"responde SOLO con SI o NO. "
-                    f"Tengo un perfil alimenticio con restriccion de [{restrictions_text}] {diet_line}"
-                    f"Esta receta cumple con mis restricciones: {recipe.name} Ingredientes: [{recipe.ingredients}]"
+                # Build message for the LLM
+                diet_line = f"and I require diets: [{diet_text}]." if diet_text else ""
+                message = (
+                    f"answer ONLY with YES or NO. "
+                    f"I have a dietary profile with restrictions: [{restrictions_text}] {diet_line}"
+                    f"Does this recipe comply with my restrictions: {recipe.name} Ingredients: [{recipe.ingredients}]"
                 )
                 
                 try:
-                    # Llamar al LLM para validar la receta
-                    response = llm.invoke(mensaje)
-                    respuesta = response.content.strip().upper()
+                    # Call the LLM to validate the recipe
+                    response = llm.invoke(message)
+                    answer = response.content.strip().upper()
                     
-                    logging.info(f"Receta: {recipe.name} -> {respuesta}")
+                    logging.info(f"Recipe: {recipe.name} -> {answer}")
                     
-                    # Si la respuesta es SI, añadir a filtradas
-                    if respuesta == "SI":
+                    # If answer is YES, add to filtered list
+                    if answer == "YES":
                         llm_filtered_recipes.append(recipe)
                 
                 except Exception as e:
-                    logging.warning(f"Error en LLM al evaluar receta {recipe.name}: {e}")
+                    logging.warning(f"Error in LLM while evaluating recipe {recipe.name}: {e}")
                     continue
             
             filtered_recipes = llm_filtered_recipes
-            logging.info(f"Recetas tras filtro IA: {len(filtered_recipes)}")
+            logging.info(f"Recipes after AI filter: {len(filtered_recipes)}")
 
-        # Búsqueda por texto en nombre e ingredientes (búsqueda SQL normal)
+        # Text search in name and ingredients (normal SQL search)
         if query:
             query_lower = query.lower()
             filtered_recipes = [
@@ -172,14 +172,14 @@ def search_recipes_by_criteria(
                 if query_lower in r.name.lower() or 
                     (r.ingredients and query_lower in r.ingredients.lower())
             ]
-            logging.info(f"Recetas tras filtro por query '{query}': {len(filtered_recipes)}")
+            logging.info(f"Recipes after query filter '{query}': {len(filtered_recipes)}")
 
         response = [
             f"Name: {r.name}, protein: {r.protein}, carbs: {r.carbs}, fat: {r.fat}"
             for r in filtered_recipes[:5]
         ]
 
-        # Si no hay recetas exactas, muestra sugerencias cercanas
+        # If no exact recipes, show close suggestions
         if not response and min_protein is not None:
             close_recipes = [
                 r for r in recipes
@@ -191,25 +191,25 @@ def search_recipes_by_criteria(
             ]
             if close_response:
                 return {
-                    "result": f"No se encontraron recetas con al menos {min_protein}g de proteína exactos, pero aquí tienes opciones cercanas:",
+                    "result": f"No recipes found with exactly {min_protein}g of protein, but here are close options:",
                     "recipes": close_response
                 }
             else:
                 return {
-                    "result": f"No se encontraron recetas con el criterio solicitado.",
+                    "result": f"No recipes found matching the requested criteria.",
                     "recipes": []
                 }
 
         return {
-            "result": f"Se encontraron {len(response)} recetas",
+            "result": f"Found {len(response)} recipes",
             "recipes": response
         }
 
     except Exception as e:
-        logging.error(f"Error buscando recetas: {str(e)}")
+        logging.error(f"Error searching recipes: {str(e)}")
         db.rollback()
         return {
-            "result": f"Error buscando recetas: {str(e)}", 
+            "result": f"Error searching recipes: {str(e)}", 
             "recipes": []
         }
     finally:
