@@ -35,6 +35,39 @@ Enlace al video explicatorio [click aqui]()
 
 El propósito de SmartEat AI es facilitar la adopción de hábitos alimenticios saludables mediante el uso de tecnología avanzada. La visión del proyecto es convertirse en una herramienta de referencia para la personalización nutricional, ayudando a los usuarios a alcanzar sus metas de bienestar de forma sencilla y efectiva.
 
+## 🤖 Machine Learning 
+
+En este apartado se describen de forma resumida los pasos realizados para preparar los datos y entrenar el modelo KNN, utilizado como recomendador de recetas. Se detalla el proceso de limpieza, transformación, etiquetado y escalado de los datos, así como la configuración y entrenamiento del modelo para garantizar recomendaciones precisas y personalizadas.
+
+### 🧹 Limpieza de datos
+
+La limpieza de datos incluyó:
+
+- **Exploración inicial**: Identificación de valores nulos, duplicados y extremos en columnas clave.
+- **Filtrado**: Eliminación de filas con valores nulos, duplicados y datos irreales (e.g., `Calories > 2000`).
+- **Normalización**: Estandarización de nombres, ingredientes y valores nutricionales.
+- **Etiquetado**: Clasificación en dietas (`vegan`, `vegetarian`, etc.) y tipos de comida (`breakfast`, `lunch`, etc.).
+
+Resultado: Un dataset final de **91,056 recetas limpias**, listo para modelos de machine learning.
+
+### 🔎 Exploración y visualización de los datos
+
+
+### 📊 Preparación de los datos
+
+La preparación de los datos incluyó:
+
+- **Transformación**: Conversión de datos categóricos a numéricos mediante técnicas como one-hot encoding.
+- **Escalado**: Normalización de valores numéricos para garantizar un rango uniforme.
+- **División**: Separación del dataset en conjuntos de entrenamiento y prueba para evaluar el rendimiento del modelo.
+
+Estos pasos aseguraron que los datos estuvieran listos para el entrenamiento del modelo KNN y otros algoritmos de machine learning.
+
+
+
+
+Para más información sobre cada uno de los pasos descritos arriba, mirar el cuaderno `Cuaderno_SmartEatAI.ipynb` que hay en la carpeta `notebooks`.
+
 ## 🚀 Características Principales
 
 - **Recomendaciones basadas en IA**: Sugerencias personalizadas de comidas y planes nutricionales.
