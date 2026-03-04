@@ -92,6 +92,306 @@ Este dataset se obtuvo mediante webscraping de la web de [Food.com](https://www.
 
 [Food.com - Recipes and Reviews](https://www.kaggle.com/datasets/irkaal/foodcom-recipes-and-reviews)
 
+
+### 🔎 Exploración y visualización de los datos
+
+#### Información general del dataset
+
+Observando el dataset podemos sacar los siguientes datos:
+
+- Tiene 522517 recetas (filas) y 28 columnas.
+
+- Vemos una mezcla de tipos de datos, incluyendo números (`float64`, `int64`) para valores como calorías (`Calories`) y IDs (`RecipeId`), y texto (object) para nombres (`Name`), descripciones (`Description`) e ingredientes (`RecipeIngredientsParts`).
+
+- Aunque algunas columnas tienen valores nulos (datos faltantes), la información nutricional clave como Calories, FatContent, CarbohydrateContent y ProteinContent está completa.
+
+| Columna                      | Tipo    | Nulos   | Descripción                                         |
+| ---------------------------- | ------- | ------- | --------------------------------------------------- |
+| `RecipeId`                   | int64   | 0       | Identificador único de la receta                    |
+| `Name`                       | object  | 0       | Nombre de la receta                                 |
+| `AuthorId`                   | int64   | 0       | Identificador único del autor                       |
+| `AuthorName`                 | object  | 0       | Nombre del autor de la receta                       |
+| `CookTime`                   | object  | 82.545  | Tiempo de cocción (formato texto, p. ej. ISO 8601)  |
+| `PrepTime`                   | object  | 0       | Tiempo de preparación de la receta                  |
+| `TotalTime`                  | object  | 0       | Tiempo total de elaboración                         |
+| `DatePublished`              | object  | 0       | Fecha de publicación de la receta                   |
+| `Description`                | object  | 5       | Descripción textual de la receta                    |
+| `Images`                     | object  | 1       | Enlaces o metadatos de imágenes asociadas           |
+| `RecipeCategory`             | object  | 751     | Categoría culinaria de la receta                    |
+| `Keywords`                   | object  | 17.237  | Palabras clave o etiquetas                          |
+| `RecipeIngredientQuantities` | object  | 3       | Cantidades de los ingredientes (texto estructurado) |
+| `RecipeIngredientParts`      | object  | 0       | Lista de ingredientes de la receta                  |
+| `AggregatedRating`           | float64 | 253.223 | Valoración media de la receta                       |
+| `ReviewCount`                | float64 | 247.489 | Número de reseñas                                   |
+| `Calories`                   | float64 | 0       | Calorías totales de la receta                       |
+| `FatContent`                 | float64 | 0       | Contenido total de grasa (g)                        |
+| `SaturatedFatContent`        | float64 | 0       | Contenido de grasas saturadas (g)                   |
+| `CholesterolContent`         | float64 | 0       | Contenido de colesterol (mg)                        |
+| `SodiumContent`              | float64 | 0       | Contenido de sodio (mg)                             |
+| `CarbohydrateContent`        | float64 | 0       | Contenido total de carbohidratos (g)                |
+| `FiberContent`               | float64 | 0       | Contenido de fibra (g)                              |
+| `SugarContent`               | float64 | 0       | Contenido de azúcares (g)                           |
+| `ProteinContent`             | float64 | 0       | Contenido de proteínas (g)                          |
+| `RecipeServings`             | float64 | 182.911 | Número de porciones                                 |
+| `RecipeYield`                | object  | 348.071 | Rendimiento de la receta (texto libre)              |
+| `RecipeInstructions`         | object  | 0       | Instrucciones paso a paso de la receta              |
+
+#### Exploración de nulos
+![heatmap_valores_nulos](/img/heatmap_valores_nulos.png)
+
+#### Exploración de duplicados
+
+Recetas duplicadas (mismo nombre):
+
+Name
+
+Banana Bread                         186
+
+Chicken Enchiladas                   132
+
+Beef Stroganoff                      126
+
+Chocolate Chip Cookies               115
+
+Sweet Potato Casserole               113
+
+... 
+
+Ham and Sweet Potato Hash              2
+
+Chicken, Lemon and Dill With Orzo      2
+
+The Dove's Nest Texas Chowder          2
+
+Chocolate Dipped Strawberries          2
+
+Chicken With Garlic Cream Sauce        2
+
+Name: count, Length: 32600, dtype: int64
+
+#### Resumen estadístico
+
+<div id="df-5f113fac-dfa4-4346-8697-d88b702d547a" class="colab-df-container">
+    <div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>RecipeId</th>
+      <th>AuthorId</th>
+      <th>AggregatedRating</th>
+      <th>ReviewCount</th>
+      <th>Calories</th>
+      <th>FatContent</th>
+      <th>SaturatedFatContent</th>
+      <th>CholesterolContent</th>
+      <th>SodiumContent</th>
+      <th>CarbohydrateContent</th>
+      <th>FiberContent</th>
+      <th>SugarContent</th>
+      <th>ProteinContent</th>
+      <th>RecipeServings</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>522517.000000</td>
+      <td>5.225170e+05</td>
+      <td>269294.000000</td>
+      <td>275028.000000</td>
+      <td>522517.000000</td>
+      <td>522517.000000</td>
+      <td>522517.000000</td>
+      <td>522517.000000</td>
+      <td>5.225170e+05</td>
+      <td>522517.000000</td>
+      <td>522517.000000</td>
+      <td>522517.000000</td>
+      <td>522517.000000</td>
+      <td>339606.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>271821.436970</td>
+      <td>4.572585e+07</td>
+      <td>4.632014</td>
+      <td>5.227784</td>
+      <td>484.438580</td>
+      <td>24.614922</td>
+      <td>9.559457</td>
+      <td>86.487003</td>
+      <td>7.672639e+02</td>
+      <td>49.089092</td>
+      <td>3.843242</td>
+      <td>21.878254</td>
+      <td>17.469510</td>
+      <td>8.606191</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>155495.878422</td>
+      <td>2.929714e+08</td>
+      <td>0.641934</td>
+      <td>20.381347</td>
+      <td>1397.116649</td>
+      <td>111.485798</td>
+      <td>46.622621</td>
+      <td>301.987009</td>
+      <td>4.203621e+03</td>
+      <td>180.822062</td>
+      <td>8.603163</td>
+      <td>142.620191</td>
+      <td>40.128837</td>
+      <td>114.319809</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>38.000000</td>
+      <td>2.700000e+01</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000e+00</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>1.000000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>137206.000000</td>
+      <td>6.947400e+04</td>
+      <td>4.500000</td>
+      <td>1.000000</td>
+      <td>174.200000</td>
+      <td>5.600000</td>
+      <td>1.500000</td>
+      <td>3.800000</td>
+      <td>1.233000e+02</td>
+      <td>12.800000</td>
+      <td>0.800000</td>
+      <td>2.500000</td>
+      <td>3.500000</td>
+      <td>4.000000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>271758.000000</td>
+      <td>2.389370e+05</td>
+      <td>5.000000</td>
+      <td>2.000000</td>
+      <td>317.100000</td>
+      <td>13.800000</td>
+      <td>4.700000</td>
+      <td>42.600000</td>
+      <td>3.533000e+02</td>
+      <td>28.200000</td>
+      <td>2.200000</td>
+      <td>6.400000</td>
+      <td>9.100000</td>
+      <td>6.000000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>406145.000000</td>
+      <td>5.658280e+05</td>
+      <td>5.000000</td>
+      <td>4.000000</td>
+      <td>529.100000</td>
+      <td>27.400000</td>
+      <td>10.800000</td>
+      <td>107.900000</td>
+      <td>7.922000e+02</td>
+      <td>51.100000</td>
+      <td>4.600000</td>
+      <td>17.900000</td>
+      <td>25.000000</td>
+      <td>8.000000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>541383.000000</td>
+      <td>2.002886e+09</td>
+      <td>5.000000</td>
+      <td>3063.000000</td>
+      <td>612854.600000</td>
+      <td>64368.100000</td>
+      <td>26740.600000</td>
+      <td>130456.400000</td>
+      <td>1.246921e+06</td>
+      <td>108294.600000</td>
+      <td>3012.000000</td>
+      <td>90682.300000</td>
+      <td>18396.200000</td>
+      <td>32767.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+#### Distribución de recetas por número de ingredientes
+
+![Distribución de recetas por número de ingredientes](/img/distribucion_de_recetas_por_numero_de_ingredientes.png)
+
+#### Análisis nutricional
+
+Distribución de macronutrientes con histogramas de:
+
+- calories
+- fat
+- protein
+- carbohydrates
+
+![Análisis nutricional](/img/analisis_nutricional.png)
+
+![Análisis nutricional logaritmico](/img/analisis_nutricional_logaritmico.png)
+
+Relación entre macronutrientes con scatter plots de:
+
+- calories vs protein
+- calories vs fat
+- fat vs carbohydrates
+
+![Análisis nutricional scatter](/img/relacion_entre_macronutrientes.png)
+
+#### Análisis de ingredientes
+
+Frecuencia de ingredientes con Barplot top-40 ingredientes
+
+Número de ingredientes vs nutrición con Scatter:
+
+- n_ingredients vs calories
+- n_ingredients vs fat
+
+![Top 40 de ingredientes más frecuentes](/img/top40_ingredientes_mas_frecuentes.png)
+
+![Número de ingredientes vs macros](/img/numero_ingredientes_vs_macros.png)
+
+#### Analisis de tags y categorias dieteticas
+
+Frecuencia de tags con Barplot top-30 tags y Wordcloud
+
+![Top 30 de Keywords más frecuentes](/img/top30_keywords_mas_frecuentes.png)
+
+![Nube de palabras: Keywords de Recetas](/img/wordcloud_keywords_mas_frecuentes.png)
+
+Frecuencia de tags con Barplot top-50 tags
+
+![Top-50 Categorias más frecuentes](/img/top50_categorias_mas_frecuentes.png)
+
+Nutrición por tipo de dieta con boxplots de:
+
+- calorias por tipo de dieta
+- proteina por tipo de dieta
+
+![Comparativa de Calorías por Tipo de Dieta](/img/comparativa_de_calorias_diet_type.png)
+
+
 ### 🧹 Limpieza de datos
 
 La limpieza de datos incluyó:
@@ -102,9 +402,6 @@ La limpieza de datos incluyó:
 - **Etiquetado**: Clasificación en dietas (`vegan`, `vegetarian`, etc.) y tipos de comida (`breakfast`, `lunch`, etc.).
 
 Resultado: Un dataset final de **91,056 recetas limpias**, listo para modelos de machine learning.
-
-### 🔎 Exploración y visualización de los datos
-
 
 ### 📊 Preparación de los datos
 
