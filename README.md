@@ -43,7 +43,7 @@ SmartEat AI surge como respuesta a esta necesidad, proponiendo un sistema que:
 
 - Ofrece asistencia conversacional mediante un agente inteligente.
 
-- La propuesta combina gestión nutricional estructurada con inteligencia artificial aplicada a la recomendación y adaptación en tiempo real.
+- Inteligencia artificial aplicada a la recomendación en tiempo real.
 
 Enlace al video explicatorio [click aqui]()
 
