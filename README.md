@@ -52,6 +52,30 @@ El propósito de SmartEat AI es facilitar la adopción de hábitos alimenticios 
 
 En este apartado se describen de forma resumida los pasos realizados para preparar los datos y entrenar el modelo KNN, utilizado como recomendador de recetas. Se detalla el proceso de limpieza, transformación, etiquetado y escalado de los datos, así como la configuración y entrenamiento del modelo para garantizar recomendaciones precisas y personalizadas.
 
+## 🚀 Características Principales
+
+- **Recomendaciones basadas en IA**: Sugerencias personalizadas de comidas y planes nutricionales.
+- **Análisis nutricional**: Seguimiento detallado de macronutrientes y calorías.
+- **Gestión de recetas**: Base de datos de recetas saludables.
+- **Perfiles personalizados**: Configuración de objetivos y preferencias dietéticas.
+- **Interfaz intuitiva**: Experiencia de usuario moderna y responsive.
+
+## 🛠️ Tecnologías Principales
+
+- **Frontend**: TypeScript, Next.js, HTML5, Tailwind CSS
+- **Backend**: Python, FastAPI, Base de datos relacional
+- **IA & Machine Learning**: scikit-learn, joblib, LangChain, LangGraph, modelos de recomendación, procesamiento de lenguaje natural (NLP)
+- **DevOps**: Docker, Docker Compose, Node 20+
+
+## Pipeline de Ciencia de Datos
+
+### 🎣 Obtención de los datos
+
+Para el entrenamiento del modelo se han sacado los datos de un dataset de Kaggle.
+Este dataset se obtuvo mediante webscraping de la web de [Food.com](https://www.food.com/).
+
+[Food.com - Recipes and Reviews](https://www.kaggle.com/datasets/irkaal/foodcom-recipes-and-reviews)
+
 ### 🧹 Limpieza de datos
 
 La limpieza de datos incluyó:
@@ -81,29 +105,6 @@ Estos pasos aseguraron que los datos estuvieran listos para el entrenamiento del
 
 Para más información sobre cada uno de los pasos descritos arriba, mirar el cuaderno `Cuaderno_SmartEatAI.ipynb` que hay en la carpeta `notebooks`.
 
-## 🚀 Características Principales
-
-- **Recomendaciones basadas en IA**: Sugerencias personalizadas de comidas y planes nutricionales.
-- **Análisis nutricional**: Seguimiento detallado de macronutrientes y calorías.
-- **Gestión de recetas**: Base de datos de recetas saludables.
-- **Perfiles personalizados**: Configuración de objetivos y preferencias dietéticas.
-- **Interfaz intuitiva**: Experiencia de usuario moderna y responsive.
-
-## 🛠️ Tecnologías Principales
-
-- **Frontend**: TypeScript, Next.js, HTML5, Tailwind CSS
-- **Backend**: Python, FastAPI, Base de datos relacional
-- **IA & Machine Learning**: scikit-learn, joblib, LangChain, LangGraph, modelos de recomendación, procesamiento de lenguaje natural (NLP)
-- **DevOps**: Docker, Docker Compose, Node 20+
-
-## Pipeline de Ciencia de Datos
-
-### 🎣 Obtención de los datos
-
-Para el entrenamiento del modelo se han sacado los datos de un dataset de Kaggle.
-Este dataset se obtuvo mediante webscraping de la web de [Food.com](https://www.food.com/).
-
-[Food.com - Recipes and Reviews](https://www.kaggle.com/datasets/irkaal/foodcom-recipes-and-reviews)
 
 ## Aplicacion Web
 
@@ -118,6 +119,9 @@ smart-eat-ai/
 ├── README.md
 └── LICENSE
 ```
+
+
+
 
 ## 🚀 Instalación Rápida
 
