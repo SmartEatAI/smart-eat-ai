@@ -25,7 +25,7 @@
 - [Autores](#autores)
 
 
-## 📋 Descripción General
+## 📋 Justificación y descripción del proyecto
 
 SmartEat AI es una plataforma innovadora que combina inteligencia artificial y gestión nutricional para ofrecer una experiencia personalizada a los usuarios. El sistema analiza preferencias alimentarias, restricciones dietéticas y objetivos nutricionales para generar recomendaciones adaptadas a cada perfil.
 
