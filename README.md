@@ -1,8 +1,7 @@
-<h1 align="center">SmartEat AI</h1>
+<h1 align="center">SmartEat AI 🥗</h1> 
 
-<p align="center">
-	<img src="https://images.emojiterra.com/google/android-12l/512px/1f957.png" alt="Logo" width="400">
-</p>
+<img width="1812" height="283" alt="image" src="https://github.com/user-attachments/assets/b512a89e-0954-41e2-8ff4-f83f52e4a789" />
+
 
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
