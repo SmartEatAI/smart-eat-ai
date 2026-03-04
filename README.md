@@ -435,11 +435,13 @@ La aplicacion esta dividida en 4 modulos principales:
 
 ### Dashboard
 El dashboard desarrollado permite al usuario visualizar las comidas planificadas para el día de hoy. Cada una de ellas puede ser marcada como consumida. A medida que el usuario confirma el consumo, el sistema actualiza automáticamente las métricas nutricionales correspondientes, recalculando las calorías totales ingeridas y la distribución de macronutrientes (proteínas, hidratos de carbono y grasas), ofreciendo una visión del progreso nutricional diario.
+<img width="1553" height="875" alt="Captura de pantalla 2026-03-03 204642" src="https://github.com/user-attachments/assets/c63ddd5e-d91b-4abf-b190-25eb4ea4355b" />
 
 ### Profile
 El Profile es la sección destinada a la gestión y configuración de la información personal y nutricional del usuario. Tras el inicio de sesión, si se trata del primer acceso a la plataforma, el sistema obliga al usuario a completar el formulario. Este proceso es necesario para garantizar la correcta personalización de los planes nutricionales.
 
 En dicho formulario se recogen, los datos biométricos relevantes (como peso, altura, edad y sexo), así como los objetivos nutricionales (pérdida de peso, mantenimiento o ganancia de masa muscular) y el nivel de actividad física habitual. Esta información permite estimar el gasto energético y los requerimientos calóricos individuales. Adicionalmente, el usuario debe especificar sus preferencias alimentarias, incluyendo el número de comidas diarias, el tipo de dieta que desea seguir, posibles restricciones alimentarias (alergias o intolerancias) y gustos personales.
+<img width="1586" height="899" alt="Captura de pantalla 2026-03-03 204838" src="https://github.com/user-attachments/assets/8b05c0b8-f5d0-4a53-8e33-31c823e6af32" />
 
 ### Chat
 El Chat consiste en el espacio de interacción directa con Smarty, nuestro agente virtual encargado de generar y gestionar los planes nutricionales del usuario. A través de esta interfaz, el usuario puede mantener una conversación dinámica con el sistema, permitiendo que éste genere planes personalizados basados en la información de perfil previamente proporcionada.
@@ -451,12 +453,13 @@ Además de la creación de planes, Smarty permite al usuario realizar diversas c
 - Sugerencia de cambios en dichas comidas
 - Buscar recetas que cumplan con las especificaciones indicadas por el usuario
 - Actualizar gustos o restricciones alimentarias
-
+<img width="1616" height="901" alt="Captura de pantalla 2026-03-04 110546" src="https://github.com/user-attachments/assets/9974e1a9-d7ea-4e59-8eb0-b5cbf0d9b5a7" />
 
 ### My Plan
 El modulo de my plan es un espacio de visualización y gestión del plan nutricional actual del usuario. En esta sección, se presentan estadísticas detalladas sobre el consumo medio de calorías y macronutrientes a lo largo de la semana.
 
 Cada receta incluida en los menús diarios se muestra de forma individual, ofreciendo al usuario la posibilidad de realizar modificaciones directamente sobre las comidas programadas. Específicamente, el sistema permite realizar un swap en cualquier comida, aceptando la sugerencia propuesta por la plataforma, solicitando una alternativa adicional o rechazando la modificación para mantener la comida original. Dicho swap es recomendado por nuestro modelo KNN entrenado anteriorne.
+<img width="1584" height="857" alt="Captura de pantalla 2026-03-03 204808" src="https://github.com/user-attachments/assets/ea46a9b3-8f86-4b9b-96f0-b9eae3cbb827" />
 
 > Puedes visitar la página [aquí](https://smart-eat-ai.vercel.app/)
 
