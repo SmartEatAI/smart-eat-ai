@@ -60,27 +60,6 @@ El propósito de SmartEat AI es facilitar la adopción de hábitos alimenticios 
 
 ## 5. Arquitectura del Sistema
 
-### Dashboard
-El dashboard desarrollado permite al usuario visualizar las comidas planificadas para el día de hoy. Cada una de ellas puede ser marcada como consumida. A medida que el usuario confirma el consumo, el sistema actualiza automáticamente las métricas nutricionales correspondientes, recalculando las calorías totales ingeridas y la distribución de macronutrientes (proteínas, hidratos de carbono y grasas), ofreciendo una visión del progreso nutricional diario.
-
-### Profile
-El Profile es la sección destinada a la gestión y configuración de la información personal y nutricional del usuario. Tras el inicio de sesión, si se trata del primer acceso a la plataforma, el sistema obliga al usuario a completar el formulario. Este proceso es necesario para garantizar la correcta personalización de los planes nutricionales.
-
-En dicho formulario se recogen, los datos biométricos relevantes (como peso, altura, edad y sexo), así como los objetivos nutricionales (pérdida de peso, mantenimiento o ganancia de masa muscular) y el nivel de actividad física habitual. Esta información permite estimar el gasto energético y los requerimientos calóricos individuales. Adicionalmente, el usuario debe especificar sus preferencias alimentarias, incluyendo el número de comidas diarias, el tipo de dieta que desea seguir, posibles restricciones alimentarias (alergias o intolerancias) y gustos personales.
-
-### Chat
-El Chat consiste en el espacio de interacción directa con Smarty, nuestro agente virtual encargado de generar y gestionar los planes nutricionales del usuario. A través de esta interfaz, el usuario puede mantener una conversación dinámica con el sistema, permitiendo que éste genere planes personalizados basados en la información de perfil previamente proporcionada.
-
-Además de la creación de planes, Smarty permite al usuario realizar diversas consultas y modificaciones de manera conversacional:
-- Obtención del plan actual
-- Visualización del perfil nutricional
-- Modificación de comidas específicas dentro del plan
-- Sugerencia de cambios en dichas comidas
-- Buscar recetas que cumplan con las especificaciones indicadas por el usuario
-- Actualizar gustos o restricciones alimentarias
-
-### My Plan
-
 ## 6. Pipeline de Ciencia de Datos
 
 En este apartado se describen de forma resumida los pasos realizados para preparar los datos y entrenar el modelo KNN, utilizado como recomendador de recetas. Se detalla el proceso de limpieza, transformación, etiquetado y escalado de los datos, así como la configuración y entrenamiento del modelo para garantizar recomendaciones precisas y personalizadas.
@@ -449,6 +428,33 @@ smart-eat-ai/
 ├── README.md
 └── LICENSE
 ```
+
+La aplicacion esta dividida en 4 modulos principales:
+
+### Dashboard
+El dashboard desarrollado permite al usuario visualizar las comidas planificadas para el día de hoy. Cada una de ellas puede ser marcada como consumida. A medida que el usuario confirma el consumo, el sistema actualiza automáticamente las métricas nutricionales correspondientes, recalculando las calorías totales ingeridas y la distribución de macronutrientes (proteínas, hidratos de carbono y grasas), ofreciendo una visión del progreso nutricional diario.
+
+### Profile
+El Profile es la sección destinada a la gestión y configuración de la información personal y nutricional del usuario. Tras el inicio de sesión, si se trata del primer acceso a la plataforma, el sistema obliga al usuario a completar el formulario. Este proceso es necesario para garantizar la correcta personalización de los planes nutricionales.
+
+En dicho formulario se recogen, los datos biométricos relevantes (como peso, altura, edad y sexo), así como los objetivos nutricionales (pérdida de peso, mantenimiento o ganancia de masa muscular) y el nivel de actividad física habitual. Esta información permite estimar el gasto energético y los requerimientos calóricos individuales. Adicionalmente, el usuario debe especificar sus preferencias alimentarias, incluyendo el número de comidas diarias, el tipo de dieta que desea seguir, posibles restricciones alimentarias (alergias o intolerancias) y gustos personales.
+
+### Chat
+El Chat consiste en el espacio de interacción directa con Smarty, nuestro agente virtual encargado de generar y gestionar los planes nutricionales del usuario. A través de esta interfaz, el usuario puede mantener una conversación dinámica con el sistema, permitiendo que éste genere planes personalizados basados en la información de perfil previamente proporcionada.
+
+Además de la creación de planes, Smarty permite al usuario realizar diversas consultas y modificaciones de manera conversacional:
+- Obtención del plan actual
+- Visualización del perfil nutricional
+- Modificación de comidas específicas dentro del plan
+- Sugerencia de cambios en dichas comidas
+- Buscar recetas que cumplan con las especificaciones indicadas por el usuario
+- Actualizar gustos o restricciones alimentarias
+
+
+### My Plan
+El modulo de my plan es un espacio de visualización y gestión del plan nutricional actual del usuario. En esta sección, se presentan estadísticas detalladas sobre el consumo medio de calorías y macronutrientes a lo largo de la semana.
+
+Cada receta incluida en los menús diarios se muestra de forma individual, ofreciendo al usuario la posibilidad de realizar modificaciones directamente sobre las comidas programadas. Específicamente, el sistema permite realizar un swap en cualquier comida, aceptando la sugerencia propuesta por la plataforma, solicitando una alternativa adicional o rechazando la modificación para mantener la comida original. Dicho swap es recomendado por nuestro modelo KNN entrenado anteriorne.
 
 > Puedes visitar la página [aquí](https://smart-eat-ai.vercel.app/)
 
