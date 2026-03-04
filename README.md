@@ -48,10 +48,6 @@ Enlace al video explicatorio [click aqui]()
 
 El propósito de SmartEat AI es facilitar la adopción de hábitos alimenticios saludables mediante el uso de tecnología avanzada. La visión del proyecto es convertirse en una herramienta de referencia para la personalización nutricional, ayudando a los usuarios a alcanzar sus metas de bienestar de forma sencilla y efectiva.
 
-## 🤖 Machine Learning 
-
-En este apartado se describen de forma resumida los pasos realizados para preparar los datos y entrenar el modelo KNN, utilizado como recomendador de recetas. Se detalla el proceso de limpieza, transformación, etiquetado y escalado de los datos, así como la configuración y entrenamiento del modelo para garantizar recomendaciones precisas y personalizadas.
-
 ## 🚀 Características Principales
 
 - **Recomendaciones basadas en IA**: Sugerencias personalizadas de comidas y planes nutricionales.
@@ -67,7 +63,9 @@ En este apartado se describen de forma resumida los pasos realizados para prepar
 - **IA & Machine Learning**: scikit-learn, joblib, LangChain, LangGraph, modelos de recomendación, procesamiento de lenguaje natural (NLP)
 - **DevOps**: Docker, Docker Compose, Node 20+
 
-## Pipeline de Ciencia de Datos
+## 📉 Pipeline de Ciencia de Datos
+
+En este apartado se describen de forma resumida los pasos realizados para preparar los datos y entrenar el modelo KNN, utilizado como recomendador de recetas. Se detalla el proceso de limpieza, transformación, etiquetado y escalado de los datos, así como la configuración y entrenamiento del modelo para garantizar recomendaciones precisas y personalizadas.
 
 ### 🎣 Obtención de los datos
 
