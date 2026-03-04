@@ -118,7 +118,7 @@ El modelo KNN se entrenó utilizando los datos limpios y preparados. Los pasos p
 
 Este proceso garantizó un modelo optimizado para realizar recomendaciones precisas basadas en las preferencias y necesidades del usuario.
 
-Para más información sobre cada uno de los pasos descritos arriba, mirar el cuaderno `Cuaderno_SmartEatAI.ipynb` que hay en la carpeta `notebooks`.
+> Para más información sobre cada uno de los pasos descritos arriba, mirar el cuaderno `Cuaderno_SmartEatAI.ipynb` que hay en la carpeta `notebooks`.
 
 
 ## Aplicacion Web
