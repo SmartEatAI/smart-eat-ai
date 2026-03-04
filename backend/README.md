@@ -62,6 +62,19 @@ backend/
 ├── alembic.ini
 └── README.md
 ```
+
+## Stack tecnológico
+
+- **FastAPI**: Framework web moderno y rápido
+- **SQLAlchemy**: Toolkit y ORM para SQL
+- **Alembic**: Migraciones de base de datos
+- **PyJWT**: Autenticación JWT
+- **Bcrypt**: Hash de contraseñas
+- **PostgreSQL**: Base de datos relacional
+- **scikit-learn, joblib**: Modelos de recomendación y procesamiento de datos
+- **LangChain, LangGraph**: Agentes inteligentes y flujos conversacionales
+- **Ollama**: Motor LLM local para generación y embeddings
+
 ## Características
 
 - **Arquitectura limpia**: Separación clara de modelos, esquemas, servicios y rutas para facilitar el mantenimiento y escalabilidad.
@@ -152,13 +165,110 @@ Accede a la documentación interactiva de la API en:
 - Swagger UI: http://localhost:8000/docs
 - ReDoc: http://localhost:8000/redoc
 
-## Stack tecnológico
+## Configuración e integración de Ollama
 
-- **FastAPI**: Framework web moderno y rápido
-- **SQLAlchemy**: Toolkit y ORM para SQL
-- **Alembic**: Migraciones de base de datos
-- **PyJWT**: Autenticación JWT
-- **Bcrypt**: Hash de contraseñas
-- **PostgreSQL**: Base de datos relacional
-- **scikit-learn, joblib**: Modelos de recomendación y procesamiento de datos
-- **LangChain, LangGraph**: Agentes inteligentes y flujos conversacionales
+SmartEat AI utiliza Ollama como motor LLM para generación de lenguaje y embeddings, integrándose con LangChain y ChromaDB para RAG y recomendaciones personalizadas.
+
+### Configuración en Docker
+
+El servicio Ollama está definido en `docker-compose.yml`:
+
+```yaml
+   ollama:
+      image: ollama/ollama:latest
+      container_name: smarteatai_ollama
+      ports:
+         - "11434:11434"
+      volumes:
+         - ollama_data:/root/.ollama
+      environment:
+         - OLLAMA_CONTEXT_LENGTH=32768  # Contexto ampliado
+         - OLLAMA_NUM_PARALLEL=1
+         - OLLAMA_MAX_LOADED_MODELS=1
+      deploy:
+         resources:
+            reservations:
+               devices:
+                  - driver: nvidia
+                     count: all
+                     capabilities: [ gpu ]
+      entrypoint: /bin/bash
+      command: -c "ollama serve"
+```
+
+Esto permite aprovechar la GPU (si está disponible) y persistir los modelos y embeddings en el volumen `ollama_data`.
+
+### Configuración en el backend
+
+En `backend/app/core/config_ollama.py` se inicializa el modelo y embeddings:
+
+```python
+from langchain_ollama import ChatOllama, OllamaEmbeddings
+from langchain_chroma import Chroma
+from app.config import settings
+
+# Configuración para 8GB VRAM con Llama 3.1
+OLLAMA_CONFIG = {
+      "model": settings.OLLAMA_MODEL,
+      "base_url": settings.OLLAMA_BASE_URL,
+      "temperature": 0,
+      "num_ctx": 16384,
+      "num_predict": 4096,
+}
+llm = ChatOllama(**OLLAMA_CONFIG)
+embeddings = OllamaEmbeddings(
+      model=settings.CHROMA_EMBEDDING_MODEL, 
+      base_url=settings.OLLAMA_BASE_URL
+)
+vector_db = Chroma(
+      persist_directory=settings.CHROMA_DB, 
+      embedding_function=embeddings
+)
+```
+
+### Variables de entorno necesarias
+
+Asegúrate de definir en tu `.env`:
+
+```
+OLLAMA_MODEL=llama3:latest
+OLLAMA_BASE_URL=http://ollama:11434
+CHROMA_EMBEDDING_MODEL=llama3:latest
+CHROMA_DB=/app/data/chroma_db_recipes
+```
+
+### Puesta en marcha de Ollama (dentro de Docker)
+
+1. **Descarga el modelo necesario** (por ejemplo, llama3.1):
+    ```bash
+    ollama pull llama3.1
+    ```
+    Puedes cambiar el modelo en la variable `OLLAMA_MODEL`.
+
+3. **Verifica que se ha descargado bien el modelo**:
+    ```bash
+    ollama list
+    ```
+    Deberías ver los modelos disponibles.
+
+2. **Levanta el stack completo** (incluyendo Ollama):
+    ```bash
+    docker-compose up -d
+    ```
+
+4. **El backend usará Ollama automáticamente** para generación y embeddings.
+
+### Notas
+- Si tienes GPU NVIDIA, Docker usará aceleración automáticamente.
+- Puedes ajustar el modelo y parámetros en el archivo `.env` y en `config_ollama.py`.
+- Para más detalles, revisa la documentación oficial de [Ollama](https://ollama.com/) y [LangChain Ollama](https://js.langchain.com/docs/integrations/llms/ollama/).
+
+## Documentación oficial
+
+- [Ollama](https://ollama.com/)
+- [Docker](https://docs.docker.com/)
+- [Alembic](https://alembic.sqlalchemy.org/en/latest/)
+- [FastApi](https://fastapi.tiangolo.com/)
+- [LangChain](https://docs.langchain.com/)
+- [PostgreSQL](https://www.postgresql.org/docs/)
+- [Scikit-Learn](https://scikit-learn.org/stable/)
