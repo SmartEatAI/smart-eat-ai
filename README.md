@@ -1,4 +1,10 @@
-# SmartEat AI
+<center>
+<h1>SmartEat AI</h1>
+	
+<img src="https://images.emojiterra.com/google/android-12l/512px/1f957.png" alt="Logo" width="400">
+</center>
+
+
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
@@ -60,6 +66,7 @@ Sigue estos pasos para clonar el repositorio, instalar las dependencias y levant
 	  cd frontend
 	  npm install
 	  ```
+Si no funciona, ir a los README.md especificos de Backend o Frontend, que se encuentran mas desarrollados.
 
 3. **Levanta los contenedores con Docker:**
 	```bash
@@ -77,16 +84,27 @@ Sigue estos pasos para clonar el repositorio, instalar las dependencias y levant
 
 SmartEat AI está diseñado como una solución integral para la gestión nutricional personalizada. El proyecto abarca desde la recolección y análisis de datos de usuario, hasta la generación de recomendaciones y la visualización de información relevante en una interfaz moderna. El alcance incluye la integración de modelos de IA, la gestión de recetas y perfiles, y la provisión de una experiencia accesible tanto para usuarios finales como para profesionales de la nutrición.
 
+## 📚 Recursos utilizados
+- [Documentación Ollama, métricas de modelos](https://ollama.com/)
+- [Documentación LangGraph](https://docs.langchain.com/oss/python/langgraph/overview)
+- [Documentación LangChain](https://docs.langchain.com/oss/python/langchain/overview)
+- [Documentación ShadCN](https://ui.shadcn.com/docs)
+- [Curso de Introducción a #FastAPI 2025 - #Backend con #Python](https://youtube.com/playlist?list=PLHftsZss8mw7pSRpCyd-TM4Mu43XdyB3R&si=EWsPmgy1PdGROFaU)
+- [Tutorial LangGraph](https://www.youtube.com/watch?v=LS4pALyrm00)
+- [Tutorial LangChain](https://www.youtube.com/watch?v=HUcIxt1v0wU)
+- [ChatGPT](https://chatgpt.com/)
+- [DeepSeek](https://chat.deepseek.com/)
+
+## 👥 Autores y ⚖️ Distribución de tareas
+
+- [Elías Robles Ruíz](https://github.com/eliasrrobles) - 33.33%
+- [Cristina Vacas López](https://github.com/flashtime-dev) - 33.33%
+- [Ruyi Xia Ye](https://github.com/rxy94) - 33.33%
+- 
+
 ## 📄 Licencia
 
 Este proyecto está bajo la Licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más detalles.
-
-## 👥 Autores
-
-**SmartEatAI Team**
-- [Elías Robles Ruíz](https://github.com/eliasrrobles)
-- [Cristina Vacas López](https://github.com/flashtime-dev)
-- [Ruyi Xia Ye](https://github.com/rxy94)
 
 ---
 ⭐ Si te gusta este proyecto, danos una estrellita en GitHub!
