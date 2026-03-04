@@ -8,6 +8,8 @@
 
 **SmartEat AI** es un proyecto de Trabajo Fin de Máster (TFM) del Curso de Especialización en Inteligencia Artificial y Big Data. Esta aplicación utiliza tecnologías de IA para proporcionar recomendaciones inteligentes sobre alimentación y nutrición.
 
+> [Presentación del proyecto](https://www.canva.com/design/DAHCnfU5p6s/D2NN2HH-_N1PsZlCq9sJpg/view?utm_content=DAHCnfU5p6s&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h708a869ec2)
+
 ## Índice
 1. [Descripción del proyecto](#descripción-del-proyecto)
 2. [Visión y propósito](#visión-y-propósito)
