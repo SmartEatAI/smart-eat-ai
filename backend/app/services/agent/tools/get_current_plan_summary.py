@@ -11,7 +11,7 @@ def get_current_plan_summary(user_id: int):
     
     WHEN TO USE:
     - When the user asks about their current plan, weekly menu, or scheduled meals
-    - When they say: "my plan", "view plan", "what do I have today", "my meals", "week's menu"
+    - When they say: "show my plan", "my plan", "view plan", "what do I have today", "my meals", "week's menu"
     - Before suggesting changes to the plan (to know the current state)
     
     WHEN NOT TO USE:
@@ -19,6 +19,9 @@ def get_current_plan_summary(user_id: int):
     - To view the user's profile (use get_user_profile_summary)
     
     Returns: summary of the plan with meals per day, or indicates if there is no active plan.
+    
+    IMPORTANT: Display the complete "result" field to the user WITHOUT summarizing. 
+    The user expects to see their FULL weekly plan with ALL meals listed.
     """
     db = SessionLocal()
     try:
@@ -54,14 +57,6 @@ def _create_plan_summary(current_plan) -> str:
         5: "Friday",
         6: "Saturday",
         7: "Sunday"
-    }
-    
-    # Meal type mapping
-    MEAL_TYPE_MAP = {
-        "breakfast": "Breakfast",
-        "lunch": "Lunch", 
-        "dinner": "Dinner",
-        "snack": "Snack"
     }
     
     # Schedule mapping (simplified)

@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 # Configuration limits – increased to preserve plan context
 MAX_CONTEXT_TOKENS = 10000  # Increased from 4000 to avoid losing context
-TOOL_RESULT_MAX_LENGTH = 6000  # Increased from 2000 for full plans
+TOOL_RESULT_MAX_LENGTH = 10000  # Increased from 2000 for full plans
 
 class ConversationMemory:
     """
