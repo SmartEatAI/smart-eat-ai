@@ -29,6 +29,22 @@
 
 SmartEat AI es una plataforma innovadora que combina inteligencia artificial y gestión nutricional para ofrecer una experiencia personalizada a los usuarios. El sistema analiza preferencias alimentarias, restricciones dietéticas y objetivos nutricionales para generar recomendaciones adaptadas a cada perfil.
 
+En la actualidad, la planificación de una alimentación equilibrada representa un desafío para muchas personas debido a la falta de conocimiento nutricional, el tiempo limitado y la dificultad para mantener consistencia en los hábitos alimentarios. Aunque existen aplicaciones de seguimiento calórico, pocas combinan análisis inteligente, generación automática de planes y capacidad conversacional para adaptar dinámicamente la dieta del usuario.
+
+SmartEat AI surge como respuesta a esta necesidad, proponiendo un sistema que:
+
+- Analiza preferencias alimentarias y restricciones dietéticas.
+
+- Tiene en cuenta objetivos nutricionales (déficit, mantenimiento, superávit).
+
+- Genera planes semanales personalizados.
+
+- Permite modificar dinámicamente comidas manteniendo coherencia nutricional.
+
+- Ofrece asistencia conversacional mediante un agente inteligente.
+
+- La propuesta combina gestión nutricional estructurada con inteligencia artificial aplicada a la recomendación y adaptación en tiempo real.
+
 Enlace al video explicatorio [click aqui]()
 
 
