@@ -130,6 +130,30 @@ smart-eat-ai/
 └── LICENSE
 ```
 
+### Arquitectura del Sistema
+
+### Dashboard
+El dashboard desarrollado permite al usuario visualizar las comidas planificadas para el día de hoy. Cada una de ellas puede ser marcada como consumida. A medida que el usuario confirma el consumo, el sistema actualiza automáticamente las métricas nutricionales correspondientes, recalculando las calorías totales ingeridas y la distribución de macronutrientes (proteínas, hidratos de carbono y grasas), ofreciendo una visión del progreso nutricional diario.
+
+### Profile
+El Profile es la sección destinada a la gestión y configuración de la información personal y nutricional del usuario. Tras el inicio de sesión, si se trata del primer acceso a la plataforma, el sistema obliga al usuario a completar el formulario. Este proceso es necesario para garantizar la correcta personalización de los planes nutricionales.
+
+En dicho formulario se recogen, los datos biométricos relevantes (como peso, altura, edad y sexo), así como los objetivos nutricionales (pérdida de peso, mantenimiento o ganancia de masa muscular) y el nivel de actividad física habitual. Esta información permite estimar el gasto energético y los requerimientos calóricos individuales. Adicionalmente, el usuario debe especificar sus preferencias alimentarias, incluyendo el número de comidas diarias, el tipo de dieta que desea seguir, posibles restricciones alimentarias (alergias o intolerancias) y gustos personales.
+
+### Chat
+El Chat consiste en el espacio de interacción directa con Smarty, nuestro agente virtual encargado de generar y gestionar los planes nutricionales del usuario. A través de esta interfaz, el usuario puede mantener una conversación dinámica con el sistema, permitiendo que éste genere planes personalizados basados en la información de perfil previamente proporcionada.
+
+Además de la creación de planes, Smarty permite al usuario realizar diversas consultas y modificaciones de manera conversacional:
+- Obtención del plan actual
+- Visualización del perfil nutricional
+- Modificación de comidas específicas dentro del plan
+- Sugerencia de cambios en dichas comidas
+- Buscar recetas que cumplan con las especificaciones indicadas por el usuario
+- Actualizar gustos o restricciones alimentarias
+
+### My Plan
+
+
 ## Instalación Rápida y Despliegue
 
 Sigue estos pasos para clonar el repositorio, instalar las dependencias y levantar los contenedores con Docker:
