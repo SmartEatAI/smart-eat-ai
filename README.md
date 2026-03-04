@@ -31,15 +31,10 @@ En la actualidad, la planificación de una alimentación equilibrada representa 
 SmartEat AI surge como respuesta a esta necesidad, proponiendo un sistema que:
 
 - Analiza preferencias alimentarias y restricciones dietéticas.
-
 - Tiene en cuenta objetivos nutricionales (déficit, mantenimiento, superávit).
-
 - Genera planes semanales personalizados.
-
 - Permite modificar dinámicamente comidas manteniendo coherencia nutricional.
-
 - Ofrece asistencia conversacional mediante un agente inteligente.
-
 - Modelo de Machine Learning para la recomendación en tiempo real.
 
 Enlace al video explicatorio [click aqui]()
