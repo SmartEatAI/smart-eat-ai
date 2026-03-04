@@ -198,6 +198,13 @@ El servicio Ollama está definido en `docker-compose.yml`:
 
 Esto permite aprovechar la GPU (si está disponible) y persistir los modelos y embeddings en el volumen `ollama_data`.
 
+
+### Nota sobre la base de datos vectorial (ChromaDB)
+
+> Actualmente, la integración de la base de datos vectorial (`chroma_db_recipes`) no está activa en la lógica de recomendación. Se ha intentado implementar, pero debido a limitaciones técnicas (principalmente, la incapacidad de filtrar correctamente las recetas devueltas según las restricciones y preferencias del usuario), se ha sustituido por queries directas a la base de datos real de Postgres. La documentación y la base de datos vectorial generada (ChromaDB) se han subido igualmente al proyecto para referencia y futuras mejoras.
+
+---
+
 ### Configuración en el backend
 
 En `backend/app/core/config_ollama.py` se inicializa el modelo y embeddings:
