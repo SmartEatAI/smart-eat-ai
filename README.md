@@ -98,8 +98,15 @@ La preparación de los datos incluyó:
 
 Estos pasos aseguraron que los datos estuvieran listos para el entrenamiento del modelo KNN y otros algoritmos de machine learning.
 
+### 🔤 Procesamiento de Lenguaje Natural
 
+El procesamiento de lenguaje natural (NLP) se utilizó para analizar y extraer información clave de los datos textuales, como nombres de recetas e ingredientes. Estas técnicas incluyeron:
 
+- **Tokenización**: Separación de texto en palabras clave.
+- **Lematización**: Reducción de palabras a su forma base para análisis uniforme.
+- **Filtrado de palabras irrelevantes**: Eliminación de stopwords y caracteres especiales.
+
+Estas técnicas permitieron mejorar la calidad de los datos textuales y facilitar su uso en el modelo de recomendación.
 
 Para más información sobre cada uno de los pasos descritos arriba, mirar el cuaderno `Cuaderno_SmartEatAI.ipynb` que hay en la carpeta `notebooks`.
 
