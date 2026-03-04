@@ -22,7 +22,7 @@
 11. [Autores](#autores-y--distribución-de-tareas)
 12. [Licencia](#licencia)
 
-## Descripción del proyecto
+## 1. Descripción del proyecto
 
 SmartEat AI es una plataforma innovadora que combina inteligencia artificial y gestión nutricional para ofrecer una experiencia personalizada a los usuarios. El sistema analiza preferencias alimentarias, restricciones dietéticas y objetivos nutricionales para generar recomendaciones adaptadas a cada perfil.
 
@@ -39,11 +39,11 @@ SmartEat AI surge como respuesta a esta necesidad, proponiendo un sistema que:
 
 Enlace al video explicatorio [click aqui]()
 
-## Visión y Propósito
+## 2. Visión y Propósito
 
 El propósito de SmartEat AI es facilitar la adopción de hábitos alimenticios saludables mediante el uso de tecnología avanzada. La visión del proyecto es convertirse en una herramienta de referencia para la personalización nutricional, ayudando a los usuarios a alcanzar sus metas de bienestar de forma sencilla y efectiva.
 
-## Características Principales
+## 3. Características Principales
 
 - **Recomendaciones basadas en IA**: Sugerencias personalizadas de comidas y planes nutricionales.
 - **Análisis nutricional**: Seguimiento detallado de macronutrientes y calorías.
@@ -58,7 +58,7 @@ El propósito de SmartEat AI es facilitar la adopción de hábitos alimenticios 
 - **IA & Machine Learning**: scikit-learn, joblib, LangChain, LangGraph, modelos de recomendación, procesamiento de lenguaje natural (NLP)
 - **DevOps**: Docker, Docker Compose, Node 20+
 
-## Pipeline de Ciencia de Datos
+## 4. Pipeline de Ciencia de Datos
 
 En este apartado se describen de forma resumida los pasos realizados para preparar los datos y entrenar el modelo KNN, utilizado como recomendador de recetas. Se detalla el proceso de limpieza, transformación, etiquetado y escalado de los datos, así como la configuración y entrenamiento del modelo para garantizar recomendaciones precisas y personalizadas.
 
@@ -116,7 +116,7 @@ Este proceso garantizó un modelo optimizado para realizar recomendaciones preci
 > Para más información sobre cada uno de los pasos descritos arriba, mirar el cuaderno `Cuaderno_SmartEatAI.ipynb` que hay en la carpeta `notebooks`.
 
 
-## Aplicacion Web
+## 5. Aplicacion Web
 
 ### 📁 Estructura General del Proyecto
 
@@ -130,7 +130,7 @@ smart-eat-ai/
 └── LICENSE
 ```
 
-## Instalación Rápida y Despliegue
+## 6. Instalación Rápida y Despliegue
 
 Sigue estos pasos para clonar el repositorio, instalar las dependencias y levantar los contenedores con Docker:
 
@@ -165,11 +165,11 @@ Si no funciona, ir a los README.md especificos de Backend o Frontend, que se enc
 	- Documentación API: [http://localhost:8000/docs](http://localhost:8000/docs)
 
 
-## Alcance del Proyecto
+## 7. Alcance del Proyecto
 
 SmartEat AI está diseñado como una solución integral para la gestión nutricional personalizada. El proyecto abarca desde la recolección y análisis de datos de usuario, hasta la generación de recomendaciones y la visualización de información relevante en una interfaz moderna. El alcance incluye la integración de modelos de IA, la gestión de recetas y perfiles, y la provisión de una experiencia accesible tanto para usuarios finales como para profesionales de la nutrición.
 
-## Recursos utilizados
+## 8. Recursos utilizados
 - [Documentación Ollama, métricas de modelos](https://ollama.com/)
 - [Documentación LangGraph](https://docs.langchain.com/oss/python/langgraph/overview)
 - [Documentación LangChain](https://docs.langchain.com/oss/python/langchain/overview)
@@ -180,14 +180,14 @@ SmartEat AI está diseñado como una solución integral para la gestión nutrici
 - [ChatGPT](https://chatgpt.com/)
 - [DeepSeek](https://chat.deepseek.com/)
 
-## Autores y Distribución de tareas
+## 9. Autores y Distribución de tareas
 
 - [Elías Robles Ruíz](https://github.com/eliasrrobles) - 33.33%
 - [Cristina Vacas López](https://github.com/flashtime-dev) - 33.33%
 - [Ruyi Xia Ye](https://github.com/rxy94) - 33.33%
 - 
 
-## Licencia
+## 10. Licencia
 
 Este proyecto está bajo la Licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más detalles.
 
