@@ -520,7 +520,6 @@ SmartEat AI está diseñado como una solución integral para la gestión nutrici
 - [Elías Robles Ruíz](https://github.com/eliasrrobles) - 33.33%
 - [Cristina Vacas López](https://github.com/flashtime-dev) - 33.33%
 - [Ruyi Xia Ye](https://github.com/rxy94) - 33.33%
-- 
 
 ## 12. Licencia
 
