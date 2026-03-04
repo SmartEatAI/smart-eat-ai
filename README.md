@@ -36,6 +36,7 @@ Enlace al video explicatorio [click aqui]()
 
 Para el entrenamiento del modelo se han sacado los datos de un dataset de Kaggle.
 Este dataset se obtuvo mediante webscraping de la web de [Food.com](https://www.food.com/)
+
 [Food.com - Recipes and Reviews](https://www.kaggle.com/datasets/irkaal/foodcom-recipes-and-reviews)
 
 
