@@ -12,18 +12,18 @@
 > [Video explicatorio]()
 
 ## Índice
-1. [Descripción del proyecto](#descripción-del-proyecto)
-2. [Visión y propósito](#visión-y-propósito)
-3. [Características principales](#características-principales)
-4. [Tecnologías utilizadas](#tecnologías-principales)
-5. [Arquitectura del sistema](#estructura-general-del-proyecto)
-6. [Pipeline de Ciencia de Datos](#pipeline-de-ciencia-de-datos)
-7. [Aplicación Web](#aplicación-web)
-8. [Instalación y despliegue](#instalación-rápida)
-9. [Alcance del proyecto](#alcance-del-proyecto)
-10. [Recursos utilizados](#recursos-utilizados)
-11. [Autores](#autores-y--distribución-de-tareas)
-12. [Licencia](#licencia)
+1. [Descripción del proyecto](#1-descripción-del-proyecto)
+2. [Visión y propósito](#2-visión-y-propósito)
+3. [Características principales](#3-características-principales)
+4. [Tecnologías utilizadas](#4-tecnologías-principales)
+5. [Arquitectura del sistema](#5-arquitectura-del-sistema)
+6. [Pipeline de Ciencia de Datos](#6-pipeline-de-ciencia-de-datos)
+7. [Aplicación Web](#7-aplicacion-web)
+8. [Instalación y despliegue](#8-instalación-rápida-y-despliegue)
+9. [Alcance del proyecto](#9-alcance-del-proyecto)
+10. [Recursos utilizados](#10-recursos-utilizados)
+11. [Autores](#11-autores-y-distribución-de-tareas)
+12. [Licencia](#12-licencia)
 
 ## 1. Descripción del proyecto
 
