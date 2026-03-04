@@ -1,4 +1,6 @@
-![Logo](https://images.emojiterra.com/google/android-12l/512px/1f957.png)
+<p align="center">
+  <img src="https://images.emojiterra.com/google/android-12l/512px/1f957.png" alt="Logo" width="500">
+</p>
 
 # SmartEat AI
 
