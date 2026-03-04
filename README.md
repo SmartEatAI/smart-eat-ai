@@ -108,6 +108,16 @@ El procesamiento de lenguaje natural (NLP) se utilizó para analizar y extraer i
 
 Estas técnicas permitieron mejorar la calidad de los datos textuales y facilitar su uso en el modelo de recomendación.
 
+### 🏋️ Entrenamiento del modelo
+
+El modelo KNN se entrenó utilizando los datos limpios y preparados. Los pasos principales incluyeron:
+
+- **División de datos**: Separación en conjuntos de entrenamiento y prueba.
+- **Escalado**: Normalización de las características numéricas con `StandardScaler`.
+- **Entrenamiento**: Uso del algoritmo KNN para ajustar el modelo a los datos de entrenamiento.
+
+Este proceso garantizó un modelo optimizado para realizar recomendaciones precisas basadas en las preferencias y necesidades del usuario.
+
 Para más información sobre cada uno de los pasos descritos arriba, mirar el cuaderno `Cuaderno_SmartEatAI.ipynb` que hay en la carpeta `notebooks`.
 
 
