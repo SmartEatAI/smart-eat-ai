@@ -22,13 +22,14 @@
 - [IA Agéntica](#ia-agentica)
 - [Conclusión](#conclusión)
 - [Recursos utilizados](#recursos-utilizados)
+- [Autores](#autores)
 
 
 ## 📋 Descripción General
 
 SmartEat AI es una plataforma innovadora que combina inteligencia artificial y gestión nutricional para ofrecer una experiencia personalizada a los usuarios. El sistema analiza preferencias alimentarias, restricciones dietéticas y objetivos nutricionales para generar recomendaciones adaptadas a cada perfil.
 
-### Video Explicatorio
+Enlace al video explicatorio [click aqui]()
 
 ## 🌟 Visión y Propósito
 
