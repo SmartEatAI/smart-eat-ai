@@ -1,3 +1,5 @@
+![Logo](https://images.emojiterra.com/google/android-12l/512px/1f957.png)
+
 # SmartEat AI
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
