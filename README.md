@@ -153,6 +153,8 @@ smart-eat-ai/
 └── LICENSE
 ```
 
+> Puedes visitar la página [aquí](https://smart-eat-ai.vercel.app/)
+
 ## 8. Instalación Rápida y Despliegue
 
 Sigue estos pasos para clonar el repositorio, instalar las dependencias y levantar los contenedores con Docker:
