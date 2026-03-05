@@ -12,7 +12,7 @@
 >
 > [Presentación del proyecto - PDF](docs/Presentación%20-%20Desarrollo%20de%20una%20WebApp%20con%20IA%20Agéntica.pdf)
 >
-> [Video explicatorio]()
+> [Video explicatorio](https://youtu.be/_5_w9H5EcRo)
 >
 > [App desplegada](https://smart-eat-ai.vercel.app/)
 > 
