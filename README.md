@@ -12,6 +12,8 @@
 
 > [Video explicatorio]()
 
+> [App desplegada](https://smart-eat-ai.vercel.app/)
+
 ## Índice
 1. [Descripción del proyecto](#1-descripción-del-proyecto)
 2. [Visión y propósito](#2-visión-y-propósito)
@@ -80,13 +82,7 @@ Este dataset se obtuvo mediante webscraping de la web de [Food.com](https://www.
 
 #### Información general del dataset
 
-Observando el dataset podemos sacar los siguientes datos:
-
-- Tiene 522517 recetas (filas) y 28 columnas.
-
-- Vemos una mezcla de tipos de datos, incluyendo números (`float64`, `int64`) para valores como calorías (`Calories`) y IDs (`RecipeId`), y texto (object) para nombres (`Name`), descripciones (`Description`) e ingredientes (`RecipeIngredientsParts`).
-
-- Aunque algunas columnas tienen valores nulos (datos faltantes), la información nutricional clave como Calories, FatContent, CarbohydrateContent y ProteinContent está completa.
+Tiene 522517 recetas (filas) y 28 columnas.
 
 | Columna                      | Tipo    | Nulos   | Descripción                                         |
 | ---------------------------- | ------- | ------- | --------------------------------------------------- |
@@ -123,34 +119,7 @@ Observando el dataset podemos sacar los siguientes datos:
 ![heatmap_valores_nulos](/img/heatmap_valores_nulos.png)
 
 #### Exploración de duplicados
-
-Recetas duplicadas (mismo nombre):
-
-Name
-
-Banana Bread                         186
-
-Chicken Enchiladas                   132
-
-Beef Stroganoff                      126
-
-Chocolate Chip Cookies               115
-
-Sweet Potato Casserole               113
-
-... 
-
-Ham and Sweet Potato Hash              2
-
-Chicken, Lemon and Dill With Orzo      2
-
-The Dove's Nest Texas Chowder          2
-
-Chocolate Dipped Strawberries          2
-
-Chicken With Garlic Cream Sauce        2
-
-Name: count, Length: 32600, dtype: int64
+Se identificaron recetas con nombres repetidos en el dataset; se inspeccionaron y trataron (eliminación o consolidación) para evitar duplicidad en el conjunto final.
 
 #### Resumen estadístico
 
@@ -462,8 +431,6 @@ El modulo de my plan es un espacio de visualización y gestión del plan nutrici
 
 Cada receta incluida en los menús diarios se muestra de forma individual, ofreciendo al usuario la posibilidad de realizar modificaciones directamente sobre las comidas programadas. Específicamente, el sistema permite realizar un swap en cualquier comida, aceptando la sugerencia propuesta por la plataforma, solicitando una alternativa adicional o rechazando la modificación para mantener la comida original. Dicho swap es recomendado por nuestro modelo KNN entrenado anteriorne.
 <img width="1584" height="857" alt="Captura de pantalla 2026-03-03 204808" src="https://github.com/user-attachments/assets/ea46a9b3-8f86-4b9b-96f0-b9eae3cbb827" />
-
-> Puedes visitar la página [aquí](https://smart-eat-ai.vercel.app/)
 
 ## 8. Instalación Rápida y Despliegue
 
