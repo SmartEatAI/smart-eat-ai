@@ -1,117 +1,37 @@
-# 🦙 SmartEatAI: Agente IA con Llama 3 + Nomic Embeddings (Docker)
+# Notebooks
 
-Este proyecto implementa un agente conversacional con arquitectura RAG
-(Retrieval-Augmented Generation) utilizando modelos ejecutados
-localmente mediante Ollama dentro de Docker.
+Este directorio contiene notebooks Jupyter usados para exploración, generación de la base de datos vectorial y pruebas de modelos del proyecto Smart-Eat-AI.
 
-------------------------------------------------------------------------
+Contenido principal
+- `Cuaderno_SmartEatAI.ipynb` — Notebook principal con experimentos, visualizaciones y notas generales.
+- `generar_base_de_datos_vectorial.ipynb` — Notebook para generar la base de datos vectorial (Chroma/FAISS u otra) usada en el buscador/recomendador.
 
-# 🐳 Uso con Docker
+Cómo abrir
+- Desde la raíz del proyecto, inicia Jupyter Lab/Notebook en el entorno Python apropiado:
 
-## Construir la imagen y contenedores
+```bash
+# conda
+conda activate <tu-entorno>
+jupyter lab
 
-Desde la raiz del proyecto ejecutar
-
-``` bash
-docker compose up
+# o con venv
+source .venv/Scripts/activate    # Windows: .venv\Scripts\activate
+jupyter lab
 ```
 
-------------------------------------------------------------------------
+Ejecutar notebooks (headless)
 
-# 🚀 Modelos Necesarios
-
-Antes de hacer uso debemos estar dentro del contenedor de ollama y descargar los siguientes modelos:
-
-## 🔹 Llama 3 y Llama 3.1
-
-``` bash
-ollama pull llama3
+```bash
+jupyter nbconvert --to notebook --execute notebooks/generar_base_de_datos_vectorial.ipynb --output executed.ipynb
 ```
 
-``` bash
-ollama pull llama3.1
-```
+Dependencias y entorno
+- Usa el mismo entorno Python que el backend; revisa `backend/requirements.txt` y `docker/backend/requirements.txt`.
+- Si los notebooks usan artefactos (modelos, vectores), comprueba `backend/files/` y `backend/data/`.
 
-## 🔹 Modelo de embeddings
+Notas útiles
+- Mantén copias de los notebooks importantes (no ejecutar directamente en producción sin revisar).
+- Para reproducibilidad, documenta en los notebooks las versiones de paquetes (ej. `pip freeze > requirements.txt`).
 
-``` bash
-ollama pull nomic-embed-text
-```
-
-------------------------------------------------------------------------
-
-# 📦 Dependencias
-
-El contenedor incluye:
-
--   Python 3.10+
--   LangChain
--   Ollama client
--   ChromaDB
--   FastAPI + Uvicorn
-
-------------------------------------------------------------------------
-
-# 🧠 Arquitectura del Agente
-
-1.  Usuario envía pregunta
-2.  Se generan embeddings con `nomic-embed-text`
-3.  Se realiza búsqueda vectorial
-4.  Se construye contexto
-5.  Se envía prompt enriquecido a `llama3` o `llama3.1`
-6.  Se devuelve respuesta final
-
-------------------------------------------------------------------------
-
-# 🔎 Verificar modelos instalados
-
-Dentro del contenedor o en el host:
-
-``` bash
-ollama list
-```
-
-------------------------------------------------------------------------
-
-# ⚠️ Problemas Comunes
-
-## ❌ Error: model not found
-
-Ejecutar nuevamente:
-
-``` bash
-ollama pull llama3
-ollama pull nomic-embed-text
-```
-
-## ❌ Error: connection refused
-
-Asegurarse de que Ollama esté corriendo:
-
-``` bash
-ollama serve
-```
-
-------------------------------------------------------------------------
-
-# 🪅 Obtener la ChromaDB
-
-* Abre el archivo de `generar_base_de_datos_vectorial.ipynb`.
-
-* Crea un venv.
-
-``` bash
-python -m venv venv
-```
-
-* Instala las dependencias y ejecutalo.
-
-* Una vez tengas la carpeta colocala en `/backend/app/data/`, tras eso ya podrás hacer uso del modelo y demás características de la aplicación.
-
-------------------------------------------------------------------------
-
-# 📌 Notas
-
--   Los modelos se ejecutan completamente en local.
--   No se envían datos a servicios externos.
--   El rendimiento depende directamente del hardware disponible.
+Soporte
+- Para más detalles consulta el README principal en la raíz del repositorio.
