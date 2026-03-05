@@ -14,7 +14,7 @@
 
 > [App desplegada](https://smart-eat-ai.vercel.app/)
 > 
-> [Documentacion](https://smarteatai-smart-eat-ai.mintlify.app/)
+> [Documentación](https://smarteatai-smart-eat-ai.mintlify.app/)
 
 ## Índice
 1. [Descripción del proyecto](#1-descripción-del-proyecto)
