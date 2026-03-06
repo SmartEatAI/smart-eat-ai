@@ -4,6 +4,7 @@ from sqlalchemy import and_, or_
 from langchain.tools import tool
 import logging
 import time
+import random  # <-- AÑADIDO: import random
 
 from app.database import SessionLocal
 from app.models.recipe import Recipe
@@ -35,7 +36,7 @@ def search_recipes_by_criteria(
     - "vegan breakfast ideas" → call with meal_type="breakfast", diet_type="vegan"
 
     Parameters: meal_type, diet_type, max_calories, min_protein, max_carbs, max_fat, query
-    Returns 5 recipes by default, but can return less if not enough matches.
+    Returns 5 recipes by default if not specified a limit.
     """
     db: Session = SessionLocal()
     start_time = time.time()
@@ -46,6 +47,15 @@ def search_recipes_by_criteria(
             return {"result": "User or profile not found", "recipes": []}
 
         profile = user.profile
+
+        # ===== NUEVO: Valores por defecto para búsquedas implícitas =====
+        if max_calories is None and query and "low calorie" in query.lower():
+            max_calories = 500  # Default para "low calorie"
+            logging.info(f"Implied max_calories set to: {max_calories}")
+
+        if min_protein is None and query and "high protein" in query.lower():
+            min_protein = 20  # Default para "high protein"
+            logging.info(f"Implied min_protein set to: {min_protein}")
 
         # ===== OPTIMIZACIÓN 1: Filtros SQL básicos primero =====
         # Construimos la query base
@@ -171,25 +181,53 @@ def search_recipes_by_criteria(
             filtered_recipes = llm_valid_recipes
             logging.info(f"Recipes after LLM filter: {len(filtered_recipes)} (processed {recipes_processed})")
         
-        # ===== OPTIMIZACIÓN 5: Preparar respuesta =====
+        # ===== MODIFICADO: Preparar respuesta con randomización =====
+        # Seleccionar aleatoriamente hasta 5 recetas
+        if len(filtered_recipes) > 5:
+            random.shuffle(filtered_recipes)
+            selected_recipes = filtered_recipes[:5]
+        else:
+            selected_recipes = filtered_recipes
+
         response = [
             f"Name: {r.name}, protein: {r.protein}, carbs: {r.carbs}, fat: {r.fat}"
-            for r in filtered_recipes[:5]
+            for r in selected_recipes
         ]
 
-        # Si no hay resultados exactos, buscar alternativas cercanas
-        if not response and min_protein is not None:
-            close_recipes = [
-                r for r in all_recipes[:20]  # Solo miramos las primeras 20
-                if r.protein >= min_protein * 0.8 and r.recipe_id not in exclude_ids
-            ]
+        # ===== MODIFICADO: Si no hay resultados exactos, buscar alternativas cercanas con randomización =====
+        if not response and (min_protein is not None or max_calories is not None):
+            # Construir condiciones para búsqueda de alternativas
+            close_conditions = []
+            if max_calories is not None:
+                close_conditions.append(Recipe.calories <= max_calories * 1.2)  # 20% más
+            if min_protein is not None:
+                close_conditions.append(Recipe.protein >= min_protein * 0.8)  # 20% menos
+            
+            # Buscar recetas alternativas
+            close_query = db.query(Recipe)
+            if close_conditions:
+                close_query = close_query.filter(and_(*close_conditions))
+            
+            close_recipes = close_query.limit(30).all()
+            
+            # Excluir las del plan activo
+            close_recipes = [r for r in close_recipes if r.recipe_id not in exclude_ids]
+            
+            # Seleccionar aleatoriamente hasta 5
+            if len(close_recipes) > 5:
+                random.shuffle(close_recipes)
+                close_recipes = close_recipes[:5]
+            
             close_response = [
                 f"Name: {r.name}, protein: {r.protein}, carbs: {r.carbs}, fat: {r.fat}"
-                for r in close_recipes[:5]
+                for r in close_recipes
             ]
+            
             if close_response:
+                filter_type = "calories" if max_calories is not None else "protein"
+                filter_value = max_calories if max_calories is not None else min_protein
                 return {
-                    "result": f"No exact matches. Close alternatives:",
+                    "result": f"No exact matches for {filter_value}g of {filter_type}. Here are {len(close_response)} close alternatives:",
                     "recipes": close_response
                 }
 
