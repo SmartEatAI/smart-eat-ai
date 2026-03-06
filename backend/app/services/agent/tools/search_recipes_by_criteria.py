@@ -29,6 +29,7 @@ def search_recipes_by_criteria(
     NEVER ask for clarification - use this tool immediately with whatever info provided.
     When user asks for recipes (ANY cuisine request), 
     call this tool right away with available parameters. If parameters missing, use defaults/null.
+    Returns 5 recipes by default if not specified a number of recipes to return.
 
     Examples of when to use WITHOUT asking questions:
     - "show me low calorie recipes" → call with max_calories=null (tool handles it)
@@ -36,7 +37,6 @@ def search_recipes_by_criteria(
     - "vegan breakfast ideas" → call with meal_type="breakfast", diet_type="vegan"
 
     Parameters: meal_type, diet_type, max_calories, min_protein, max_carbs, max_fat, query
-    Returns 5 recipes by default if not specified a limit.
     """
     db: Session = SessionLocal()
     start_time = time.time()
