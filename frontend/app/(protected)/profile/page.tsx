@@ -22,8 +22,8 @@ export default function ProfilePage() {
   const fetchOptions = async () => {
   try {
       const [restrRes, tastesRes] = await Promise.all([
-        fetch("https://backend-smarteatai.onrender.com/api/restriction"),
-        fetch("https://backend-smarteatai.onrender.com/api/taste")
+        fetch("http://localhost:8000/api/restriction"),
+        fetch("http://localhost:8000/api/taste")
       ]);
       const restrData = await restrRes.json();
       const tastesData = await tastesRes.json();

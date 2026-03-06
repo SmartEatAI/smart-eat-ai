@@ -24,7 +24,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
             try {
                 // Validate token with backend
-                const response = await fetch("https://backend-smarteatai.onrender.com/api/auth/me", {
+                const response = await fetch("http://localhost:8000/api/auth/me", {
                     headers: {
                         "Authorization": `Bearer ${token}`,
                     },
