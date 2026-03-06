@@ -16,7 +16,7 @@ class Settings:
     ACCESS_TOKEN_EXPIRE_MINUTES: int = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "3000"))
     
     # Backend
-    BACKEND_URL: str = os.getenv("BACKEND_URL", "http://localhost:8000")
+    BACKEND_URL: str = os.getenv("BACKEND_URL", "https://backend-smarteatai.onrender.com")
     FRONTEND_URL: str = os.getenv("FRONTEND_URL", "https://smart-eat-ai.vercel.app")
     
     # OLLAMA

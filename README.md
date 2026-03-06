@@ -467,7 +467,7 @@ Si no funciona, ir a los README.md especificos de Backend o Frontend, que se enc
 
 4. **Accede a la aplicación:**
 	- Frontend: [https://smart-eat-ai.vercel.app](https://smart-eat-ai.vercel.app)
-	- Backend API: [http://localhost:8000](http://localhost:8000)
+	- Backend API: [https://backend-smarteatai.onrender.com](https://backend-smarteatai.onrender.com)
 	- Documentación API: [https://backend-smarteatai.onrender.com/docs](https://backend-smarteatai.onrender.com/docs)
 
 
