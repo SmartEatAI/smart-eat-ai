@@ -1,19 +1,33 @@
 from langchain_ollama import ChatOllama, OllamaEmbeddings
 from langchain_chroma import Chroma
+from langchain_groq import ChatGroq
+from langchain_core.messages import HumanMessage
 from app.config import settings
 
-# Configuración para 8GB VRAM con Llama 3.1
-# Valores aumentados para preservar contexto completo del plan nutricional
-OLLAMA_CONFIG = {
-    "model": settings.OLLAMA_MODEL,
-    "base_url": settings.OLLAMA_BASE_URL,
-    "temperature": 0,        # 0 para mejor tool calling
-    "num_ctx": 16384,        # Contexto ampliado (de 8192)
-    "num_predict": 4096,     # Respuestas más largas (de 2048)
+
+GROQ_CONFIG = {
+    "model": settings.GROQ_MODEL,  # 32K tokens de contexto
+    "temperature": 0,
+    "max_tokens": 4096,  # Respuestas largas
+    "timeout": 60,
+    "max_retries": 2,
+    "api_key": settings.GROQ_API_KEY,
 }
 
-# Inicialización del LLM con soporte para tools
-llm = ChatOllama(**OLLAMA_CONFIG)
+# Inicialización del LLM con Groq
+llm = ChatGroq(**GROQ_CONFIG)
+print("✅ Groq inicializado correctamente")
+
+try:
+    # Probar una llamada simple
+    response = llm.invoke([HumanMessage(content="Hola, ¿cómo estás?")])
+    print(f"✅ Respuesta recibida: {response.content[:50]}...")
+    
+except Exception as e:
+    print(f"❌ Error: {str(e)}")
+    import traceback
+    traceback.print_exc()
+
 
 # Inicialización de RAG
 embeddings = OllamaEmbeddings(

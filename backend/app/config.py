@@ -23,6 +23,10 @@ class Settings:
     OLLAMA_MODEL: str = os.getenv("OLLAMA_MODEL")
     OLLAMA_BASE_URL: str = os.getenv("OLLAMA_BASE_URL")
 
+    # GROQ
+    GROQ_MODEL: str = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+    GROQ_API_KEY: str = os.getenv("GROQ_API_KEY")
+
     def __init__(self):
         if not self.DATABASE_URL:
             raise ValueError("DATABASE_URL is not set")

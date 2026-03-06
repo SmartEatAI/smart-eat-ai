@@ -36,3 +36,4 @@ langchainhub>=0.1.15
 langchain_chroma
 chromadb
 
+langchain-groq>=0.1.0
