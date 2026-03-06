@@ -54,7 +54,7 @@ frontend/
    ```bash
    npm run dev
    ```
-3. Accede a la app en [http://localhost:3000](http://localhost:3000)
+3. Accede a la app en [https://smart-eat-ai.vercel.app](https://smart-eat-ai.vercel.app)
 
 > **Nota:** Si usas Docker, consulta el README principal del proyecto para instrucciones de despliegue con contenedores.
 

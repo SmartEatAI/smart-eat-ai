@@ -17,7 +17,7 @@ class Settings:
     
     # Backend
     BACKEND_URL: str = os.getenv("BACKEND_URL", "http://localhost:8000")
-    FRONTEND_URL: str = os.getenv("FRONTEND_URL", "http://localhost:3000")
+    FRONTEND_URL: str = os.getenv("FRONTEND_URL", "https://smart-eat-ai.vercel.app")
     
     # OLLAMA
     OLLAMA_MODEL: str = os.getenv("OLLAMA_MODEL")

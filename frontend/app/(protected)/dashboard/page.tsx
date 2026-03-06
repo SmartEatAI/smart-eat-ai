@@ -56,7 +56,7 @@ export default function Dashboard() {
             return;
         }
 
-        fetch("http://localhost:8000/api/plan/current", {
+        fetch("https://backend-smarteatai.onrender.com/api/plan/current", {
             headers: { Authorization: `Bearer ${token}` },
         })
             .then((res) => {
@@ -143,7 +143,7 @@ export default function Dashboard() {
 
         try {
             const response = await fetch(
-                `http://localhost:8000/api/meal-detail/${mealDetailId}/status?status=${newStatus}`,
+                `https://backend-smarteatai.onrender.com/api/meal-detail/${mealDetailId}/status?status=${newStatus}`,
                 {
                     method: "PUT",
                     headers: {

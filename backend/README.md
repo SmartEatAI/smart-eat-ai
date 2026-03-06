@@ -162,8 +162,8 @@ Este script insertará usuarios, categorías, perfiles, recetas y planes en la b
 ## Desarrollo
 
 Accede a la documentación interactiva de la API en:
-- Swagger UI: http://localhost:8000/docs
-- ReDoc: http://localhost:8000/redoc
+- Swagger UI: https://backend-smarteatai.onrender.com/docs
+- ReDoc: https://backend-smarteatai.onrender.com/redoc
 
 ## Configuración e integración de Ollama
 
@@ -239,7 +239,7 @@ Asegúrate de definir en tu `.env`:
 
 ```
 OLLAMA_MODEL=llama3:latest
-OLLAMA_BASE_URL=http://ollama:11434
+OLLAMA_BASE_URL=https://novel-flowers-jet-outdoor.trycloudflare.com
 CHROMA_EMBEDDING_MODEL=llama3:latest
 CHROMA_DB=/app/data/chroma_db_recipes
 ```

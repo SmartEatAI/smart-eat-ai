@@ -85,7 +85,7 @@ export default function ChatPage() {
 
         try {
             const response = await fetch(
-                `http://localhost:8000/api/chat/?message=${encodeURIComponent(
+                `https://backend-smarteatai.onrender.com/api/chat/?message=${encodeURIComponent(
                     text
                 )}`,
                 {
@@ -123,7 +123,7 @@ export default function ChatPage() {
     async function fetchNewRecipe(mealType: string, recipeId: number) {
         try {
             const response = await fetch(
-                `http://localhost:8000/api/ml/swap-recipe?recipe_id=${recipeId}&meal_label=${mealType}`,
+                `https://backend-smarteatai.onrender.com/api/ml/swap-recipe?recipe_id=${recipeId}&meal_label=${mealType}`,
                 {
                     method: "POST",
                     headers: {

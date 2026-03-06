@@ -29,7 +29,7 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("http://localhost:8000/api/profile/", {
+      const res = await fetch("https://backend-smarteatai.onrender.com/api/profile/", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -79,7 +79,7 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
         DEBUG: Ver el payload antes de enviarlo
         #######################################*/
       
-      const res = await fetch("http://localhost:8000/api/profile/", {
+      const res = await fetch("https://backend-smarteatai.onrender.com/api/profile/", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
