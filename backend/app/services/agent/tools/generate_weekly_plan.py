@@ -145,45 +145,23 @@ def all_recipes_for_user(user_id: int, max_recipes_per_type: int = 50) -> Dict[s
                 # Get user's diet names
                 diet_text = ", ".join(diet_type_names_filtered)
 
-                print(f"Filtering with AI - Restrictions: [{restrictions_text}], Diets: [{diet_text}]")
+                print(f"Filtering with AI (batch) - Restrictions: [{restrictions_text}], Diets: [{diet_text}]")
                 
-                filtered_recipes = []
+                # Usar validación en batch para reducir llamadas al LLM (evita rate limits de Groq)
+                from .rate_limit_utils import validate_recipes_batch
                 
-                # Process recipes until enough that comply are found
-                for recipe in recipes[:max_recipes_per_type*2]:
-
-                    # Build message for the LLM
-                    # 1. Define the diet part only if it exists
-                    diet_line = f"and I require diets: [{diet_text}]." if diet_text else ""
-
-                    # 2. Build the final message
-                    message = (
-                        f"answer ONLY with YES or NO. "
-                        f"I have a dietary profile with restrictions: [{restrictions_text}] {diet_line}"
-                        f"Does this recipe comply with my restrictions: {recipe.name} Ingredients: [{recipe.ingredients}]"
-                    )
-
-                    try:
-                        # Call Ollama with the base model without tools or context
-                        response = llm.invoke(message)
-                        answer = response.content.strip().upper()
-                        
-                        print(f"- Recipe: {recipe.name} -> {answer}")
-                        
-                        # If the answer is YES, add to filtered list
-                        if answer == "YES":
-                            filtered_recipes.append(recipe)
-                            
-                            # If we have enough, exit the loop
-                            if len(filtered_recipes) >= max_recipes_per_type:
-                                print(f"  ✓ Reached limit of {max_recipes_per_type} recipes for {meal_type_name}")
-                                break
-                    
-                    except Exception as e:
-                        print(f"  ✗ Error processing recipe {recipe.name}: {e}")
-                        continue
+                filtered_recipes = validate_recipes_batch(
+                    llm=llm,
+                    recipes=recipes[:max_recipes_per_type * 2],
+                    restrictions_text=restrictions_text,
+                    diet_text=diet_text,
+                    batch_size=10  # 10 recetas por llamada al LLM
+                )
                 
-                print(f"After AI filtering - {meal_type_name}: {len(filtered_recipes)} valid recipes")
+                # Limitar al máximo necesario
+                filtered_recipes = filtered_recipes[:max_recipes_per_type]
+                
+                print(f"After AI filtering (batch) - {meal_type_name}: {len(filtered_recipes)} valid recipes")
                 
                 # Use filtered recipes
                 limited_recipes = filtered_recipes

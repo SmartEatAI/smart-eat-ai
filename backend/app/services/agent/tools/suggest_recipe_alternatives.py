@@ -246,21 +246,19 @@ def suggest_recipe_alternatives(
                 if not recipe:
                     continue
                 
-                # Construir prompt igual que en generate_weekly_plan
-                diet_line = f"y quiero dietas: [{diet_text}]." if diet_text else ""
-                mensaje = (
-                    f"responde SOLO con SI o NO. "
-                    f"Tengo un perfil alimenticio con restriccion de [{restrictions_text}] {diet_line}."
-                    f"Esta receta cumple con mis restricciones: {recipe.name} Ingredientes: [{recipe.ingredients}]"
+                # Usar utilidad con retry para evitar rate limits
+                from .rate_limit_utils import validate_single_recipe
+                
+                is_valid = validate_single_recipe(
+                    llm=llm,
+                    recipe_name=recipe.name,
+                    ingredients=recipe.ingredients or "",
+                    restrictions_text=restrictions_text,
+                    diet_text=diet_text
                 )
-                try:
-                    response = llm.invoke(mensaje)
-                    respuesta = response.content.strip().upper()
-                    if respuesta != "SI":
-                        continue  # No cumple, probar siguiente candidato
-                except Exception as e:
-                    logger.warning(f"Error en LLM al evaluar receta {recipe.name}: {e}")
-                    continue  # Ante error, saltamos esta receta
+                
+                if not is_valid:
+                    continue  # No cumple, probar siguiente candidato
             
             # Si llegamos aquí, la receta es válida
             seen_ids.add(candidate['recipe_id'])

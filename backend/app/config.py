@@ -24,7 +24,7 @@ class Settings:
     OLLAMA_BASE_URL: str = os.getenv("OLLAMA_BASE_URL")
 
     # GROQ
-    GROQ_MODEL: str = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+    GROQ_MODEL: str = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
     GROQ_API_KEY: str = os.getenv("GROQ_API_KEY")
 
     def __init__(self):

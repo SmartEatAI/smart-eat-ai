@@ -22,7 +22,6 @@ numpy
 # seaborn
 
 # LangChain dependencies
-     
 langchain>=0.2.0
 langchain-core>=0.2.0
 langchain-community>=0.2.0
@@ -37,3 +36,4 @@ langchain_chroma
 chromadb
 
 langchain-groq>=0.1.0
+groq>=0.4.0  # SDK de Groq para manejo de excepciones (RateLimitError)

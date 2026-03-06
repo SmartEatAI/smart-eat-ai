@@ -132,37 +132,21 @@ def search_recipes_by_criteria(
             # Activate LLM filter if there are restrictions or vegan/vegetarian diets
             if restriction_names or diet_text_list:
                 use_llm_filter = True
-                logging.info(f"Applying AI filter - Restrictions: [{restrictions_text}], Diets: [{diet_text}]")
+                logging.info(f"Applying AI filter (batch) - Restrictions: [{restrictions_text}], Diets: [{diet_text}]")
         
         if use_llm_filter:
-            llm_filtered_recipes: List[Recipe] = []
+            # Usar validación en batch para reducir llamadas al LLM (evita rate limits de Groq)
+            from .rate_limit_utils import validate_recipes_batch
             
-            for recipe in filtered_recipes:
-                # Build message for the LLM
-                diet_line = f"and I require diets: [{diet_text}]." if diet_text else ""
-                message = (
-                    f"answer ONLY with YES or NO. "
-                    f"I have a dietary profile with restrictions: [{restrictions_text}] {diet_line}"
-                    f"Does this recipe comply with my restrictions: {recipe.name} Ingredients: [{recipe.ingredients}]"
-                )
-                
-                try:
-                    # Call the LLM to validate the recipe
-                    response = llm.invoke(message)
-                    answer = response.content.strip().upper()
-                    
-                    logging.info(f"Recipe: {recipe.name} -> {answer}")
-                    
-                    # If answer is YES, add to filtered list
-                    if answer == "YES":
-                        llm_filtered_recipes.append(recipe)
-                
-                except Exception as e:
-                    logging.warning(f"Error in LLM while evaluating recipe {recipe.name}: {e}")
-                    continue
+            filtered_recipes = validate_recipes_batch(
+                llm=llm,
+                recipes=filtered_recipes,
+                restrictions_text=restrictions_text,
+                diet_text=diet_text,
+                batch_size=10  # 10 recetas por llamada al LLM
+            )
             
-            filtered_recipes = llm_filtered_recipes
-            logging.info(f"Recipes after AI filter: {len(filtered_recipes)}")
+            logging.info(f"Recipes after AI filter (batch): {len(filtered_recipes)}")
 
         # Text search in name and ingredients (normal SQL search)
         if query:

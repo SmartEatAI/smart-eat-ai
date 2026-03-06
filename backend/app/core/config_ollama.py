@@ -1,41 +1,89 @@
-from langchain_ollama import ChatOllama, OllamaEmbeddings
+"""
+Configuración del LLM (Groq) y embeddings para el agente nutricional.
+
+Groq se usa para inferencia LLM (llama-3.1-8b-instant).
+Ollama se mantiene solo para embeddings locales (Chroma RAG).
+"""
+import logging
+from functools import lru_cache
+from langchain_ollama import OllamaEmbeddings
 from langchain_chroma import Chroma
 from langchain_groq import ChatGroq
-from langchain_core.messages import HumanMessage
+from groq import RateLimitError, APIConnectionError, APIStatusError
 from app.config import settings
 
+logger = logging.getLogger(__name__)
 
+
+# ============================================================
+# CONFIGURACIÓN DE GROQ (LLM)
+# ============================================================
 GROQ_CONFIG = {
-    "model": settings.GROQ_MODEL,  # 32K tokens de contexto
+    "model": settings.GROQ_MODEL,  # llama-3.1-8b-instant: 128K tokens de contexto
     "temperature": 0,
-    "max_tokens": 4096,  # Respuestas largas
+    "max_tokens": 4096,
     "timeout": 60,
-    "max_retries": 2,
+    "max_retries": 3,  # Reintentos automáticos para rate limits
     "api_key": settings.GROQ_API_KEY,
 }
 
-# Inicialización del LLM con Groq
-llm = ChatGroq(**GROQ_CONFIG)
-print("✅ Groq inicializado correctamente")
 
-try:
-    # Probar una llamada simple
-    response = llm.invoke([HumanMessage(content="Hola, ¿cómo estás?")])
-    print(f"✅ Respuesta recibida: {response.content[:50]}...")
+def _validate_groq_config() -> None:
+    """Valida que la configuración de Groq esté completa."""
+    if not settings.GROQ_API_KEY:
+        raise ValueError(
+            "GROQ_API_KEY no está configurada. "
+            "Añádela al archivo .env o como variable de entorno."
+        )
+    if not settings.GROQ_MODEL:
+        logger.warning("GROQ_MODEL no configurado, usando valor por defecto: llama-3.1-8b-instant")
+
+
+@lru_cache(maxsize=1)
+def get_llm() -> ChatGroq:
+    """
+    Inicializa y retorna el LLM de Groq (singleton).
     
-except Exception as e:
-    print(f"❌ Error: {str(e)}")
-    import traceback
-    traceback.print_exc()
+    Maneja errores comunes:
+    - RateLimitError: Se excedió el límite de peticiones
+    - APIConnectionError: No se puede conectar a Groq
+    - APIStatusError: Error en la API de Groq
+    """
+    _validate_groq_config()
+    try:
+        llm = ChatGroq(**GROQ_CONFIG)
+        logger.info(f"✅ Groq LLM inicializado: {settings.GROQ_MODEL}")
+        return llm
+    except (RateLimitError, APIConnectionError, APIStatusError) as e:
+        logger.error(f"❌ Error inicializando Groq: {e}")
+        raise
 
 
-# Inicialización de RAG
-embeddings = OllamaEmbeddings(
-    model=settings.CHROMA_EMBEDDING_MODEL, 
-    base_url=settings.OLLAMA_BASE_URL
-)
+# Instancia singleton para compatibilidad con código existente
+llm = get_llm()
 
-vector_db = Chroma(
-    persist_directory=settings.CHROMA_DB, 
-    embedding_function=embeddings
-)
+
+# ============================================================
+# CONFIGURACIÓN DE EMBEDDINGS (Ollama local)
+# ============================================================
+@lru_cache(maxsize=1)
+def get_embeddings() -> OllamaEmbeddings:
+    """Inicializa embeddings de Ollama (para RAG con Chroma)."""
+    return OllamaEmbeddings(
+        model=settings.CHROMA_EMBEDDING_MODEL,
+        base_url=settings.OLLAMA_BASE_URL
+    )
+
+
+@lru_cache(maxsize=1)
+def get_vector_db() -> Chroma:
+    """Inicializa la base de datos vectorial Chroma."""
+    return Chroma(
+        persist_directory=settings.CHROMA_DB,
+        embedding_function=get_embeddings()
+    )
+
+
+# Instancias singleton para compatibilidad
+embeddings = get_embeddings()
+vector_db = get_vector_db()
