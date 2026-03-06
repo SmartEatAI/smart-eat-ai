@@ -1,8 +1,9 @@
-from typing import Optional, List
+from typing import Optional, List, Dict
 from sqlalchemy.orm import Session
-from sqlalchemy import and_
+from sqlalchemy import and_, or_
 from langchain.tools import tool
 import logging
+import time
 
 from app.database import SessionLocal
 from app.models.recipe import Recipe
@@ -22,32 +23,23 @@ def search_recipes_by_criteria(
     max_fat: Optional[float] = None,
     query: Optional[str] = None
 ):
-    """
+    """ 
     Searches for recipes in the GENERAL DATABASE according to specific criteria. NOT related to the active plan.
-    
-    WHEN TO USE (general recipe searches):
-    - "Search for chicken recipes", "vegan recipes", "low-calorie options"
-    - "Give me high-protein recipes", "breakfast recipes"
-    - When the user wants to EXPLORE new recipes WITHOUT modifying their plan
-    - When they ask for general recommendations or meal ideas
-    
-    WHEN NOT TO USE (use suggest_recipe_alternatives instead):
-    - "I want to change Monday's breakfast" → suggest_recipe_alternatives
-    - "Change Sunday's dinner" → suggest_recipe_alternatives  
-    - Any request to MODIFY a meal from the active plan
-    
-    KEY DIFFERENCE: This tool searches the entire database.
-    suggest_recipe_alternatives searches for SIMILAR alternatives to a specific meal from the plan.
-    
-    Parameters:
-    - meal_type: breakfast, lunch, dinner, snack
-    - diet_type: vegetarian, vegan, gluten-free, etc.
-    - max_calories, min_protein, max_carbs, max_fat: nutritional filters
-    - query: semantic search by ingredients or description
-    
-    Returns 5 recipes by default.
+    NEVER ask for clarification - use this tool immediately with whatever info provided.
+    When user asks for recipes (ANY cuisine request), 
+    call this tool right away with available parameters. If parameters missing, use defaults/null.
+
+    Examples of when to use WITHOUT asking questions:
+    - "show me low calorie recipes" → call with max_calories=null (tool handles it)
+    - "find chicken recipes" → call with query="chicken"
+    - "vegan breakfast ideas" → call with meal_type="breakfast", diet_type="vegan"
+
+    Parameters: meal_type, diet_type, max_calories, min_protein, max_carbs, max_fat, query
+    Returns 5 recipes by default, but can return less if not enough matches.
     """
     db: Session = SessionLocal()
+    start_time = time.time()
+    
     try:
         user = db.query(User).filter(User.id == user_id).first()
         if not user or not user.profile:
@@ -55,90 +47,105 @@ def search_recipes_by_criteria(
 
         profile = user.profile
 
-        # Only strictly filter by vegan/vegetarian diets (same as in generate_weekly_plan)
-        # Other diets like "high protein" should not exclude recipes
-        target_strict_diets = {"vegan", "vegetarian"}
-        required_diets = set()
-        if profile.diet_types:
-            for d in profile.diet_types:
-                if d.name.lower() in target_strict_diets:
-                    required_diets.add(d.name.lower())
-
+        # ===== OPTIMIZACIÓN 1: Filtros SQL básicos primero =====
+        # Construimos la query base
+        query_db = db.query(Recipe)
+        
+        # Aplicar filtros básicos de SQL (los más rápidos)
+        if meal_type:
+            query_db = query_db.join(Recipe.meal_types).filter(
+                Recipe.meal_types.any(name=meal_type.lower())
+            )
+        
+        # Filtros numéricos (muy rápidos en SQL)
+        if max_calories is not None:
+            query_db = query_db.filter(Recipe.calories <= max_calories)
+        if min_protein is not None:
+            query_db = query_db.filter(Recipe.protein >= min_protein)
+        if max_carbs is not None:
+            query_db = query_db.filter(Recipe.carbs <= max_carbs)
+        if max_fat is not None:
+            query_db = query_db.filter(Recipe.fat <= max_fat)
+        
+        # Excluir recetas del plan activo
         plan = (
             db.query(Plan)
             .filter(Plan.user_id == user.id, Plan.active.is_(True))
             .first()
         )
-        exclude_ids = (
-            {
+        exclude_ids = set()
+        if plan:
+            exclude_ids = {
                 meal.recipe_id 
                 for day in plan.daily_menus 
                 for meal in day.meal_details
             }
-            if plan else set()
-        )
+        
+        # Obtener TODAS las recetas que pasan los filtros SQL
+        # Pero limitamos a un número razonable para evitar sobrecarga
+        all_recipes = query_db.limit(100).all()  # Limitamos a 100 recetas máximo
+        logging.info(f"Total recipes after SQL filters: {len(all_recipes)}")
 
-        query_db = db.query(Recipe)
-        if meal_type:
-            query_db = query_db.join(Recipe.meal_types).filter(
-                Recipe.meal_types.any(
-                    name=meal_type.lower()
-                )
-            )
-        if diet_type:
-            query_db = query_db.join(Recipe.diet_types).filter(
-                Recipe.diet_types.any(
-                    name=diet_type.lower()
-                )
-            )
-        recipes = query_db.all()
-        logging.info(f"Total recipes after meal_type/diet_type filter: {len(recipes)}")
-
-        # Nutritional and diet filtering
-        filtered_recipes: List[Recipe] = []
-        for recipe in recipes:
-            if recipe.recipe_id in exclude_ids:
-                continue
-            recipe_diets = {d.name.lower() for d in recipe.diet_types}
-            if required_diets and not required_diets.intersection(recipe_diets):
-                continue
-            if max_calories is not None and recipe.calories > max_calories:
-                continue
-            if min_protein is not None and recipe.protein < min_protein:
-                continue
-            if max_carbs is not None and recipe.carbs > max_carbs:
-                continue
-            if max_fat is not None and recipe.fat > max_fat:
-                continue
-            filtered_recipes.append(recipe)
-        logging.info(f"Recipes after nutritional filter: {len(filtered_recipes)}")
-
-        # AI filtering for dietary restrictions
-        use_llm_filter = False
+        # ===== OPTIMIZACIÓN 2: Filtrado por lotes sin paralelismo complejo =====
+        # Determinamos si necesitamos el filtro LLM
+        has_llm_filter = False
         restrictions_text = ""
         diet_text = ""
         
         if profile.restrictions or profile.diet_types:
-            # Get user restriction names
             restriction_names = [r.name for r in profile.restrictions] if profile.restrictions else []
             restrictions_text = ", ".join(restriction_names)
             
-            # Check for vegan/vegetarian diets
             diet_type_names = [d.name for d in profile.diet_types] if profile.diet_types else []
             target_diets = {"vegan", "vegetarian"}
             diet_text_list = [name for name in diet_type_names if name.lower() in target_diets]
             diet_text = ", ".join(diet_text_list)
             
-            # Activate LLM filter if there are restrictions or vegan/vegetarian diets
             if restriction_names or diet_text_list:
-                use_llm_filter = True
-                logging.info(f"Applying AI filter - Restrictions: [{restrictions_text}], Diets: [{diet_text}]")
+                has_llm_filter = True
+                logging.info(f"LLM filter active - Restrictions: [{restrictions_text}], Diets: [{diet_text}]")
+
+        # ===== OPTIMIZACIÓN 3: Procesamiento por lotes con early exit =====
+        filtered_recipes = []
+        recipes_processed = 0
+        recipes_to_return = 5  # Número de recetas a devolver
         
-        if use_llm_filter:
-            llm_filtered_recipes: List[Recipe] = []
+        # Primero filtramos por diet_type si se proporcionó
+        if diet_type:
+            filtered_recipes = [
+                r for r in all_recipes
+                if diet_type.lower() in [d.name.lower() for d in r.diet_types]
+            ]
+        else:
+            filtered_recipes = all_recipes.copy()
+        
+        # Filtramos por exclude_ids
+        filtered_recipes = [r for r in filtered_recipes if r.recipe_id not in exclude_ids]
+        
+        # Si hay query de texto, aplicamos ese filtro ahora (es rápido)
+        if query:
+            query_lower = query.lower()
+            filtered_recipes = [
+                r for r in filtered_recipes
+                if query_lower in r.name.lower() or 
+                    (r.ingredients and query_lower in r.ingredients.lower())
+            ]
+        
+        logging.info(f"Recipes after basic filters: {len(filtered_recipes)}")
+        
+        # ===== OPTIMIZACIÓN 4: LLM filter con early stopping =====
+        if has_llm_filter and filtered_recipes:
+            llm_valid_recipes = []
             
             for recipe in filtered_recipes:
-                # Build message for the LLM
+                # Verificamos si ya tenemos suficientes recetas
+                if len(llm_valid_recipes) >= recipes_to_return:
+                    logging.info(f"Early stopping: found {recipes_to_return} valid recipes")
+                    break
+                
+                recipes_processed += 1
+                
+                # Construir mensaje para LLM
                 diet_line = f"and I require diets: [{diet_text}]." if diet_text else ""
                 message = (
                     f"answer ONLY with YES or NO. "
@@ -147,42 +154,33 @@ def search_recipes_by_criteria(
                 )
                 
                 try:
-                    # Call the LLM to validate the recipe
+                    # Llamada al LLM
                     response = llm.invoke(message)
                     answer = response.content.strip().upper()
                     
-                    logging.info(f"Recipe: {recipe.name} -> {answer}")
+                    logging.info(f"Recipe {recipes_processed}: {recipe.name} -> {answer}")
                     
-                    # If answer is YES, add to filtered list
                     if answer == "YES":
-                        llm_filtered_recipes.append(recipe)
+                        llm_valid_recipes.append(recipe)
                 
                 except Exception as e:
-                    logging.warning(f"Error in LLM while evaluating recipe {recipe.name}: {e}")
+                    logging.warning(f"Error in LLM for recipe {recipe.name}: {e}")
                     continue
             
-            filtered_recipes = llm_filtered_recipes
-            logging.info(f"Recipes after AI filter: {len(filtered_recipes)}")
-
-        # Text search in name and ingredients (normal SQL search)
-        if query:
-            query_lower = query.lower()
-            filtered_recipes = [
-                r for r in filtered_recipes 
-                if query_lower in r.name.lower() or 
-                    (r.ingredients and query_lower in r.ingredients.lower())
-            ]
-            logging.info(f"Recipes after query filter '{query}': {len(filtered_recipes)}")
-
+            # Reemplazamos filtered_recipes con las válidas
+            filtered_recipes = llm_valid_recipes
+            logging.info(f"Recipes after LLM filter: {len(filtered_recipes)} (processed {recipes_processed})")
+        
+        # ===== OPTIMIZACIÓN 5: Preparar respuesta =====
         response = [
             f"Name: {r.name}, protein: {r.protein}, carbs: {r.carbs}, fat: {r.fat}"
             for r in filtered_recipes[:5]
         ]
 
-        # If no exact recipes, show close suggestions
+        # Si no hay resultados exactos, buscar alternativas cercanas
         if not response and min_protein is not None:
             close_recipes = [
-                r for r in recipes
+                r for r in all_recipes[:20]  # Solo miramos las primeras 20
                 if r.protein >= min_protein * 0.8 and r.recipe_id not in exclude_ids
             ]
             close_response = [
@@ -191,15 +189,13 @@ def search_recipes_by_criteria(
             ]
             if close_response:
                 return {
-                    "result": f"No recipes found with exactly {min_protein}g of protein, but here are close options:",
+                    "result": f"No exact matches. Close alternatives:",
                     "recipes": close_response
                 }
-            else:
-                return {
-                    "result": f"No recipes found matching the requested criteria.",
-                    "recipes": []
-                }
 
+        elapsed_time = time.time() - start_time
+        logging.info(f"Search completed in {elapsed_time:.2f} seconds")
+        
         return {
             "result": f"Found {len(response)} recipes",
             "recipes": response
@@ -208,9 +204,6 @@ def search_recipes_by_criteria(
     except Exception as e:
         logging.error(f"Error searching recipes: {str(e)}")
         db.rollback()
-        return {
-            "result": f"Error searching recipes: {str(e)}", 
-            "recipes": []
-        }
+        return {"result": f"Error searching recipes: {str(e)}", "recipes": []}
     finally:
         db.close()
