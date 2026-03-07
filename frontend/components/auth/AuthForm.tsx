@@ -48,7 +48,7 @@ const AuthForm: React.FC = () => {
         try {
             const endpoint = mode === "login" ? "/api/auth/login" : "/api/auth/register";
             
-            const response = await fetch(`https://backend-smarteatai.onrender.com${endpoint}`, {
+            const response = await fetch(`https://smart-eat-ai-backend.onrender.com${endpoint}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

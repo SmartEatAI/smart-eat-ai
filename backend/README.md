@@ -162,8 +162,8 @@ Este script insertará usuarios, categorías, perfiles, recetas y planes en la b
 ## Desarrollo
 
 Accede a la documentación interactiva de la API en:
-- Swagger UI: https://backend-smarteatai.onrender.com/docs
-- ReDoc: https://backend-smarteatai.onrender.com/redoc
+- Swagger UI: https://smart-eat-ai-backend.onrender.com/docs
+- ReDoc: https://smart-eat-ai-backend.onrender.com/redoc
 
 ## Configuración e integración de Ollama
 

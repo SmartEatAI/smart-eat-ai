@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       try {
-        const response = await fetch(`https://backend-smarteatai.onrender.com/api/auth/?token=${token}`);
+        const response = await fetch(`https://smart-eat-ai-backend.onrender.com/api/auth/?token=${token}`);
         const valid = await response.json(); // true o false
         setIsValid(valid);
 

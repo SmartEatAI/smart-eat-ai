@@ -24,7 +24,7 @@ const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
 
             try {
                 // Validate token with backend
-                const response = await fetch("https://backend-smarteatai.onrender.com/api/auth/me", {
+                const response = await fetch("https://smart-eat-ai-backend.onrender.com/api/auth/me", {
                     headers: {
                         "Authorization": `Bearer ${token}`,
                     },

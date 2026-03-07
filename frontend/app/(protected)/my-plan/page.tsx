@@ -44,7 +44,7 @@ export default function MyPlanPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("https://backend-smarteatai.onrender.com/api/plan/current", {
+    fetch("https://smart-eat-ai-backend.onrender.com/api/plan/current", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.ok ? res.json() : null)
@@ -56,7 +56,7 @@ export default function MyPlanPage() {
   async function fetchNewRecipe(mealType: string, recipeId: number) {
     try {
       const response = await fetch(
-        `https://backend-smarteatai.onrender.com/api/ml/swap-recipe?recipe_id=${recipeId}&meal_label=${mealType}`,
+        `https://smart-eat-ai-backend.onrender.com/api/ml/swap-recipe?recipe_id=${recipeId}&meal_label=${mealType}`,
         {
           method: "POST",
           headers: {
@@ -80,7 +80,7 @@ export default function MyPlanPage() {
 
   async function updateMealRecipe(mealDetailId: number, newRecipeId: number) {
     const response = await fetch(
-      `https://backend-smarteatai.onrender.com/api/meal-detail/${mealDetailId}?recipe_id=${newRecipeId}`,
+      `https://smart-eat-ai-backend.onrender.com/api/meal-detail/${mealDetailId}?recipe_id=${newRecipeId}`,
       {
         method: "PUT",
         headers: {
