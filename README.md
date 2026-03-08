@@ -10,7 +10,7 @@
 
 > [Presentación del proyecto - Canva](https://www.canva.com/design/DAHCnfU5p6s/D2NN2HH-_N1PsZlCq9sJpg/view?utm_content=DAHCnfU5p6s&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h708a869ec2)
 >
-> [Presentación del proyecto - PDF](docs/Presentación%20-%20Desarrollo%20de%20una%20WebApp%20con%20IA%20Agéntica.pdf)
+> [Presentación del proyecto - PDF](docs/SmartEatAI-Presentacion.pdf)
 >
 > [Video explicatorio](https://youtu.be/_5_w9H5EcRo)
 >
